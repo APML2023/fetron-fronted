@@ -1,0 +1,33 @@
+export const typeOfFleet = [
+    {
+        id: 1,
+        name: "All Vehicles",
+        path: "all"
+    },
+    {
+        id: 2,
+        name: 'Available',
+        path: "available",
+    },
+    {
+        id: 3,
+        name: 'Enroute for Pickup',
+        path: "enroute-for-pickup"
+    },
+    {
+        id: 4,
+        name: 'At Enroute',
+        path: "at-enroute"
+    },
+    {
+        id: 5,
+        name: 'Intransit',
+        path: "intransit"
+    },
+    {
+        id: 6,
+        name: 'Unloading',
+        path: "unloading"
+    },
+
+]

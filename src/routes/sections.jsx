@@ -24,7 +24,24 @@ export default function Router() {
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'fleets', element: <FleetPage /> },
+        {
+          path: 'fleets',
+          element: (
+            <FleetPage>
+              <Suspense>
+                <Outlet />
+              </Suspense>
+            </FleetPage>
+          ),
+          children: [
+            { path: "all", element: {} },
+            { path: "available", element: {} },
+            { path: "enroute-for-pickup", element: {} },
+            { path: "at-enroute", element: {} },
+            { path: "intransit", element: {} },
+            { path: "unloading", element: {} },
+          ]
+        },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
 

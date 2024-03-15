@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -7,6 +7,10 @@ import Box from "@mui/material/Box";
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import TabList from '@mui/lab/TabList';
+import TabContext from '@mui/lab/TabContext';
+import { useNavigate } from "react-router-dom";
+
 
 // import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -27,6 +31,8 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+import { typeOfFleet } from 'src/data/fleet';
+import { usePathname } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
 function CustomTabPanel(props) {
@@ -68,7 +74,11 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState();
+  const [pathQ, setPathQ] = useState();
+
+  const navigate = useNavigate();
+  const pathname = usePathname();
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -138,6 +148,24 @@ export default function UserPage() {
     setValue(newValue);
   };
 
+  useEffect(() => {
+    var pn = pathname.split("/")[2];
+    console.log(pn);
+    // setValue(pn);
+    var new_value = 1;
+    if (!pn) {
+      setValue(1);
+      return;
+    }
+    for (var i = 0; i < typeOfFleet.length; i++) {
+      if (typeOfFleet[i].path == pn) {
+        console.log(typeOfFleet[i].id);
+        setValue(typeOfFleet[i].id);
+        return;
+      }
+    }
+  }, [pathname])
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
@@ -152,14 +180,19 @@ export default function UserPage() {
           New User
         </Button> */}
       </Stack>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList onChange={handleChange} aria-label="basic tabs example">
+            {typeOfFleet.map((el, in2) => {
+              // console.log(in2);
+              return (
+                <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleets/${el.path}`) }} />
+              )
+            })}
+          </TabList>
+        </Box>
+      </TabContext>
+      {/* <CustomTabPanel value={value} index={0}>
         Item One
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
@@ -167,7 +200,8 @@ export default function UserPage() {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three
-      </CustomTabPanel>
+      </CustomTabPanel> */}
+
       <Card>
 
 
@@ -228,6 +262,7 @@ export default function UserPage() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
+
     </Container>
   );
 }
