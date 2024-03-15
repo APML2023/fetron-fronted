@@ -11,6 +11,8 @@ import TabList from '@mui/lab/TabList';
 import TabContext from '@mui/lab/TabContext';
 import { useNavigate } from "react-router-dom";
 
+import Toolbar from '@mui/material/Toolbar';
+
 
 // import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -33,6 +35,10 @@ import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 import { typeOfFleet } from 'src/data/fleet';
 import { usePathname } from 'src/routes/hooks';
+import { useTheme } from '@emotion/react';
+import { useResponsive } from 'src/hooks/use-responsive';
+import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
+import { bgBlur } from 'src/theme/css';
 
 // ----------------------------------------------------------------------
 function CustomTabPanel(props) {
@@ -166,33 +172,70 @@ export default function UserPage() {
     }
   }, [pathname])
 
+  const theme = useTheme();
+
+  const lgUp = useResponsive('up', 'lg');
+
   return (
-    <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
-        <Typography variant="h4">Fleets</Typography>
-        <UserTableToolbar
-          numSelected={selected.length}
-          filterName={filterName}
-          onFilterName={handleFilterByName}
-        />
-        {/* 
+    <>
+      <TabContext value={value}>
+        <Box sx={{
+          position: 'fixed',
+          width: '100%',
+          // boxShadow: 'none',
+          // height: HEADER.H_MOBILE,
+          zIndex: theme.zIndex.appBar + 10,
+          ...bgBlur({
+            color: theme.palette.background.default,
+          }),
+          // background: "white",
+          // transition: theme.transitions.create(['height'], {
+          //   duration: theme.transitions.duration.shorter,
+          // }),
+          ...(lgUp && {
+            width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+            // height: HEADER.H_DESKTOP,
+          }),
+        }}
+
+        >
+          <Toolbar
+            sx={{
+              height: 1,
+              px: { lg: 5 },
+            }}
+          >
+            <Typography sx={{ flexGrow: 0 }} variant="h4">Fleets</Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            <UserTableToolbar
+              numSelected={selected.length}
+              filterName={filterName}
+              onFilterName={handleFilterByName}
+            />
+          </Toolbar>
+          {/* 
         <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
           New User
         </Button> */}
-      </Stack>
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange} aria-label="basic tabs example">
-            {typeOfFleet.map((el, in2) => {
-              // console.log(in2);
-              return (
-                <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleets/${el.path}`) }} />
-              )
-            })}
-          </TabList>
+          <Box sx={{
+            borderBottom: 1, borderColor: 'divider', marginBottom: 2,
+          }}>
+            <TabList onChange={handleChange} aria-label="basic tabs example">
+              {typeOfFleet.map((el, in2) => {
+                // console.log(in2);
+                return (
+                  <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleets/${el.path}`) }} />
+                )
+              })}
+            </TabList>
+          </Box>
+
         </Box>
       </TabContext>
-      {/* <CustomTabPanel value={value} index={0}>
+      <Container sx={{ width: "100%" }}>
+
+
+        {/* <CustomTabPanel value={value} index={0}>
         Item One
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
@@ -201,68 +244,70 @@ export default function UserPage() {
       <CustomTabPanel value={value} index={2}>
         Item Three
       </CustomTabPanel> */}
+        <Box sx={{ paddingTop: "9rem" }}>
+          <Card>
+            <Scrollbar>
+              <TableContainer sx={{ overflow: 'unset' }}>
+                <Table sx={{ minWidth: 800 }}>
+                  <UserTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    rowCount={users.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleSort}
+                    onSelectAllClick={handleSelectAllClick}
+                    headLabel={[
+                      { id: 'name', label: 'Vehicle No.' },
+                      { id: 'company', label: 'Summary' },
+                      { id: 'role', label: 'Driver Info.' },
+                      { id: 'isVerified', label: 'Current Status', align: 'center' },
+                      { id: 'status', label: 'Status' },
+                      { id: '' },
+                    ]}
+                  />
+                  <TableBody>
+                    {dataFiltered
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => (
+                        <UserTableRow
+                          key={row.id}
+                          name={row.name}
+                          role={row.role}
+                          status={row.status}
+                          company={row.company}
+                          avatarUrl={row.avatarUrl}
+                          isVerified={row.isVerified}
+                          selected={selected.indexOf(row.name) !== -1}
+                          handleClick={(event) => handleClick(event, row.name)}
+                        />
+                      ))}
 
-      <Card>
-
-
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={users.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      name={row.name}
-                      role={row.role}
-                      status={row.status}
-                      company={row.company}
-                      avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
+                    <TableEmptyRows
+                      height={77}
+                      emptyRows={emptyRows(page, rowsPerPage, users.length)}
                     />
-                  ))}
 
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
-                />
+                    {notFound && <TableNoData query={filterName} />}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-                {notFound && <TableNoData query={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+            <TablePagination
+              page={page}
+              component="div"
+              count={users.length}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handleChangePage}
+              rowsPerPageOptions={[5, 10, 25]}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Card>
+        </Box>
 
-        <TablePagination
-          page={page}
-          component="div"
-          count={users.length}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Card>
 
-    </Container>
+      </Container>
+    </>
+
   );
 }

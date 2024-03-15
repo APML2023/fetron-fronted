@@ -15,7 +15,7 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
   return (
     <Toolbar
       sx={{
-        height: 96,
+        height: 20,
         display: 'flex',
         justifyContent: 'space-between',
         p: (theme) => theme.spacing(0, 1, 0, 3),

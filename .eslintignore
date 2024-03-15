@@ -10,6 +10,7 @@ next.config.js
 
 vite.config.js
 vite.config.ts
+src/layouts
 src/sections
 src/reportWebVitals.js
 src/service-worker.js
