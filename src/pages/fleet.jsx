@@ -4,11 +4,11 @@ import { UserView } from 'src/sections/user/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function FleetPage() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Fleets </title>
       </Helmet>
 
       <UserView />
