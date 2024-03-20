@@ -20,7 +20,7 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-
+import { CircularProgress } from '@mui/material';
 
 import { users } from 'src/_mock/user';
 
@@ -39,6 +39,7 @@ import { useTheme } from '@emotion/react';
 import { useResponsive } from 'src/hooks/use-responsive';
 import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 function CustomTabPanel(props) {
@@ -82,6 +83,8 @@ export default function UserPage() {
 
   const [value, setValue] = useState();
   const [pathQ, setPathQ] = useState();
+
+  const [tabData, setTabData] = useState();
 
   const navigate = useNavigate();
   const pathname = usePathname();
@@ -176,6 +179,22 @@ export default function UserPage() {
 
   const lgUp = useResponsive('up', 'lg');
 
+  useEffect(() => {
+    async function getAllVehicles() {
+      await axios.get("http://localhost:5050/y/vehicle/erpvehicles",
+        { withCredentials: true }
+      )
+        .then((res) => {
+          console.log(res.data);
+          setTabData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+    getAllVehicles();
+  }, [])
+
   return (
     <>
       <TabContext value={value}>
@@ -254,11 +273,11 @@ export default function UserPage() {
                     orderBy={orderBy}
                     rowCount={users.length}
                     numSelected={selected.length}
-                    onRequestSort={handleSort}
+                    // onRequestSort={handleSort}
                     onSelectAllClick={handleSelectAllClick}
                     headLabel={[
-                      { id: 'name', label: 'Vehicle No.' },
-                      { id: 'company', label: 'Summary' },
+                      { id: 'Veh', label: 'Vehicle No.' },
+                      { id: 'summary', label: 'Summary' },
                       { id: 'role', label: 'Driver Info.' },
                       { id: 'isVerified', label: 'Current Status', align: 'center' },
                       { id: 'status', label: 'Status' },
@@ -266,28 +285,35 @@ export default function UserPage() {
                     ]}
                   />
                   <TableBody>
-                    {dataFiltered
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => (
-                        <UserTableRow
-                          key={row.id}
-                          name={row.name}
-                          role={row.role}
-                          status={row.status}
-                          company={row.company}
-                          avatarUrl={row.avatarUrl}
-                          isVerified={row.isVerified}
-                          selected={selected.indexOf(row.name) !== -1}
-                          handleClick={(event) => handleClick(event, row.name)}
-                        />
-                      ))}
+                    {tabData ?
+                      <>
+                        {tabData.map((row) => (
+                          <UserTableRow
+                            key={row._id}
+                            name={row.VEHNO}
+                            role={row.role}
+                            status={row.status}
+                            company={row.DriverName}
+                            avatarUrl={row.avatarUrl}
+                            isVerified={row.isVerified}
+                            selected={selected.indexOf(row.name) !== -1}
+                            handleClick={(event) => handleClick(event, row.name)}
+                          />
+                        ))}
+                      </>
+                      :
+                      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                        <CircularProgress />
+                      </Box>
 
-                    <TableEmptyRows
-                      height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, users.length)}
-                    />
 
-                    {notFound && <TableNoData query={filterName} />}
+                      // <TableEmptyRows
+                      //   height={77}
+                      //   emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                      // />
+
+                      // {notFound && <TableNoData query={filterName} />}
+                    }
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -25,7 +25,7 @@ export default function UserTableHead({
   };
 
   return (
-    <TableHead>
+    <TableHead sx={{ position: "sticky", top: "0", zIndex: "1" }}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -44,9 +44,9 @@ export default function UserTableHead({
           >
             <TableSortLabel
               hideSortIcon
-              active={orderBy === headCell.id}
+              // active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={onSort(headCell.id)}
+            // onClick={onSort(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
