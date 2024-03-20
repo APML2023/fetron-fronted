@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -10,20 +9,14 @@ import Table from '@mui/material/Table';
 import TabList from '@mui/lab/TabList';
 import TabContext from '@mui/lab/TabContext';
 import { useNavigate } from "react-router-dom";
-
 import Toolbar from '@mui/material/Toolbar';
-
-
 // import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-
-
 import { users } from 'src/_mock/user';
-
 // import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -40,6 +33,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
 
+import "../Styles/Style.css"
 // ----------------------------------------------------------------------
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -234,21 +228,11 @@ export default function UserPage() {
       </TabContext>
       <Container sx={{ width: "100%" }}>
 
-
-        {/* <CustomTabPanel value={value} index={0}>
-        Item One
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel> */}
         <Box sx={{ paddingTop: "9rem" }}>
           <Card>
             <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
-                <Table sx={{ minWidth: 800 }}>
+              <TableContainer sx={{ overflowY:"scroll", height:"60vh"}}>
+                <Table>
                   <UserTableHead
                     order={order}
                     orderBy={orderBy}
@@ -265,7 +249,7 @@ export default function UserPage() {
                       { id: '' },
                     ]}
                   />
-                  <TableBody>
+                  <TableBody >
                     {dataFiltered
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (

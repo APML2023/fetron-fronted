@@ -1,0 +1,18 @@
+
+.rdt_TableBody{
+    height: 50vh;
+    overflow-y: scroll;
+    z-index: 1;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+.rdt_TableHeader{
+    position: sticky;
+    z-index: 0;
+}
+.rdt_TableBody::-webkit-scrollbar {
+  width: 0.5em;
+}
+.rdt_TableBody::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}

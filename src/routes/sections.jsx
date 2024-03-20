@@ -40,9 +40,10 @@ export default function Router() {
             { path: "at-enroute", element: {} },
             { path: "intransit", element: {} },
             { path: "unloading", element: {} },
+            { path: "Completed", element: {} }
           ]
         },
-        { path: 'products', element: <ProductsPage /> },
+        { path: 'products', element: <ProductsPage/> },
         { path: 'blog', element: <BlogPage /> },
 
       ],
