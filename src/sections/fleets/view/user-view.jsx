@@ -227,8 +227,7 @@ export default function UserPage() {
         </Box>
       </TabContext>
       <Container sx={{ width: "100%" }}>
-
-        <Box sx={{ paddingTop: "9rem" }}>
+        <Box sx={{ paddingTop: "8rem" }}>
           <Card>
             <Scrollbar>
               <TableContainer sx={{ overflowY:"scroll", height:"60vh"}}>
