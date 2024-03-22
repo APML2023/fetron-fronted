@@ -25,14 +25,14 @@ export default function UserTableHead({
   };
 
   return (
-    <TableHead sx={{position:"sticky", top:"0", zIndex:"1"}}>
+    <TableHead sx={{ position: "sticky", top: "0", zIndex: "1" }}>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
+          {/* <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-          />
+          /> */}
         </TableCell>
 
         {headLabel.map((headCell) => (
@@ -44,9 +44,9 @@ export default function UserTableHead({
           >
             <TableSortLabel
               hideSortIcon
-              active={orderBy === headCell.id}
+              // active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={onSort(headCell.id)}
+            // onClick={onSort(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (

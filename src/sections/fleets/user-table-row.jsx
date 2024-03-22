@@ -13,10 +13,26 @@ import IconButton from '@mui/material/IconButton';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
-
+import Box from '@mui/material/Box';
+import Backdrop from '@mui/material/Backdrop';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import FleetModal from './Components/fleetModal';
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({
+const style = {
+  height:"95%",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: "95%",
+  bgcolor: 'background.paper',
+  boxShadow:" 0 4px 30px rgba(0, 0, 0, 0.1)",
+  borderRadius: "10px",
+  // p: 4,
+};
+export default function UserTableRow({Data,
   selected,
   name,
   avatarUrl,
@@ -27,7 +43,9 @@ export default function UserTableRow({
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
-
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
@@ -35,15 +53,34 @@ export default function UserTableRow({
   const handleCloseMenu = () => {
     setOpen(null);
   };
+  // console.log(Data.VEHNO);
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox disableRipple checked={selected} onChange={handleClick} />
+      <Modal
+        open={openModal}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={openModal}>
+        <Box sx={style}>
+        <FleetModal Data1={Data} Close={handleClose}/>
+        </Box>
+        </Fade>
+      </Modal>
+
+      <TableRow  hover tabIndex={-1} role="checkbox" selected={selected}>
+        <TableCell  padding="checkbox">
+          {/* <Checkbox disableRipple checked={selected} onChange={handleClick} /> */}
         </TableCell>
 
-        <TableCell component="th" scope="row" padding="none">
+        <TableCell  onClick={handleOpen} component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar alt={name} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
@@ -52,7 +89,7 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell >{company}</TableCell>
 
         <TableCell>{role}</TableCell>
 
