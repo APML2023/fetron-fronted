@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import CreateTrip from "./ModalContent/createTrip";
 const FleetUpdate = ({ Data1 ,Close }) => {
 
 //   const [FleetData , setFleetData] =useState([]);
@@ -62,6 +63,8 @@ const FleetUpdate = ({ Data1 ,Close }) => {
 
             {/* ---------------------------------- Create Trip ----------------------------- */}
             <Box className=" h-fit  z-0 ">
+            <CreateTrip/>
+
               {/* {!Loading ? (
                 Data.FleetData &&
                 Data.FleetData.VehicleStatus !== "Available" ? (

@@ -30,6 +30,7 @@ const style = {
   bgcolor: 'background.paper',
   boxShadow:" 0 4px 30px rgba(0, 0, 0, 0.1)",
   borderRadius: "10px",
+  overflowY:"scroll"
   // p: 4,
 };
 export default function UserTableRow({Data,
