@@ -19,7 +19,7 @@ import Iconify from 'src/components/iconify';
 export default function UserTableRow({
   selected,
   name,
-  avatarUrl,
+  vehicleType,
   company,
   role,
   isVerified,
@@ -38,14 +38,16 @@ export default function UserTableRow({
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-        <TableCell padding="checkbox">
+      <TableRow tabIndex={-1} role="checkbox" selected={selected}
+        className=' hover:bg-gray-100 cursor-pointer focus:bg-gray-200 transition-colors duration-200 ease-in-out'
+      >
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell component="th" scope="row" padding="none">
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+        <TableCell component="th" scope="row" padding="0.4">
+          <Stack direction="column" alignItems="start" spacing={0.5}>
+            <p className='text-sm'>{vehicleType}</p>
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
@@ -55,8 +57,6 @@ export default function UserTableRow({
         <TableCell>{company}</TableCell>
 
         <TableCell>{role}</TableCell>
-
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
 
         <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>

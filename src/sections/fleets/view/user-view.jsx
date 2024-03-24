@@ -276,23 +276,22 @@ export default function UserPage() {
                     // onRequestSort={handleSort}
                     onSelectAllClick={handleSelectAllClick}
                     headLabel={[
-                      { id: 'Veh', label: 'Vehicle No.' },
+                      { id: 'Veh', label: 'Vehicle' },
                       { id: 'summary', label: 'Summary' },
                       { id: 'role', label: 'Driver Info.' },
-                      { id: 'isVerified', label: 'Current Status', align: 'center' },
                       { id: 'status', label: 'Status' },
                       { id: '' },
                     ]}
                   />
                   <TableBody>
-                    {tabData ?
+                    {tabData && tabData.length ?
                       <>
                         {tabData.map((row) => (
                           <UserTableRow
-                            key={row._id}
-                            name={row.VEHNO}
-                            role={row.role}
-                            status={row.status}
+                            key={row.data._id}
+                            name={row.data.VEHNO}
+                            vehicleType={row.data.VehicleType}
+                            status="Null"
                             company={row.DriverName}
                             avatarUrl={row.avatarUrl}
                             isVerified={row.isVerified}
