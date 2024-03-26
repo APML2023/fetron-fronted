@@ -265,58 +265,57 @@ export default function UserPage() {
       </CustomTabPanel> */}
         <Box sx={{ paddingTop: "9rem" }}>
           <Card>
-            <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
-                <Table sx={{ minWidth: 800 }}>
-                  <UserTableHead
-                    order={order}
-                    orderBy={orderBy}
-                    rowCount={users.length}
-                    numSelected={selected.length}
-                    // onRequestSort={handleSort}
-                    onSelectAllClick={handleSelectAllClick}
-                    headLabel={[
-                      { id: 'Veh', label: 'Vehicle' },
-                      { id: 'summary', label: 'Summary' },
-                      { id: 'role', label: 'Driver Info.' },
-                      { id: 'status', label: 'Status' },
-                      { id: '' },
-                    ]}
-                  />
-                  <TableBody>
-                    {tabData && tabData.length ?
-                      <>
-                        {tabData.map((row) => (
-                          <UserTableRow
-                            key={row.data._id}
-                            name={row.data.VEHNO}
-                            vehicleType={row.data.VehicleType}
-                            status="Null"
-                            company={row.DriverName}
-                            avatarUrl={row.avatarUrl}
-                            isVerified={row.isVerified}
-                            selected={selected.indexOf(row.name) !== -1}
-                            handleClick={(event) => handleClick(event, row.name)}
-                          />
-                        ))}
-                      </>
-                      :
-                      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                        <CircularProgress />
-                      </Box>
+            {/* <Scrollbar> */}
+            <TableContainer sx={{ overflow: 'auto' }}>
+              <Table sx={{ minWidth: 800 }}>
+                <UserTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  rowCount={users.length}
+                  numSelected={selected.length}
+                  // onRequestSort={handleSort}
+                  onSelectAllClick={handleSelectAllClick}
+                  headLabel={[
+                    { id: 'Veh', label: 'Vehicle' },
+                    { id: 'summary', label: 'Summary' },
+                    { id: 'role', label: 'Driver Info.' },
+                    { id: 'status', label: 'Status' }
+                  ]} xx
+                />
+                <TableBody>
+                  {tabData && tabData.length ?
+                    <>
+                      {tabData.map((row) => (
+                        <UserTableRow
+                          key={row.data._id}
+                          name={row.data.VEHNO}
+                          vehicleType={row.data.VehicleType}
+                          status="Null"
+                          company={row.DriverName}
+                          avatarUrl={row.avatarUrl}
+                          isVerified={row.isVerified}
+                          selected={selected.indexOf(row.name) !== -1}
+                          handleClick={(event) => handleClick(event, row.name)}
+                        />
+                      ))}
+                    </>
+                    :
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                      <CircularProgress />
+                    </Box>
 
 
-                      // <TableEmptyRows
-                      //   height={77}
-                      //   emptyRows={emptyRows(page, rowsPerPage, users.length)}
-                      // />
+                    // <TableEmptyRows
+                    //   height={77}
+                    //   emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                    // />
 
-                      // {notFound && <TableNoData query={filterName} />}
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Scrollbar>
+                    // {notFound && <TableNoData query={filterName} />}
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {/* </Scrollbar> */}
 
             <TablePagination
               page={page}
