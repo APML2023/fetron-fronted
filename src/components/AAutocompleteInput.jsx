@@ -6,6 +6,7 @@ import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react
 export default function UseAutocomplete(props) {
   const [value, setValue] = React.useState(null);
   const [opt, setOpt] = React.useState([]);
+  const [addSel, setAddSel] = React.useState("null");
 
   const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
   const autofill = useAddressAutofillCore({ accessToken: access_token });
@@ -43,25 +44,32 @@ export default function UseAutocomplete(props) {
     options: opt,
     getOptionLabel: (option) => { return option ? option : "" },
     value,
-    onChange: (e, nn) => { setValue(e.target.innerHTML); setOpt([]); }
+    onChange: (e, nn) => { setValue(e.target.innerHTML); setOpt([]); setAddSel(e.target.innerHTML) }
     // onChange: (e) => { setValue(e.target.value); getAutoFill(e.target.value); },
   });
 
   return (
     <div style={{ marginBottom: 16, width: "100%" }}>
-      <Root {...getRootProps()} className={focused ? 'Mui-focused ' : ''} style={{ width: "100%", background: "transparent" }}>
-        <Input {...getInputProps()} className='w-full border-2 border-gray-200' style={{ padding: "0.8rem", background: "transparent", fontSize: "1rem" }} onChange={(e) => { setValue(value => e.target.value); getAutoFill(e.target.value); }} />
-      </Root>
-      {opt.length > 0 && (
-        <Listbox {...getListboxProps()} style={{ marginBottom: 16 }}>
-          {opt.map((el, index) => {
-            const dd = el.full_address || "";
-            return (
-              <Option key={index} {...getOptionProps({ dd, index })}>{el.full_address}</Option>
-            )
-          })}
-        </Listbox>
-      )
+
+      <div className='flex flex-col '>
+        <Root {...getRootProps()} className={focused ? 'Mui-focused ' : ''} style={{ width: "100%", background: "transparent" }}>
+          <Input {...getInputProps()} className='w-fit border-2 border-gray-200 h-fit' style={{ padding: "0.8rem", background: "transparent", fontSize: "1rem" }} onChange={(e) => { setValue(value => e.target.value); getAutoFill(e.target.value); }} />
+        </Root>
+        <Label className='px-2 text-normal font-bold'>{addSel}</Label>
+      </div>
+
+
+      {
+        opt.length > 0 && (
+          <Listbox {...getListboxProps()} style={{ marginBottom: 16 }}>
+            {opt.map((el, index) => {
+              const dd = el.full_address || "";
+              return (
+                <Option key={index} {...getOptionProps({ dd, index })}>{el.full_address}</Option>
+              )
+            })}
+          </Listbox>
+        )
       }
     </div >
   );
@@ -93,8 +101,6 @@ const grey = {
 const Label = styled('label')`
   display: block;
   font-family: sans-serif;
-  font-size: 14px;
-  font-weight: 500;
   margin-bottom: 4px;
 `;
 
@@ -131,15 +137,14 @@ const Root = styled('div')(
 
 const Input = styled('input')(
   ({ theme }) => `
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-family: inherit;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1;
   color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
   background: inherit;
   border: none;
   border-radius: inherit;
-  padding: 8px 12px;
   outline: 0;
   flex: 1 0 auto;
 `,

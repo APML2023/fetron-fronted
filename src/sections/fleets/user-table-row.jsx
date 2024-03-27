@@ -235,7 +235,7 @@ export default function UserTableRow({
             <div className='w-full flex justify-center items-center flex-col'>
               <div className='flex justify-start items-center gap-4 w-full p-4 flex-col'>
                 <div className='w-full flex justify-center items-center flex-wrap gap-4'>
-                  <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                  <div className='h-full flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
                     style={{ width: "calc(50% - 15px)" }}
                   >
                     <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Origin</p>
@@ -264,7 +264,7 @@ export default function UserTableRow({
                     </div>
 
                   </div>
-                  <div className='flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                  <div className='h-full flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
                     style={{ width: "calc(50% - 15px)" }}
                   >
                     <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Destination</p>
