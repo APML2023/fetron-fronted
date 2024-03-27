@@ -56,10 +56,10 @@ const style = {
   width: 'calc(100vw - 3rem)',
   height: 'calc(100vh - 3rem)',
   bgcolor: 'rgba(255,255,255,0.95)',
-  // border: '2px solid #000',
   boxShadow: 1,
   borderRadius: 1.5,
   transition: 'all 0.2s ease-in',
+  // overflowY:"scroll" 
 };
 
 const today = dayjs();
@@ -179,10 +179,10 @@ export default function UserTableRow({
         onClose={() => { setMOpen(mopen => !mopen) }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        className='bg-transparent'
+        // className='bg-transparent'
       >
         <Box sx={style} className="overflow-hidden" >
-          <div className='w-full h-full flex justify-start content-center flex-col'>
+          <div className='w-full h-full flex justify-start content-center flex-col '>
             <div className='flex justify-between p-3 bg-slate-300'>
               <div className='flex justify-center content-center'>
                 <p className='text-normal font-semibold'>23JhU987</p>
@@ -197,7 +197,7 @@ export default function UserTableRow({
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>En-route</div>
               <div className='rounded-lg border-2 border-green-300 bg-emerald-100 p-2 w-fit'>Intransit</div>
             </div>
-            <div className='w-full h-96 overflow-hidden bg-sky-900'>
+            <div style={{minHeight:"50vh"}} className='w-full h-fit overflow-hidden bg-sky-900 '>
               <ModalMap />
             </div>
             <div className='w-full flex justify-center items-center flex-col'>
