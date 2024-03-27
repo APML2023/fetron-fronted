@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
@@ -13,30 +13,63 @@ import IconButton from '@mui/material/IconButton';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+
 import Box from '@mui/material/Box';
-import Backdrop from '@mui/material/Backdrop';
+import Button from '@mui/material/Button';
+// import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-import FleetModal from './Components/fleetModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-regular-svg-icons';
+import { faCancel, faCross, faXmark } from '@fortawesome/free-solid-svg-icons';
+
+import { MapProvider } from "react-simple-maps"
+import ModalMap from 'src/components/Modal/Map';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  geocodeByPlaceId,
+  getLatLng,
+} from 'react-places-autocomplete';
+
+
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+// import { LocalizationProvider } from '@mui/x-date-pickers';
+// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+// import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+
+// import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+
+import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react';
+import UseAutocompletePopper from 'src/components/AAutocompleteInput';
 // ----------------------------------------------------------------------
 
 const style = {
-  height:"95%",
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: "95%",
-  bgcolor: 'background.paper',
-  boxShadow:" 0 4px 30px rgba(0, 0, 0, 0.1)",
-  borderRadius: "10px",
-  overflowY:"scroll"
-  // p: 4,
+  width: 'calc(100vw - 3rem)',
+  height: 'calc(100vh - 3rem)',
+  bgcolor: 'rgba(255,255,255,0.95)',
+  // border: '2px solid #000',
+  boxShadow: 1,
+  borderRadius: 1.5,
+  transition: 'all 0.2s ease-in',
 };
-export default function UserTableRow({Data,
+
+const today = dayjs();
+const yesterday = dayjs().subtract(1, 'day');
+const todayStartOfTheDay = today.startOf('day');
+
+export default function UserTableRow({
   selected,
   name,
-  avatarUrl,
+  vehicleType,
   company,
   role,
   isVerified,
@@ -44,46 +77,62 @@ export default function UserTableRow({Data,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpen = () => setOpenModal(true);
-  const handleClose = () => setOpenModal(false);
+  const [mopen, setMOpen] = useState(false);
+  const [address, setAddress] = useState();
+
+
+  const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
+
   const handleOpenMenu = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     setOpen(event.currentTarget);
   };
 
   const handleCloseMenu = () => {
     setOpen(null);
   };
-  // console.log(Data.VEHNO);
+
+  const handleChange = address => {
+    setAddress({ address });
+  };
+
+  const handleSelect = address => {
+    geocodeByAddress(address)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => console.log('Success', latLng))
+      .catch(error => console.error('Error', error));
+  };
+
+
+
+  // async function getAutoFill() {
+  //   const autofill = useAddressAutofillCore({ accessToken: access_token });
+  //   // const ss = 
+  //   // const sessionToken = new SessionToken();
+  //   const result = await autofill.suggest('Washington D.C.', { sessionToken: 'test-123' });
+  //   // console.log("hello");
+  //   console.log(result);
+  // }
+  // getAutoFill();
+  // useEffect(() => {
+  //   getAutoFill();
+  // }, [])
+
 
   return (
     <>
-      <Modal
-        open={openModal}
-        onClose={handleClose}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
+      <TableRow tabIndex={-1} role="checkbox" selected={selected}
+        className=' hover:bg-gray-100 cursor-pointer transition-colors duration-200 ease-in-out'
+        onClick={(e) => { setMOpen(mopen => !mopen) }}
       >
-        <Fade in={openModal}>
-        <Box sx={style}>
-        <FleetModal Data1={Data} Close={handleClose}/>
-        </Box>
-        </Fade>
-      </Modal>
+        {/* <TableCell padding="checkbox">
+          <Checkbox disableRipple checked={selected} onChange={handleClick} />
+        </TableCell> */}
 
-      <TableRow  hover tabIndex={-1} role="checkbox" selected={selected}>
-        <TableCell  padding="checkbox">
-          {/* <Checkbox disableRipple checked={selected} onChange={handleClick} /> */}
-        </TableCell>
-
-        <TableCell  onClick={handleOpen} component="th" scope="row" padding="none">
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+        <TableCell component="th" scope="row" padding="0.4">
+          <Stack direction="column" alignItems="start" spacing={0.5}>
+            <p className='text-sm'>{vehicleType}</p>
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
@@ -94,17 +143,15 @@ export default function UserTableRow({Data,
 
         <TableCell>{role}</TableCell>
 
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
-
         <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
 
-        <TableCell align="right">
+        {/* <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
       <Popover
         open={!!open}
@@ -126,6 +173,116 @@ export default function UserTableRow({Data,
           Delete
         </MenuItem>
       </Popover>
+
+      <Modal
+        open={mopen}
+        onClose={() => { setMOpen(mopen => !mopen) }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className='bg-transparent'
+      >
+        <Box sx={style} className="overflow-hidden" >
+          <div className='w-full h-full flex justify-start content-center flex-col'>
+            <div className='flex justify-between p-3 bg-slate-300'>
+              <div className='flex justify-center content-center'>
+                <p className='text-normal font-semibold'>23JhU987</p>
+              </div>
+              <div className='flex justify-center content-center gap-3 px-2'>
+                <button><FontAwesomeIcon icon={faBell} /></button>
+                <button><FontAwesomeIcon icon={faXmark} onClick={() => { setMOpen(false) }} /></button>
+              </div>
+            </div>
+            <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm'>
+              <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>Available</div>
+              <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>En-route</div>
+              <div className='rounded-lg border-2 border-green-300 bg-emerald-100 p-2 w-fit'>Intransit</div>
+            </div>
+            <div className='w-full h-96 overflow-hidden bg-sky-900'>
+              <ModalMap />
+            </div>
+            <div className='w-full flex justify-center items-center flex-col'>
+              <div className='flex justify-start items-center gap-4 w-full p-4 flex-col'>
+                <div className='w-full flex justify-center items-center flex-wrap gap-4'>
+                  <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                    style={{ width: "calc(50% - 15px)" }}
+                  >
+                    <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Origin</p>
+                    <div className='w-full p-2'>
+                      {/* 
+                      < input className='w-full border-2 rounded-md border-gray-100 p-2 text-md' name="address" placeholder="Address" type="text"
+                        autoComplete="address-line1" /> */}
+                      <UseAutocompletePopper />
+
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer
+                          components={[
+                            'DatePicker',
+                            'DateTimePicker',
+                            'TimePicker',
+                            'DateRangePicker',
+                            'DateTimeRangePicker',
+                          ]}
+                        >
+                          <DemoItem label="">
+                            <DateTimePicker
+                              defaultValue={today}
+                              // disablePast
+                              views={['year', 'month', 'day', 'hours', 'minutes']}
+                            />
+                          </DemoItem>
+                        </DemoContainer>
+                      </LocalizationProvider>
+
+                      {/* </div> */}
+                    </div>
+
+                  </div>
+                  <div className='flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                    style={{ width: "calc(50% - 15px)" }}
+                  >
+                    <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Destination</p>
+                    <div className='w-full p-2'>
+                      <input className='w-full border-2 rounded-md border-gray-100 p-2' placeholder='Destination' />
+                      <div className='w-full text-sm'>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer
+                            components={[
+                              'DatePicker',
+                              'DateTimePicker',
+                              'TimePicker',
+                              'DateRangePicker',
+                              'DateTimeRangePicker',
+                            ]}
+                          >
+                            <DemoItem label="">
+                              <DateTimePicker
+                                defaultValue={today}
+                                // disablePast
+                                views={['year', 'month', 'day', 'hours', 'minutes']}
+                              />
+                            </DemoItem>
+                          </DemoContainer>
+                        </LocalizationProvider>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <button className='rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2'
+                style={{ width: "calc(100% - 40px)" }}
+              >Create Trip</button>
+            </div>
+
+          </div>
+
+
+
+          {/* </div> */}
+
+        </Box>
+      </Modal >
     </>
   );
 }
