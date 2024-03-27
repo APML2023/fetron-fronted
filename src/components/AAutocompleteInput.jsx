@@ -21,7 +21,7 @@ export default function UseAutocomplete(props) {
     // const sessionToken = new SessionToken();
     const result = await autofill.suggest(str2, { sessionToken: 'test-123456789' });
     // console.log("hello");
-    console.log(result);
+    // console.log(result);
     setOpt(result.suggestions);
   }
   //   getAutoFill();
@@ -43,6 +43,7 @@ export default function UseAutocomplete(props) {
     options: opt,
     getOptionLabel: (option) => { return option ? option : "" },
     value,
+    onChange: (e, nn) => { setValue(e.target.innerHTML); setOpt([]); }
     // onChange: (e) => { setValue(e.target.value); getAutoFill(e.target.value); },
   });
 
@@ -53,12 +54,16 @@ export default function UseAutocomplete(props) {
       </Root>
       {opt.length > 0 && (
         <Listbox {...getListboxProps()} style={{ marginBottom: 16 }}>
-          {opt.map((el, index) => (
-            <Option key={index} {...getOptionProps({ el, index })}>{el.full_address}</Option>
-          ))}
+          {opt.map((el, index) => {
+            const dd = el.full_address || "";
+            return (
+              <Option key={index} {...getOptionProps({ dd, index })}>{el.full_address}</Option>
+            )
+          })}
         </Listbox>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }
 

@@ -230,8 +230,9 @@ export default function UserTableRow({
             <div className='w-full h-96 overflow-hidden ' style={{ minHeight: "50vh" }}>
               <ModalMap />
             </div>
+
             {/* ----------------Create a trip------------- */}
-            {/* <div className='w-full flex justify-center items-center flex-col'>
+            <div className='w-full flex justify-center items-center flex-col'>
               <div className='flex justify-start items-center gap-4 w-full p-4 flex-col'>
                 <div className='w-full flex justify-center items-center flex-wrap gap-4'>
                   <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
@@ -298,9 +299,23 @@ export default function UserTableRow({
               <button className='rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2'
                 style={{ width: "calc(100% - 40px)" }}
               >Create Trip</button>
-            </div> */}
+            </div>
+            {/* ----------------Route timeline------------ */}
+            <div className='w-full flex justify-center items-center flex-col py-4 px-3'>
+              <div className='flex justify-center items-center flex-col w-fit'>
+                <div className='flex justify-center items-center'>
+                  <div className='w-5 h-5 bg-green-900 rounded-full ml-3'></div>
+                  <div className='h-1 bg-gray-500' style={{ minWidth: "15rem", maxWidth: "calc(100vw - 14rem)" }}></div>
+                  <div className='w-5 h-5 bg-red-900 rounded-full mr-3'></div>
+                </div>
+                <div className='flex justify-between items-center w-full font-semibold text-normal'>
+                  <p>Mumbai</p>
+                  <p>Delhi</p>
+                </div>
+              </div>
+            </div>
             {/* ----------------Enroute for pickup------------- */}
-            {/* <div className='w-full flex justify-center items-center flex-col'>
+            <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
@@ -321,9 +336,9 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div> */}
+            </div>
             {/* ----------------At pickup------------- */}
-            {/* <div className='w-full flex justify-center items-center flex-col'>
+            <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
@@ -345,9 +360,9 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div> */}
+            </div>
             {/* ---------------In Transit---------------- */}
-            {/* <div className='w-full flex justify-center items-center flex-col'>
+            <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
@@ -371,7 +386,8 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div> */}
+            </div>
+
           </div>
 
 
