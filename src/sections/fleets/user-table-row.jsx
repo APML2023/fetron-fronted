@@ -104,8 +104,11 @@ export default function UserTableRow({
       .catch(error => console.error('Error', error));
   };
 
+  const [locationIns, setLocationIns] = useState({ origin: 0, destination: 0 });
 
-
+  // label, 
+  // {text:, lat,long, date, time}
+  // ALocationInputBox
   // async function getAutoFill() {
   //   const autofill = useAddressAutofillCore({ accessToken: access_token });
   //   // const ss = 
@@ -182,8 +185,8 @@ export default function UserTableRow({
         aria-describedby="modal-modal-description"
         className='bg-transparent'
       >
-        <Box sx={style} className="overflow-hidden" >
-          <div className='w-full h-full flex justify-start content-center flex-col'>
+        <Box sx={style} className="overflow-hidden " >
+          <div className='w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto'>
             <div className='flex justify-between p-3 bg-slate-300'>
               <div className='flex justify-center content-center'>
                 <p className='text-normal font-semibold'>23JhU987</p>
@@ -198,7 +201,7 @@ export default function UserTableRow({
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>En-route</div>
               <div className='rounded-lg border-2 border-green-300 bg-emerald-100 p-2 w-fit'>Intransit</div>
             </div>
-            <div className='w-full h-96 overflow-hidden bg-sky-900'>
+            <div className='w-full h-96 overflow-hidden bg-sky-900' style={{ minHeight: "50vh" }}>
               <ModalMap />
             </div>
             <div className='w-full flex justify-center items-center flex-col'>
@@ -224,8 +227,9 @@ export default function UserTableRow({
                             'DateTimeRangePicker',
                           ]}
                         >
-                          <DemoItem label="">
+                          <DemoItem label="" className="p-2 text-sm">
                             <DateTimePicker
+                              className="p-2 text-sm"
                               defaultValue={today}
                               // disablePast
                               views={['year', 'month', 'day', 'hours', 'minutes']}
@@ -243,7 +247,8 @@ export default function UserTableRow({
                   >
                     <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Destination</p>
                     <div className='w-full p-2'>
-                      <input className='w-full border-2 rounded-md border-gray-100 p-2' placeholder='Destination' />
+                      {/* <input className='w-full border-2 rounded-md border-gray-100 p-2' placeholder='Destination' /> */}
+                      <UseAutocompletePopper />
                       <div className='w-full text-sm'>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DemoContainer
