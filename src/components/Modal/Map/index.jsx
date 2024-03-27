@@ -11,6 +11,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 
 
+
 const parkLayer = {
     id: 'landuse_park',
     type: 'fill',
@@ -39,6 +40,9 @@ export default function ModalMap() {
         })
     }, [])
 
+    // const search = new SearchBoxCore({ accessToken: import.meta.env.VITE_APP_MAPBOX_API_KEY });
+    // const session = new SearchSession(search);
+    // console.log(session);
     return (
         <>{userLocation && userLocation.latitude && userLocation.longitude ?
             <Map
@@ -70,7 +74,7 @@ export default function ModalMap() {
                 // zoom={10}
                 >
                     {/* <img sr */}
-                    <FontAwesomeIcon icon={faLocationDot} className='text-2xl text-violet-600' />
+                    <FontAwesomeIcon icon={faLocationDot} className='text-4xl text-orange-600' />
                 </Marker>
                 {/* <GeocoderControl showUserLocation={true} mapboxAccessToken={TOKEN} position="top-left" /> */}
 

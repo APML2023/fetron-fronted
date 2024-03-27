@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
@@ -30,8 +30,22 @@ import PlacesAutocomplete, {
   getLatLng,
 } from 'react-places-autocomplete';
 
+
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+// import { LocalizationProvider } from '@mui/x-date-pickers';
+// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+// import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+
 // import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
+import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react';
+import UseAutocompletePopper from 'src/components/AAutocompleteInput';
 // ----------------------------------------------------------------------
 
 const style = {
@@ -41,12 +55,16 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 'calc(100vw - 3rem)',
   height: 'calc(100vh - 3rem)',
-  bgcolor: 'background.paper',
+  bgcolor: 'rgba(255,255,255,0.95)',
   // border: '2px solid #000',
   boxShadow: 1,
   borderRadius: 1.5,
   transition: 'all 0.2s ease-in',
 };
+
+const today = dayjs();
+const yesterday = dayjs().subtract(1, 'day');
+const todayStartOfTheDay = today.startOf('day');
 
 export default function UserTableRow({
   selected,
@@ -61,6 +79,9 @@ export default function UserTableRow({
   const [open, setOpen] = useState(null);
   const [mopen, setMOpen] = useState(false);
   const [address, setAddress] = useState();
+
+
+  const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
 
   const handleOpenMenu = (event) => {
     event.preventDefault();
@@ -82,6 +103,22 @@ export default function UserTableRow({
       .then(latLng => console.log('Success', latLng))
       .catch(error => console.error('Error', error));
   };
+
+
+
+  // async function getAutoFill() {
+  //   const autofill = useAddressAutofillCore({ accessToken: access_token });
+  //   // const ss = 
+  //   // const sessionToken = new SessionToken();
+  //   const result = await autofill.suggest('Washington D.C.', { sessionToken: 'test-123' });
+  //   // console.log("hello");
+  //   console.log(result);
+  // }
+  // getAutoFill();
+  // useEffect(() => {
+  //   getAutoFill();
+  // }, [])
+
 
   return (
     <>
@@ -145,7 +182,7 @@ export default function UserTableRow({
         aria-describedby="modal-modal-description"
         className='bg-transparent'
       >
-        <Box className="overflow-hidden" sx={style}>
+        <Box sx={style} className="overflow-hidden" >
           <div className='w-full h-full flex justify-start content-center flex-col'>
             <div className='flex justify-between p-3 bg-slate-300'>
               <div className='flex justify-center content-center'>
@@ -164,77 +201,89 @@ export default function UserTableRow({
             <div className='w-full h-96 overflow-hidden bg-sky-900'>
               <ModalMap />
             </div>
-            <div className='flex justify-start items-center gap-4 w-full p-4 flex-col'>
-              <div className='w-full flex justify-center items-center flex-wrap gap-4'>
-                <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
-                  style={{ width: "calc(50% - 15px)" }}
-                >
-                  <p className='text-normal font-semibold bg-slate-200 w-full p-2'>Origin</p>
-                  <div className='w-full p-2'>
-                    <div className='w-full border-2 rounded-md border-gray-200 p-2 bg-slate-100'>
-                      {/* <PlacesAutocomplete
-                        value={address}
-                        onChange={handleChange}
-                        onSelect={handleSelect}
-                      >
-                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                          <div>
-                            <input
-                              {...getInputProps({
-                                placeholder: 'Search Places ...',
-                                className: 'location-search-input',
-                              })}
-                            />
-                            <div className="autocomplete-dropdown-container">
-                              {loading && <div>Loading...</div>}
-                              {suggestions.map(suggestion => {
-                                const className = suggestion.active
-                                  ? 'suggestion-item--active'
-                                  : 'suggestion-item';
-                                // inline style for demonstration purpose
-                                const style = suggestion.active
-                                  ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                  : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                                return (
-                                  <div
-                                    {...getSuggestionItemProps(suggestion, {
-                                      className,
-                                      style,
-                                    })}
-                                  >
-                                    <span>{suggestion.description}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        )}
-                      </PlacesAutocomplete> */}
-                      Mumbai
-                    </div>
-                  </div>
+            <div className='w-full flex justify-center items-center flex-col'>
+              <div className='flex justify-start items-center gap-4 w-full p-4 flex-col'>
+                <div className='w-full flex justify-center items-center flex-wrap gap-4'>
+                  <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                    style={{ width: "calc(50% - 15px)" }}
+                  >
+                    <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Origin</p>
+                    <div className='w-full p-2'>
+                      {/* 
+                      < input className='w-full border-2 rounded-md border-gray-100 p-2 text-md' name="address" placeholder="Address" type="text"
+                        autoComplete="address-line1" /> */}
+                      <UseAutocompletePopper />
 
-                </div>
-                <div className='flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
-                  style={{ width: "calc(50% - 15px)" }}
-                >
-                  <p className='text-normal font-semibold bg-slate-200 w-full p-2'>Origin</p>
-                  <div className='w-full p-2'>
-                    <div className='w-full border-2 rounded-md border-gray-200 p-2 bg-slate-100'>Mumbai</div>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer
+                          components={[
+                            'DatePicker',
+                            'DateTimePicker',
+                            'TimePicker',
+                            'DateRangePicker',
+                            'DateTimeRangePicker',
+                          ]}
+                        >
+                          <DemoItem label="">
+                            <DateTimePicker
+                              defaultValue={today}
+                              // disablePast
+                              views={['year', 'month', 'day', 'hours', 'minutes']}
+                            />
+                          </DemoItem>
+                        </DemoContainer>
+                      </LocalizationProvider>
+
+                      {/* </div> */}
+                    </div>
+
+                  </div>
+                  <div className='flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                    style={{ width: "calc(50% - 15px)" }}
+                  >
+                    <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Destination</p>
+                    <div className='w-full p-2'>
+                      <input className='w-full border-2 rounded-md border-gray-100 p-2' placeholder='Destination' />
+                      <div className='w-full text-sm'>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer
+                            components={[
+                              'DatePicker',
+                              'DateTimePicker',
+                              'TimePicker',
+                              'DateRangePicker',
+                              'DateTimeRangePicker',
+                            ]}
+                          >
+                            <DemoItem label="">
+                              <DateTimePicker
+                                defaultValue={today}
+                                // disablePast
+                                views={['year', 'month', 'day', 'hours', 'minutes']}
+                              />
+                            </DemoItem>
+                          </DemoContainer>
+                        </LocalizationProvider>
+
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>
-              <button className='rounded-lg border-2 border-cyan-900 bg-cyan-200 p-2'
-                style={{ width: "calc(100% - 10px)" }}
+              <button className='rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2'
+                style={{ width: "calc(100% - 40px)" }}
               >Create Trip</button>
             </div>
 
-
-
           </div>
 
+
+
+          {/* </div> */}
+
         </Box>
-      </Modal>
+      </Modal >
     </>
   );
 }
