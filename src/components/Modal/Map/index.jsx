@@ -4,7 +4,7 @@ import Map, { Marker } from 'react-map-gl';
 
 import GeocoderControl from './geocoder-control';
 import ControlPanel from './control-panel';
-import CircularProgress from '@mui/material/CircularProgress';
+import Skeleton from '@mui/material/Skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -74,13 +74,29 @@ export default function ModalMap() {
                 // zoom={10}
                 >
                     {/* <img sr */}
-                    <FontAwesomeIcon icon={faLocationDot} className='text-4xl text-orange-600' />
+                    <div className='h-20 w-20 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
+                        <div className='absolute center h-5 w-5 bg-sky-500 rounded-full'
+                            style={{
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                            }}
+                        ></div>
+                    </div>
+                    {/* <FontAwesomeIcon icon={faLocationDot} className='text-4xl text-orange-600'
+                        
+                    /> */}
                 </Marker>
                 {/* <GeocoderControl showUserLocation={true} mapboxAccessToken={TOKEN} position="top-left" /> */}
 
             </Map >
             :
-            <CircularProgress />
+            <div className='flex justify-center items-center w-full h-full flex-col'>
+                {/* <CircularProgress /> */}
+                <p>Loading map...</p>
+                <Skeleton className='bg-sky-900' animation="pulse" variant="rounded" style={{ width: "calc(100% - 1rem)", height: "calc(100% - 1rem)" }} />
+            </div>
+
         }
 
             {/* <ControlPanel /> */}
