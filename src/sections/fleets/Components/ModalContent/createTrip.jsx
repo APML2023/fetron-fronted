@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 // import axios from "axios";
-import { makeStyles } from '@material-ui/core/styles';
+// import makeStyles from '@mui/styles';
+import { createTheme } from '@mui/material/styles';
 import { Box } from "@mui/material";
 
-const useStyle = makeStyles((theme) => ({
+
+
+const useStyle = createTheme((theme) => ({
   customScroll: {
     overflowY: 'auto',
     WebkitOverflowScrolling: 'touch',
@@ -32,7 +35,7 @@ const CreateTrip = ({ VehicleData }) => {
   const [destinations, setDestinations] = useState([initialDestination]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const useMe = useStyle();
+  // const useMe = useStyle();
   const closeAlert = () => {
     setShowAlert(false);
   };
@@ -85,7 +88,7 @@ const CreateTrip = ({ VehicleData }) => {
 
   return (
     <div>
-      <Box className={useMe.customScroll}>
+      <Box className={useStyle.customScroll}>
       <div className="border-2 rounded-lg bg-white p-5 m-5 flex flex-col gap-4">
         <div className="flex justify-between">
           <div>

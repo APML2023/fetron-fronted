@@ -106,7 +106,6 @@ export default function UserTableRow({Data,
           </IconButton>
         </TableCell>
       </TableRow>
-
       <Popover
         open={!!open}
         anchorEl={open}
@@ -121,7 +120,7 @@ export default function UserTableRow({Data,
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
-
+        
         <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete

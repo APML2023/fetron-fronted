@@ -1,7 +1,10 @@
-import { Box } from "@mui/material";
+
 import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import CreateTrip from "./ModalContent/createTrip";
+import Box from '@mui/material/Box';
+
+
 const FleetUpdate = ({ Data1 ,Close }) => {
 
 //   const [FleetData , setFleetData] =useState([]);
@@ -31,7 +34,7 @@ const FleetUpdate = ({ Data1 ,Close }) => {
           {/* {Data1.map((item, index) => (
             <>{item.VEHNO}</>
           ))} */}
-          {Data1.VEHNO} &nbsp;
+          {Data1[0].data.VEHNO} 
             <Box className="p-1 text-white rounded-3xl w-12 text-base flex items-center justify-center bg-green-600 border-black ">
               GPS 
             </Box>
@@ -44,51 +47,25 @@ const FleetUpdate = ({ Data1 ,Close }) => {
         </Box>
         <Box className="w-full h-96 overflow-hidden rounded-lg relative ">
           <Box className=" absolute z-20 w-full ">
-            {/* {!Loading ? (
-              Data.FleetData && Data.FleetData.VehicleStatus !== "Available" ? (
-                <FleetPages Data={Data} />
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )} */}
+           
+            
           </Box>
-          <Box className="absolute z-10 w-full h-full">
-            {/* <Map /> */}
-          </Box>
+          {/* <Box className="absolute z-10 w-full h-full">
+            <Map />
+          </Box> */}
         </Box>
         <Box className="flex overflow-hidden z-[1]">
           <Box className="w-1/2 h-[50vh]  ">
 
             {/* ---------------------------------- Create Trip ----------------------------- */}
-            <Box className=" h-fit  z-0 ">
-            <CreateTrip/>
-
-              {/* {!Loading ? (
-                Data.FleetData &&
-                Data.FleetData.VehicleStatus !== "Available" ? (
-                  <FleetTripUpdate row={Data.FleetData} />
-                ) : (
-                  <CreateTrip VehicleData={Data} />
-                )
-              ) : (
-                <>
-                    ""
-                </>
-              )} */}
+            <Box className="h-fit z-0 ">
+          
+             HEllo
             </Box>
-          </Box>
+          </Box> 
+          {/* <CreateTrip/> */}
           <Box className="w-1/2  h-[50vh] flex flex-col gap-24">
-            {/* {!Loading ? (
-              Data.FleetData && Data.FleetData.VehicleStatus !== "Available" ? (
-                <FleetUpdateStatus Data={Data} />
-              ) : (
-                <FleetTripDetails />
-              )
-            ) : (
-              ""
-            )} */}
+           Hii
           </Box>
         </Box>
       </div>

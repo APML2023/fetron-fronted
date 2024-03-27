@@ -35,7 +35,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
 import axios from 'axios';
-import "../Styles/Style.css"
+// import "../Styles/Style.css"
 // ----------------------------------------------------------------------
 
 const style = {
@@ -286,15 +286,15 @@ export default function UserPage() {
                       <>
                         {tabData.map((row) => (
                           <UserTableRow Data={tabData}
-                            key={row._id}
-                            name={row.VEHNO}
-                            role={row.role}
-                            status={row.status}
-                            company={row.DriverName}
-                            avatarUrl={row.avatarUrl}
-                            isVerified={row.isVerified}
-                            selected={selected.indexOf(row.name) !== -1}
-                            handleClick={(event) => handleClick(event, row.name)}
+                          key={row.data._id}
+                          name={row.data.VEHNO}
+                          company={row.data.DriverName}
+                          vehicleType={row.data.VehicleType}
+                          status="Available"
+                          // avatarUrl={row.avatarUrl}
+                          // isVerified={row.isVerified}
+                          selected={selected.indexOf(row.name) !== -1}
+                          handleClick={(event) => handleClick(event, row.name)}
                           />
                         ))}
                       </>
