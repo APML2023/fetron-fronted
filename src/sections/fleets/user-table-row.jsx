@@ -300,12 +300,12 @@ export default function UserTableRow({
               >Create Trip</button>
             </div> */}
             {/* ----------------Enroute for pickup------------- */}
-            <div className='w-full flex justify-center items-center flex-col'>
+            {/* <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
                   <p className='text-normal font-semibold bg-cyan-100 w-full p-2'><span className='font-bold'>Enroute for Pickup</span></p>
-                  <div className='w-full p-2 flex justify-start items-start flex-col gap-2'>
+                  <div className='w-full p-2 flex justify-start items-start flex-col gap-2 px-4'>
                     <div className='flex gap-1 justify-start items-center px-2'><div className='h-3 w-3 bg-green-900 animate-pulse rounded-xl'></div> Mumbai, Maharashtra, India</div>
                     <div className='w-full flex justify-start items-center flex-wrap'>
                       <ADateTimePicker />
@@ -321,9 +321,9 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* ----------------At pickup------------- */}
-            <div className='w-full flex justify-center items-center flex-col'>
+            {/* <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
@@ -345,29 +345,33 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* ---------------In Transit---------------- */}
-            <div className='w-full flex justify-center items-center flex-col'>
+            {/* <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
                   <p className='text-normal font-semibold bg-cyan-100 w-full p-2'><span className='font-bold'>In transit</span></p>
                   <div className='w-full p-2 flex justify-start items-start flex-col gap-2'>
-                    <div className='flex flex-col gap-2 mb-2'>
-                      <p className='font-bold px-4'>Vehicle Journey Start Information:</p>
+                    <div className='flex flex-col gap-2 mb-2 px-4'>
+                      <p className='font-bold'>Vehicle Journey Start Information:</p>
                       <div className='flex gap-4 justify-start items-start flex-wrap pl-6'>
                         <div className='flex gap-1 justify-start items-center px-2'><FontAwesomeIcon icon={faLocation} /> <span className='font-semibold'>Mumbai, Maharashtra, India</span></div>
                         <div className='flex gap-1 justify-start items-center px-2'><FontAwesomeIcon icon={faClock} /><span className='font-semibold'>19:00:00</span></div>
                       </div>
+                      <div className='w-full flex justify-start items-center flex-wrap'>
+                        <ADateTimePicker />
+                        <button className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white hover:bg-cyan-500'>Mark Arrived</button>
+
+                      </div>
                     </div>
 
-                    <button className='flex gap-1 justify-start items-center mx-2 px-3 py-2 bg-cyan-600 rounded-lg text-white hover:bg-cyan-500'>Mark Departed</button>
 
                   </div>
 
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
 
