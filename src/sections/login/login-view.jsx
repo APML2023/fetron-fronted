@@ -137,14 +137,14 @@ useEffect(() => {
           left: { xs: 16, md: 24 },
         }}/>
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 , display:"flex",flexDirection:"row" }}>
-      <Card sx={{
+      {/* <Card sx={{
           backgroundImage: `url(${sideimage})`,
           backgroundSize: 'cover',
           height: '86%',
           width: '420px',
           borderRadius:"10px 0px 0px 10px",
           boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px"
-        }}/>
+        }}/> */}
         <Card
           sx={{
             padding:"2rem 3rem",

@@ -3,7 +3,7 @@ import { useAutocomplete } from '@mui/base/useAutocomplete';
 import { styled } from '@mui/system';
 import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react';
 
-export default function UseAutocomplete() {
+export default function UseAutocomplete(props) {
   const [value, setValue] = React.useState(null);
   const [opt, setOpt] = React.useState([]);
   const [addSel, setAddSel] = React.useState("null");
@@ -48,6 +48,11 @@ export default function UseAutocomplete() {
     // onChange: (e) => { setValue(e.target.value); getAutoFill(e.target.value); },
   });
 
+  const handleLatLong =(e)=>{
+    e.preventDefault();
+    const [latitude , longitude ] = opt.split(',')
+    setOpt('');
+  }
   return (
     <div style={{ marginBottom: 16, width: "100%" }}>
 

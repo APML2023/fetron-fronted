@@ -263,7 +263,7 @@ export default function UserPage() {
         <Box sx={{ paddingTop: "8rem" }}>
           <Card>
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflow: 'auto' }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight:"60vh" }}>
               <Table sx={{ minWidth: 800 }}>
                 <UserTableHead
                   order={order}

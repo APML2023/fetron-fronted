@@ -223,7 +223,7 @@ export default function UserTableRow({
                 <button><FontAwesomeIcon icon={faXmark} onClick={() => { setMOpen(false) }} /></button>
               </div>
             </div>
-            <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  '>
+            <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm sticky top-11 z-10'>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>Available</div>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>En-route</div>
               <div className='relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse'>
