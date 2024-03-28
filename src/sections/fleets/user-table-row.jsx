@@ -20,7 +20,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
-import { faCancel, faCross, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCancel, faClock, faCross, faLocation, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { MapProvider } from "react-simple-maps"
 import ModalMap from 'src/components/Modal/Map';
@@ -65,6 +65,30 @@ const style = {
 const today = dayjs();
 const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
+
+
+const ADateTimePicker = () => {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer
+        components={[
+          'DatePicker',
+          'DateTimePicker',
+          'TimePicker',
+          'DateRangePicker',
+          'DateTimeRangePicker',
+        ]}
+      >
+        <DemoItem label="">
+          <DateTimePicker
+            defaultValue={today}
+            views={['year', 'month', 'day', 'hours', 'minutes']}
+          />
+        </DemoItem>
+      </DemoContainer>
+    </LocalizationProvider>
+  )
+}
 
 export default function UserTableRow({
   selected,
@@ -186,7 +210,7 @@ export default function UserTableRow({
       >
         <Box sx={style} className="overflow-hidden " >
           <div className='w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto '>
-            <div className='flex justify-between p-3 bg-slate-300'>
+            <div className='flex justify-between p-3 bg-slate-300 sticky top-0 z-[1]'>
               <div className='flex justify-center content-center'>
                 <p className='text-normal font-semibold'>23JhU987</p>
               </div>
@@ -195,25 +219,26 @@ export default function UserTableRow({
                 <button><FontAwesomeIcon icon={faXmark} onClick={() => { setMOpen(false) }} /></button>
               </div>
             </div>
-            <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm'>
+            <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm sticky top-11 z-[1] bg-slate-50 '>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>Available</div>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>En-route</div>
-              <div className='rounded-lg border-2 border-green-300 bg-emerald-100 p-2 w-fit'>Intransit</div>
+              <div className='relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse'>
+                Intransit
+              </div>
             </div>
-            <div style={{minHeight:"50vh"}} className='w-full h-fit overflow-hidden bg-sky-900 ' style={{ minHeight: "50vh" }}>
+            <div className='w-full h-96 overflow-hidden z-[0] ' style={{ minHeight: "50vh" }}>
               <ModalMap />
             </div>
-            <div className='w-full flex justify-center items-center flex-col'>
+
+            {/* ----------------Create a trip------------- */}
+            <div className='w-full flex justify-center items-center flex-col overflow-y-scroll z-[2]'>
               <div className='flex justify-start items-center gap-4 w-full p-4 flex-col'>
                 <div className='w-full flex justify-center items-center flex-wrap gap-4'>
-                  <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                  <div className='h-full flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
                     style={{ width: "calc(50% - 15px)" }}
                   >
                     <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Origin</p>
                     <div className='w-full p-2'>
-                      {/* 
-                      < input className='w-full border-2 rounded-md border-gray-100 p-2 text-md' name="address" placeholder="Address" type="text"
-                        autoComplete="address-line1" /> */}
                       <UseAutocompletePopper />
 
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -230,23 +255,19 @@ export default function UserTableRow({
                             <DateTimePicker
                               className="p-2 text-sm"
                               defaultValue={today}
-                              // disablePast
                               views={['year', 'month', 'day', 'hours', 'minutes']}
                             />
                           </DemoItem>
                         </DemoContainer>
                       </LocalizationProvider>
-
-                      {/* </div> */}
                     </div>
 
                   </div>
-                  <div className='flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+                  <div className='h-full flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
                     style={{ width: "calc(50% - 15px)" }}
                   >
                     <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Destination</p>
                     <div className='w-full p-2'>
-                      {/* <input className='w-full border-2 rounded-md border-gray-100 p-2' placeholder='Destination' /> */}
                       <UseAutocompletePopper />
                       <div className='w-full text-sm'>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -262,7 +283,6 @@ export default function UserTableRow({
                             <DemoItem label="">
                               <DateTimePicker
                                 defaultValue={today}
-                                // disablePast
                                 views={['year', 'month', 'day', 'hours', 'minutes']}
                               />
                             </DemoItem>
@@ -278,6 +298,93 @@ export default function UserTableRow({
               <button className='rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2'
                 style={{ width: "calc(100% - 40px)" }}
               >Create Trip</button>
+            </div>
+            {/* ----------------Route timeline------------ */}
+            <div className='w-full flex justify-center items-center flex-col py-4 px-3'>
+              <div className='flex justify-center items-center flex-col w-fit'>
+                <div className='flex justify-center items-center'>
+                  <div className='w-5 h-5 bg-green-900 rounded-full ml-3'></div>
+                  <div className='h-1 bg-gray-500' style={{ minWidth: "15rem", maxWidth: "calc(100vw - 14rem)" }}></div>
+                  <div className='w-5 h-5 bg-red-900 rounded-full mr-3'></div>
+                </div>
+                <div className='flex justify-between items-center w-full font-semibold text-normal'>
+                  <p>Mumbai</p>
+                  <p>Delhi</p>
+                </div>
+              </div>
+            </div>
+            {/* ----------------Enroute for pickup------------- */}
+            <div className='w-full flex justify-center items-center flex-col'>
+              <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
+                <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
+                >
+                  <p className='text-normal font-semibold bg-cyan-100 w-full p-2'><span className='font-bold'>Enroute for Pickup</span></p>
+                  <div className='w-full p-2 flex justify-start items-start flex-col gap-2 px-4'>
+                    <div className='flex gap-1 justify-start items-center px-2'><div className='h-3 w-3 bg-green-900 animate-pulse rounded-xl'></div> Mumbai, Maharashtra, India</div>
+                    <div className='w-full flex justify-start items-center flex-wrap'>
+                      <ADateTimePicker />
+                      <button className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white hover:bg-cyan-500'>Mark as Enrouted for Pickup</button>
+
+                    </div>
+                    <div className='w-full flex justify-start items-center flex-wrap'>
+                      <ADateTimePicker />
+                      <button className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white hover:bg-cyan-500'>Mark Arrived</button>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {/* ----------------At pickup------------- */}
+            <div className='w-full flex justify-center items-center flex-col'>
+              <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
+                <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
+                >
+                  <p className='text-normal font-semibold bg-cyan-100 w-full p-2'><span className='font-bold'>At Pickup</span></p>
+                  <div className='w-full px-4 py-2 flex justify-start items-start flex-col gap-3'>
+                    <div className='flex flex-col gap-2'>
+                      <p className='font-bold'>Arrival Information:</p>
+                      <div className='flex gap-4 justify-start items-start flex-wrap pl-6'>
+                        <div className='flex gap-1 justify-start items-center px-2'><FontAwesomeIcon icon={faLocation} /> <span className='font-semibold'>Mumbai, Maharashtra, India</span></div>
+                        <div className='flex gap-1 justify-start items-center px-2'><FontAwesomeIcon icon={faClock} /><span className='font-semibold'>19:00:00</span></div>
+                      </div>
+                    </div>
+                    <div className='w-full flex justify-start items-center flex-wrap'>
+                      <ADateTimePicker />
+                      <button className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white hover:bg-cyan-500'>Mark Departed</button>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {/* ---------------In Transit---------------- */}
+            <div className='w-full flex justify-center items-center flex-col'>
+              <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
+                <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
+                >
+                  <p className='text-normal font-semibold bg-cyan-100 w-full p-2'><span className='font-bold'>In transit</span></p>
+                  <div className='w-full p-2 flex justify-start items-start flex-col gap-2'>
+                    <div className='flex flex-col gap-2 mb-2 px-4'>
+                      <p className='font-bold'>Vehicle Journey Start Information:</p>
+                      <div className='flex gap-4 justify-start items-start flex-wrap pl-6'>
+                        <div className='flex gap-1 justify-start items-center px-2'><FontAwesomeIcon icon={faLocation} /> <span className='font-semibold'>Mumbai, Maharashtra, India</span></div>
+                        <div className='flex gap-1 justify-start items-center px-2'><FontAwesomeIcon icon={faClock} /><span className='font-semibold'>19:00:00</span></div>
+                      </div>
+                      <div className='w-full flex justify-start items-center flex-wrap'>
+                        <ADateTimePicker />
+                        <button className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white hover:bg-cyan-500'>Mark Arrived</button>
+
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                </div>
+              </div>
             </div>
 
           </div>

@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+}
+body::-webkit-scrollbar {
+  width: 0.5em;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
