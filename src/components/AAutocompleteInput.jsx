@@ -3,7 +3,7 @@ import { useAutocomplete } from '@mui/base/useAutocomplete';
 import { styled } from '@mui/system';
 import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react';
 
-export default function UseAutocomplete(props) {
+export default function UseAutocomplete() {
   const [value, setValue] = React.useState(null);
   const [opt, setOpt] = React.useState([]);
   const [addSel, setAddSel] = React.useState("null");

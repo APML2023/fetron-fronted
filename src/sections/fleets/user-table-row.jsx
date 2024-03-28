@@ -46,6 +46,9 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react';
 import UseAutocompletePopper from 'src/components/AAutocompleteInput';
+import ALocationInputBox from 'src/components/ALocationInputBox';
+import {FirstComponet , SecondComponet} from 'src/components/BDateTimeInputBox'
+
 // ----------------------------------------------------------------------
 
 const style = {
@@ -133,6 +136,7 @@ export default function UserTableRow({
   // label, 
   // {text:, lat,long, date, time}
   // ALocationInputBox
+  
   // async function getAutoFill() {
   //   const autofill = useAddressAutofillCore({ accessToken: access_token });
   //   // const ss = 
@@ -219,7 +223,7 @@ export default function UserTableRow({
                 <button><FontAwesomeIcon icon={faXmark} onClick={() => { setMOpen(false) }} /></button>
               </div>
             </div>
-            <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm sticky top-11 z-[1] bg-slate-50 '>
+            <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  '>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>Available</div>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>En-route</div>
               <div className='relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse'>
@@ -231,9 +235,11 @@ export default function UserTableRow({
             </div>
 
             {/* ----------------Create a trip------------- */}
-            <div className='w-full flex justify-center items-center flex-col overflow-y-scroll z-[2]'>
+            <div className='w-full flex justify-center items-center flex-col '>
               <div className='flex justify-start items-center gap-4 w-full p-4 flex-col'>
-                <div className='w-full flex justify-center items-center flex-wrap gap-4'>
+                <div className='w-full  flex justify-center items-center flex-wrap gap-4'>
+                {/* <ALocationInputBox statusUpdate={"Origin"}/>
+                <ALocationInputBox statusUpdate={"Destination"}/> */}
                   <div className='h-full flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
                     style={{ width: "calc(50% - 15px)" }}
                   >
@@ -288,10 +294,8 @@ export default function UserTableRow({
                             </DemoItem>
                           </DemoContainer>
                         </LocalizationProvider>
-
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -314,7 +318,7 @@ export default function UserTableRow({
               </div>
             </div>
             {/* ----------------Enroute for pickup------------- */}
-            <div className='w-full flex justify-center items-center flex-col'>
+            {/* <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
@@ -335,9 +339,13 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div>
+            </div> */}
+            <FirstComponet
+            vehicalStatus={"Enroute for pickup"}
+            location={"Mumbai, Maharashtra, India"}
+            />
             {/* ----------------At pickup------------- */}
-            <div className='w-full flex justify-center items-center flex-col'>
+            {/* <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
@@ -359,9 +367,15 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div>
+            </div> */}
+            <SecondComponet
+            vehicalStatus={"At pickup"}
+            information={"Arrival Information:"}
+            location={"Mumbai, Maharashtra, India"}
+            time={"19:00:00"}
+            />
             {/* ---------------In Transit---------------- */}
-            <div className='w-full flex justify-center items-center flex-col'>
+            {/* <div className='w-full flex justify-center items-center flex-col'>
               <div className='w-full flex justify-between items-center flex-wrap p-4 flex-col gap-3'>
                 <div className='flex justify-center items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full'
                 >
@@ -385,8 +399,13 @@ export default function UserTableRow({
 
                 </div>
               </div>
-            </div>
-
+            </div> */}
+               <SecondComponet
+            vehicalStatus={"In Transit"}
+            information={"Vehicle Journey Start Information:"}
+            location={"Mumbai, Maharashtra, India"}
+            time={"19:00:00"}
+            />
           </div>
 
 
