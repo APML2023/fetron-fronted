@@ -48,6 +48,12 @@ import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react
 import UseAutocompletePopper from 'src/components/AAutocompleteInput';
 import ALocationInputBox from 'src/components/ALocationInputBox';
 import {FirstComponet , SecondComponet} from 'src/components/BDateTimeInputBox'
+import { IoMdArrowDropup } from "react-icons/io";
+import DropDownMenu from 'src/components/DropDownMenu';
+import { IoMdArrowDropdown } from "react-icons/io";
+import { IoMdArrowDropright } from "react-icons/io";
+import { FaTruck } from "react-icons/fa";
+
 
 // ----------------------------------------------------------------------
 
@@ -106,7 +112,8 @@ export default function UserTableRow({
   const [open, setOpen] = useState(null);
   const [mopen, setMOpen] = useState(false);
   const [address, setAddress] = useState();
-
+  const [isOpen, setIsOpen] = useState(false);
+  
 
   const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
 
@@ -149,6 +156,7 @@ export default function UserTableRow({
   // useEffect(() => {
   //   getAutoFill();
   // }, [])
+
 
 
   return (
@@ -218,6 +226,7 @@ export default function UserTableRow({
               <div className='flex justify-center content-center'>
                 <p className='text-normal font-semibold'>23JhU987</p>
               </div>
+              {/* <p className='text-normal font-semibold'>Driver Name</p> */}
               <div className='flex justify-center content-center gap-3 px-2'>
                 <button><FontAwesomeIcon icon={faBell} /></button>
                 <button><FontAwesomeIcon icon={faXmark} onClick={() => { setMOpen(false) }} /></button>
@@ -226,8 +235,21 @@ export default function UserTableRow({
             <div className='flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm sticky top-11 z-10'>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>Available</div>
               <div className='rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit'>En-route</div>
-              <div className='relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse'>
+              <div className='flex items-center  relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse active:border-black duration-300 active:text-green-900'
+              onClick={()=>setIsOpen(!isOpen)}
+              >
                 Intransit
+                {isOpen ? (
+                  <IoMdArrowDropdown className='h-3' />  
+                ):(<IoMdArrowDropup className='h-3'/>)
+                }
+              {!isOpen && <DropDownMenu 
+              leftIcon={<FaTruck/>}
+              text="Current Trip"
+              rightIcon={<IoMdArrowDropright/>}
+              text2="History"
+              />
+              }
               </div>
             </div>
             <div className='w-full h-96 overflow-hidden z-[0] ' style={{ minHeight: "50vh" }}>
