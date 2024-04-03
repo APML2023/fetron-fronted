@@ -53,6 +53,9 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { FaTruck } from 'react-icons/fa';
 import Tabs from "../../components/Tabs"
+// import { Axios } from 'axios';
+import axios from "axios";
+import ACreateTrip from 'src/components/ACreateTrip';
 // ----------------------------------------------------------------------
 
 const style = {
@@ -110,6 +113,7 @@ export default function UserTableRow({
   const [mopen, setMOpen] = useState(false);
   const [address, setAddress] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [fleet, setFleet] = useState();
 
   const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
 
@@ -160,6 +164,20 @@ export default function UserTableRow({
   const handleMouseLeave = () => {
     setIsOpen(true);
   };
+
+  useEffect(() => {
+    async function fetchFleets() {
+      await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/getFleet?vehiclenum=${123}`)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          window.alert("Some error occurred");
+        })
+    }
+    fetchFleets();
+  }, []);
 
   return (
     <>
@@ -230,7 +248,7 @@ export default function UserTableRow({
       >
         <Box sx={style} className="overflow-hidden ">
           <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
-            <div className="flex justify-between p-3 bg-slate-300 sticky top-0 z-[1]">
+            <div style={{ background: "rgba(255,255,255,0.7)" }} className="flex justify-between p-3 border-solid border-b-2 border-black bg-transparent backdrop-blur-lg sticky top-0 z-[1]">
               <div className="flex justify-center flex-row content-center">
                 <p className="text-normal font-semibold">NL01AC4734</p>
               </div>
@@ -248,17 +266,17 @@ export default function UserTableRow({
                 </button>
               </div>
             </div>
-            <div className="flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm sticky top-11 z-10 bg-white">
-              <div className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
+            <div style={{ background: "rgba(255,255,255,0.4)" }} className="transition transition-all duration-100 border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-11 z-[1]">
+              <button className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
                 Available
-              </div>
-              <div className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
+              </button>
+              <button className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
                 En-route
-              </div>
-              <div
+              </button>
+              <button
                 // onMouseEnter={handleMouseEnter}
                 // onMouseLeave={handleMouseLeave}
-                className="flex items-center relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit active:border- duration-300 active:text-green-900"
+                className="flex items-center relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse active:border- duration-300 active:text-green-900"
                 onClick={() => setIsOpen(!isOpen)}
               >
                 Intransit
@@ -267,20 +285,23 @@ export default function UserTableRow({
                 ) : (
                   <IoMdArrowDropup className="h-3" />
                 )}
-              </div>
-                {!isOpen && ( 
-                  <Tabs isOpen={isOpen} setIsOpen={setIsOpen}/>
-                )}
+              </button>
+              {isOpen && (
+                <div className='w-full h-full transition-all ease-out duration-100'>
+                  <Tabs isOpen={isOpen} setIsOpen={setIsOpen} />
+                </div>
+              )}
             </div>
-            <div className="w-full h-96 overflow-hidden z-[0] " style={{ minHeight: '50vh' }}>
+            <div className="mt-14 w-full h-96 overflow-hidden z-[0] px-6 rounded-lg overflow-hidden" style={{ minHeight: '50vh' }}>
               <ModalMap />
             </div>
             {/* ----------------Create a trip------------- */}
-            <div className="w-full flex justify-center items-center flex-col ">
+            <ACreateTrip />
+            {/* <div className="w-full flex justify-center items-center flex-col ">
               <div className="flex justify-start items-center gap-4 w-full p-4 flex-col">
                 <div className="w-full  flex justify-center items-center flex-wrap gap-4">
-                  <ALocationInputBox statusUpdate={"Origin"}/>
-                <ALocationInputBox statusUpdate={"Destination"}/>
+                  <ALocationInputBox statusUpdate={"Origin"} />
+                  <ALocationInputBox statusUpdate={"Destination"} />
                 </div>
               </div>
               <button
@@ -289,9 +310,9 @@ export default function UserTableRow({
               >
                 Create Trip
               </button>
-            </div>
+            </div> */}
             {/* ----------------Route timeline------------ */}
-            <div className="w-full flex justify-center items-center flex-col py-4 px-3">
+            {/* <div className="w-full flex justify-center items-center flex-col py-4 px-3">
               <div className="flex justify-center items-center flex-col w-fit">
                 <div className="flex justify-center items-center">
                   <div className="w-5 h-5 bg-green-900 rounded-full ml-3"></div>
@@ -306,26 +327,26 @@ export default function UserTableRow({
                   <p>Delhi</p>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* ----------------Enroute for pickup------------- */}
-            <FirstComponet
+            {/* <FirstComponet
               vehicalStatus={'Enroute for pickup'}
               location={'Mumbai, Maharashtra, India'}
-            />
+            /> */}
             {/* ----------------At pickup------------- */}
-            <SecondComponet
+            {/* <SecondComponet
               vehicalStatus={'At pickup'}
               information={'Arrival Information:'}
               location={'Mumbai, Maharashtra, India'}
               time={'19:00:00'}
-            />
+            /> */}
             {/* ---------------In Transit---------------- */}
-            <SecondComponet
+            {/* <SecondComponet
               vehicalStatus={'In Transit'}
               information={'Vehicle Journey Start Information:'}
               location={'Mumbai, Maharashtra, India'}
               time={'19:00:00'}
-            />
+            /> */}
           </div>
 
         </Box>

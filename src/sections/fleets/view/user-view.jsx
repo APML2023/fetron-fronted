@@ -192,7 +192,7 @@ export default function UserPage() {
         { withCredentials: true }
       )
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setTabData(res.data);
         })
         .catch((err) => {
@@ -262,7 +262,7 @@ export default function UserPage() {
         <Box sx={{ paddingTop: "8rem" }}>
           <Card>
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflowY: 'auto', maxHeight:"60vh" }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight: "60vh" }}>
               <Table sx={{ minWidth: 800 }}>
                 <UserTableHead
                   order={order}
@@ -283,7 +283,7 @@ export default function UserPage() {
                     <>
                       {tabData.map((row) => (
                         <UserTableRow
-                        Data={tabData}
+                          Data={tabData}
                           key={row.data._id}
                           name={row.data.VEHNO}
                           vehicleType={row.data.VehicleType}

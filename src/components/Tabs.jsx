@@ -5,40 +5,40 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
-import {PreviousTrip,CurrentTrip}from "./DropDownMenu";
- 
-export function ModalTabs({isOpen, setIsOpen}) {
+import { PreviousTrip, CurrentTrip } from "./DropDownMenu";
+
+export function ModalTabs({ isOpen, setIsOpen }) {
   const data = [
     {
       label: "Current Trip",
       value: "curent-Trip",
-      desc:<CurrentTrip isOpen={isOpen} setIsOpen={setIsOpen}/>
+      desc: <CurrentTrip isOpen={isOpen} setIsOpen={setIsOpen} />
     },
     {
       label: "Previous Trips",
       value: "Previous-Trips",
-      desc:<PreviousTrip isOpen={isOpen} setIsOpen={setIsOpen}/>
+      desc: <PreviousTrip isOpen={isOpen} setIsOpen={setIsOpen} />
     },
   ];
- 
+
   return (
-    <div className="w-full">
-    <Tabs className="  shadow-md" value="curent-Trip" orientation="vertical">
-      <TabsHeader >
-        {data.map(({ label, value }) => (
-          <Tab className="bg-cyan-500 shadow-cyan-500/50 rounded-md p-1 m-2 text-nowrap font-semibold active:bg-sky-300 shadow-md hover:bg-sky-300" key={value} value={value}>
-            {label}
-          </Tab>
-        ))}
-      </TabsHeader>
-      <TabsBody className="shadow-lg ">
-        {data.map(({ value, desc }) => (
-          <TabPanel key={value} value={value} className="py-0">
-            {desc}
-          </TabPanel>
-        ))}
-      </TabsBody>
-    </Tabs>
+    <div className="w-full z-0 transition-all ease-out duration-100">
+      <Tabs className="w-full" value="curent-Trip" orientation="vertical">
+        <TabsHeader className="h-full w-fit rounded-2xl overflow-hidden border-solid border-gray-400 border-2 divide-gray-400 divide-y-2 divide-solid p-0">
+          {data.map(({ label, value }) => (
+            <Tab className="bg-slate-100 font-semibold active:bg-sky-300 hover:bg-slate-200 text-cyan-900 h-full" key={value} value={value}>
+              {label}
+            </Tab>
+          ))}
+        </TabsHeader>
+        <TabsBody className=" ">
+          {data.map(({ value, desc }) => (
+            <TabPanel key={value} value={value} className="py-0">
+              {desc}
+            </TabPanel>
+          ))}
+        </TabsBody>
+      </Tabs>
     </div>
   );
 }
