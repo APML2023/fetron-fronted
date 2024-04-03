@@ -48,6 +48,11 @@ export default function UseAutocomplete(props) {
     // onChange: (e) => { setValue(e.target.value); getAutoFill(e.target.value); },
   });
 
+  const handleLatLong =(e)=>{
+    e.preventDefault();
+    const [latitude , longitude ] = opt.split(',')
+    setOpt('');
+  }
   return (
     <div style={{ marginBottom: 16, width: "100%" }}>
 

@@ -29,5 +29,10 @@ export const typeOfFleet = [
         name: 'Unloading',
         path: "unloading"
     },
+    {
+        id: 7,
+        name: 'Completed',
+        path: "completed"
+    },
 
 ]

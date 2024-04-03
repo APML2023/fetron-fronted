@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -10,10 +9,7 @@ import Table from '@mui/material/Table';
 import TabList from '@mui/lab/TabList';
 import TabContext from '@mui/lab/TabContext';
 import { useNavigate } from "react-router-dom";
-
 import Toolbar from '@mui/material/Toolbar';
-
-
 // import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
@@ -23,7 +19,6 @@ import TablePagination from '@mui/material/TablePagination';
 import { CircularProgress } from '@mui/material';
 
 import { users } from 'src/_mock/user';
-
 // import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -40,8 +35,20 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
 import axios from 'axios';
-
+// import "../Styles/Style.css"
 // ----------------------------------------------------------------------
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -194,9 +201,10 @@ export default function UserPage() {
     }
     getAllVehicles();
   }, [])
-
+  console.log(tabData);
   return (
     <>
+
       <TabContext value={value}>
         <Box sx={{
           position: 'fixed',
@@ -216,7 +224,6 @@ export default function UserPage() {
             // height: HEADER.H_DESKTOP,
           }),
         }}
-
         >
           <Toolbar
             sx={{
@@ -252,21 +259,10 @@ export default function UserPage() {
         </Box>
       </TabContext>
       <Container sx={{ width: "100%" }}>
-
-
-        {/* <CustomTabPanel value={value} index={0}>
-        Item One
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel> */}
-        <Box sx={{ paddingTop: "9rem" }}>
+        <Box sx={{ paddingTop: "8rem" }}>
           <Card>
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflow: 'auto' }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight:"60vh" }}>
               <Table sx={{ minWidth: 800 }}>
                 <UserTableHead
                   order={order}
@@ -287,6 +283,7 @@ export default function UserPage() {
                     <>
                       {tabData.map((row) => (
                         <UserTableRow
+                        Data={tabData}
                           key={row.data._id}
                           name={row.data.VEHNO}
                           vehicleType={row.data.VehicleType}
@@ -319,7 +316,6 @@ export default function UserPage() {
 
             <TablePagination
               page={page}
-              component="div"
               count={users.length}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
