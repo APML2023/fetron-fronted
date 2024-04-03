@@ -224,7 +224,6 @@ export default function UserPage() {
             // height: HEADER.H_DESKTOP,
           }),
         }}
-
         >
           <Toolbar
             sx={{
@@ -284,6 +283,7 @@ export default function UserPage() {
                     <>
                       {tabData.map((row) => (
                         <UserTableRow
+                        Data={tabData}
                           key={row.data._id}
                           name={row.data.VEHNO}
                           vehicleType={row.data.VehicleType}
