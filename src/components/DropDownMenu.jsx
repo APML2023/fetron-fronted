@@ -7,7 +7,7 @@ import { MdOutlineLocationOn } from "react-icons/md";
 const CurrentTrip = ({ isOpen, setIsOpen }) => {
   // ${isOpen ? 'grid-rows-[1fr] opacity-100': 'grid-rows-[0fr] opacity-0'}
   return (
-    <div className="w-full flex justify-between items-center flex-wrap flex-col gap-3 overflow-hidden transition-all ease-in-out">
+    <div className="w-full flex justify-between items-center flex-wrap flex-col gap-3 overflow-hidden transition-1 transition-opacity ease-in-out">
       <div className="flex bg-slate-50 justify-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full">
         <p className="text-normal font-semibold bg-cyan-100 w-full p-2">
           <span className="font-bold">Current Trip</span>
@@ -46,7 +46,7 @@ const CurrentTrip = ({ isOpen, setIsOpen }) => {
 const PreviousTrip = ({ isOpen, setIsOpen }) => {
   // ${isOpen ? 'grid-rows-[1fr] opacity-100': 'grid-rows-[0fr] opacity-0'}
   return (
-    <div className="w-full flex justify-between items-center flex-wrap flex-col gap-3 overflow-hidden transition-all ease-in-out">
+    <div className="w-full flex justify-between items-center flex-wrap flex-col gap-3 overflow-hidden transition-1 transition-opacity ease-in-out">
       <div className="flex bg-slate-50 justify-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 w-full">
         <p className="text-normal font-semibold bg-cyan-100 w-full p-2">
           <span className="font-bold">Previous Trip</span>

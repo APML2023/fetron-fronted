@@ -3,7 +3,7 @@ import { useAutocomplete } from '@mui/base/useAutocomplete';
 import { styled } from '@mui/system';
 import { AddressAutofill, useAddressAutofillCore } from '@mapbox/search-js-react';
 
-export default function UseAutocomplete(props) {
+export default function UseAutocomplete({ location, setLocation }) {
   const [value, setValue] = React.useState(null);
   const [opt, setOpt] = React.useState([]);
   const [addSel, setAddSel] = React.useState("null");
@@ -11,8 +11,8 @@ export default function UseAutocomplete(props) {
   const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
   const autofill = useAddressAutofillCore({ accessToken: access_token });
 
-  async function getAutoFill2(str2) {
-    console.log(str2);
+  async function getAutoFill(str2) {
+    // console.log(str2);
     if (str2 == "" || str2 == undefined) {
       setOpt([]);
       return;
@@ -22,14 +22,15 @@ export default function UseAutocomplete(props) {
     // const sessionToken = new SessionToken();
     const result = await autofill.suggest(str2, { sessionToken: 'test-123456789' });
     // console.log("hello");
-    // console.log(result);
+    console.log(result);
     setOpt(result.suggestions);
+    // console.log(result);
   }
   //   getAutoFill();
 
-  const getAutoFill = (str2) => {
-    getAutoFill2(str2);
-  }
+  // const getAutoFill = (str2) => {
+  //   getAutoFill2(str2);
+  // }
 
   const {
     getRootProps,
@@ -44,23 +45,29 @@ export default function UseAutocomplete(props) {
     options: opt,
     getOptionLabel: (option) => { return option ? option : "" },
     value,
-    onChange: (e, nn) => { setValue(e.target.innerHTML); setOpt([]); setAddSel(e.target.innerHTML) }
+    onChange: (e, nn) => { console.log(nn); setValue(e.target.innerHTML); setOpt([]); setAddSel(nn.full_address) }
     // onChange: (e) => { setValue(e.target.value); getAutoFill(e.target.value); },
   });
 
-  const handleLatLong =(e)=>{
+  const handleLatLong = (e) => {
     e.preventDefault();
-    const [latitude , longitude ] = opt.split(',')
+    const [latitude, longitude] = opt.split(',')
     setOpt('');
   }
   return (
-    <div style={{ marginBottom: 16, width: "100%" }}>
+    <div style={{ width: "100%" }}>
 
       <div className='flex flex-col '>
+        {/* <AddressAutofill accessToken={access_token}>
+          <input
+            name="address" placeholder="Address" type="text"
+            autoComplete="address"
+          />
+        </AddressAutofill> */}
         <Root {...getRootProps()} className={focused ? 'Mui-focused ' : ''} style={{ width: "100%", background: "transparent" }}>
-          <Input {...getInputProps()} className='w-fit border-2 border-gray-200 h-fit' style={{ padding: "0.8rem", background: "transparent", fontSize: "1rem" }} onChange={(e) => { setValue(value => e.target.value); getAutoFill(e.target.value); }} />
+          <Input {...getInputProps()} className='w-48 border-2 border-gray-200 h-fit' style={{ padding: "0.8rem", background: "transparent", fontSize: "1rem" }} onChange={(e) => { setValue(value => e.target.value); getAutoFill(e.target.value); }} />
         </Root>
-        <Label className='px-2 text-normal font-bold'>{addSel}</Label>
+        {/* <Label className='px-2 text-normal font-bold'>{addSel}</Label> */}
       </div>
 
 

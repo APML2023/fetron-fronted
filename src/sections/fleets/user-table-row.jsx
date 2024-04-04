@@ -266,7 +266,7 @@ export default function UserTableRow({
                 </button>
               </div>
             </div>
-            <div style={{ background: "rgba(255,255,255,0.4)" }} className="transition transition-all duration-100 border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-11 z-[1]">
+            <div style={{ background: "rgba(255,255,255,0.4)" }} className=" transition-all duration-500 ease-out border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-11 z-[1]">
               <button className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
                 Available
               </button>
@@ -286,11 +286,11 @@ export default function UserTableRow({
                   <IoMdArrowDropup className="h-3" />
                 )}
               </button>
-              {isOpen && (
-                <div className='w-full h-full transition-all ease-out duration-100'>
-                  <Tabs isOpen={isOpen} setIsOpen={setIsOpen} />
-                </div>
-              )}
+              {/* {isOpen && ( */}
+              <div className={'w-full h-full transition-all ease-out duration-500'}>
+                <Tabs isOpen={isOpen} setIsOpen={setIsOpen} />
+              </div>
+              {/* )} */}
             </div>
             <div className="mt-14 w-full h-96 overflow-hidden z-[0] px-6 rounded-lg overflow-hidden" style={{ minHeight: '50vh' }}>
               <ModalMap />

@@ -1,6 +1,11 @@
+import { useState } from "react";
 import ALocationInputBox from "./ALocationInputBox";
 
 export default function ACreateTrip() {
+    const [data, setData] = useState();
+    const [origin, setOrigin] = useState();
+    const [destination, setDestination] = useState();
+
     return (
         <div className="w-full flex justify-center items-center flex-col ">
             <div className="flex justify-start items-center gap-4 w-full p-4 flex-col">
