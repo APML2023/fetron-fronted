@@ -62,15 +62,17 @@ export default function AAutoCI2({
         const streetAndNumber = suggestion.place_name.split(",")[0];
         const latitude = suggestion.center[1];
         const longitude = suggestion.center[0];
+        const place_name = suggestion.place_name;
 
-        const address = {
+        const dumaddress = {
             latitude,
             longitude,
+            place_name
         };
 
-        // console.log(address.longitude, address.latitude);
+        // console.log(suggestion);
         setInValue(inValue => "");
-        setAddress(address);
+        setAddress({ ...dumaddress });
         // window.alert(address.longitude, address.latitude);
         setSuggestions([]);
     };

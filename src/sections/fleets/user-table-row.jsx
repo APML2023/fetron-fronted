@@ -114,6 +114,10 @@ export default function UserTableRow({
   const [address, setAddress] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [fleet, setFleet] = useState();
+  const [locationIns, setLocationIns] = useState({ origin: 0, destination: 0 });
+  const [pickAddress, setPickAddress] = useState();
+  const [pick, setPick] = useState(false);
+  const [field, setField] = useState('');
 
   const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
 
@@ -138,7 +142,7 @@ export default function UserTableRow({
       .catch((error) => console.error('Error', error));
   };
 
-  const [locationIns, setLocationIns] = useState({ origin: 0, destination: 0 });
+
 
   // label,
   // {text:, lat,long, date, time}
@@ -165,19 +169,28 @@ export default function UserTableRow({
     setIsOpen(true);
   };
 
-  useEffect(() => {
-    async function fetchFleets() {
-      await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/getFleet?vehiclenum=${123}`)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-          window.alert("Some error occurred");
-        })
+  // useEffect(() => {
+  //   async function fetchFleets() {
+  //     await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/getFleet?vehiclenum=${123}`)
+  //       .then((res) => {
+  //         console.log(res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         window.alert("Some error occurred");
+  //       })
+  //   }
+  //   fetchFleets();
+  // }, []);
+
+  const handleChangeLocation = (ftext) => {
+    const dumpick = pick;
+    const dumPickAdd = pickAddress;
+    if (!pick) {
+      setPick(true);
+      setField(ftext);
     }
-    fetchFleets();
-  }, []);
+  }
 
   return (
     <>
@@ -292,11 +305,95 @@ export default function UserTableRow({
               </div>
               {/* )} */}
             </div>
-            <div className="mt-14 w-full h-96 overflow-hidden z-[0] px-6 rounded-lg overflow-hidden" style={{ minHeight: '50vh' }}>
-              <ModalMap />
+            <div className='flex gap-4 w-full h-full p-4 mt-14 '>
+              <div style={{ minHeight: "calc(100% - 2rem)", width: "70%" }} className="relative border-2 border-solid border-slate-400 overflow-hidden z-[0] rounded-md overflow-hidden">
+                <ModalMap pick={pick} setPick={setPick} pickAddress={locationIns} setPickAddress={setLocationIns} field={field} />
+              </div>
+              <div style={{ width: "30%" }} className="w-full h-full flex flex-col gap-4">
+                <div className='h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+
+                >
+                  <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Origin</p>
+                  <div className='flex flex-col h-fit w-full p-2'>
+                    {locationIns && locationIns.origin.latitude ?
+                      <p><span>Location: </span>{locationIns.origin.place_name}</p>
+                      :
+                      <button
+                        className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100'
+                        onClick={() => handleChangeLocation("origin")}
+                      >Pick Location</button>
+                    }
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer
+                        components={[
+                          'DatePicker',
+                          'DateTimePicker',
+                          'TimePicker',
+                          'DateRangePicker',
+                          'DateTimeRangePicker',
+                        ]}
+                      >
+                        <DemoItem label="" className="p-2 text-sm">
+                          <DateTimePicker
+                            className="p-2 text-sm"
+                            defaultValue={today}
+                            views={['year', 'month', 'day', 'hours', 'minutes']}
+                            onAccept={(newValue) => { setTime(time => newValue) }}
+                          />
+                        </DemoItem>
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
+
+                </div>
+                {locationIns && locationIns.origin ?
+                  <div className='h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
+
+                  >
+                    <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Destination</p>
+                    <div className='flex flex-col h-fit w-full p-2'>
+                      {locationIns && locationIns.destination.latitude ?
+                        <p><span>Location: </span>{locationIns.destination.place_name}</p>
+                        :
+                        <button
+                          className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100'
+                          onClick={() => handleChangeLocation("destination")}
+                        >Pick Location</button>
+                      }
+
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer
+                          components={[
+                            'DatePicker',
+                            'DateTimePicker',
+                            'TimePicker',
+                            'DateRangePicker',
+                            'DateTimeRangePicker',
+                          ]}
+                        >
+                          <DemoItem label="" className="p-2 text-sm">
+                            <DateTimePicker
+                              className="p-2 text-sm"
+                              defaultValue={today}
+                              views={['year', 'month', 'day', 'hours', 'minutes']}
+                              onAccept={(newValue) => { setTime(time => newValue) }}
+                            />
+                          </DemoItem>
+                        </DemoContainer>
+                      </LocalizationProvider>
+                    </div>
+
+                  </div>
+                  : <></>
+                }
+
+              </div>
+              {/* <ACreateTrip /> */}
             </div>
+
             {/* ----------------Create a trip------------- */}
-            <ACreateTrip />
+
             {/* <div className="w-full flex justify-center items-center flex-col ">
               <div className="flex justify-start items-center gap-4 w-full p-4 flex-col">
                 <div className="w-full  flex justify-center items-center flex-wrap gap-4">

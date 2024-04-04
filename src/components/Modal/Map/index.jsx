@@ -29,7 +29,7 @@ const parkLayer = {
 const TOKEN = import.meta.env.VITE_APP_MAPBOX_API_KEY; // Set your mapbox token here
 
 
-export default function ModalMap() {
+export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, field }) {
     const [userLocation, setUserLocation] = React.useState({ latitude: "", longitude: "" });
     const [viewState, setViewState] = React.useState({
         longitude: "",
@@ -56,12 +56,12 @@ export default function ModalMap() {
     }, [])
 
     React.useEffect(() => {
-        console.log(viewState);
+        // console.log(viewState);
     }, [viewState])
 
 
 
-    const [address, setAddress] = React.useState({ longitude: "", latitude: "" });
+    const [address, setAddress] = React.useState({ longitude: "", latitude: "", place_name: "" });
 
     // const handleManualInputChange = (event, stateProperty) => {
     //     const newAddress = { ...address };
@@ -83,36 +83,41 @@ export default function ModalMap() {
                 latitude: address.latitude,
                 longitude: address.longitude,
             })
+            setPick(false);
+            var dumPickAdd = { ...pickAddress };
+            dumPickAdd[field] = dumAddress;
+            setPickAddress({ ...dumPickAdd });
             // moveCamera();
-            mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 2000, zoom: 12 });
+            mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 2000, zoom: 14 });
+
         }
     }, [address])
 
-    const moveCamera = React.useCallback(() => {
-
-        React.useCallback(() => {
-
-        })
-    }, [])
-
     return (
         <>{viewState && viewState.latitude && viewState.longitude ?
+
             <div className='relative w-full h-full'>
-                <div className='flex flex-col absolute top-2 left-1 z-[2] bg-slate-100 rounded px-3 py-2 w-fit'>
-                    <p>Search here...</p>
-                    <div>
-                        {/* <UseAutocomplete /> */}
-                        <AAutoCI2
-                            address={address}
-                            setAddress={setAddress}
+                <>
+                    {pick ?
+                        <div className='flex flex-col absolute top-2 left-2 z-[2] bg-slate-100 rounded p-3 w-fit'>
+                            <p>Search here...</p>
+                            <div>
+                                {/* <UseAutocomplete /> */}
+                                <AAutoCI2
+                                    address={address}
+                                    setAddress={setAddress}
 
-                        // setAddress={setAddress}
-                        // handleManualInputChange={handleManualInputChange}
-                        // streetAndNumber={address.streetAndNumber}
-                        />
-                    </div>
+                                // setAddress={setAddress}
+                                // handleManualInputChange={handleManualInputChange}
+                                // streetAndNumber={address.streetAndNumber}
+                                />
+                            </div>
 
-                </div>
+                        </div>
+                        : <></>
+                    }
+                </>
+
                 <>
                     <Map
                         ref={mapRef}
@@ -123,9 +128,19 @@ export default function ModalMap() {
                         mapboxAccessToken={TOKEN}
                         pitch={0}
                         bearing={0}
+
                     >
-                        {address.latitude && address.longitude ?
-                            <Marker latitude={address.latitude} longitude={address.longitude}
+                        {pickAddress && pickAddress.origin && pickAddress.origin.latitude ?
+                            <Marker latitude={pickAddress.origin.latitude} longitude={pickAddress.origin.longitude}
+                                color='red'
+                            // draggable={true}
+                            ></Marker>
+                            : <></>
+                        }
+
+                        {pickAddress && pickAddress.destination && pickAddress.destination.latitude ?
+                            <Marker latitude={pickAddress.destination.latitude} longitude={pickAddress.destination.longitude}
+                                color='green'
                             // draggable={true}
                             ></Marker>
                             : <></>
