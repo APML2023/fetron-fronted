@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-import Map, { AttributionControl, Marker } from 'react-map-gl';
+import Map, { AttributionControl, FullscreenControl, GeolocateControl, Marker } from 'react-map-gl';
 
 import GeocoderControl from './geocoder-control';
 import ControlPanel from './control-panel';
@@ -97,28 +97,10 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
         <>{viewState && viewState.latitude && viewState.longitude ?
 
             <div className='relative w-full h-full'>
-                <>
-                    {pick ?
-                        <div className='flex flex-col absolute top-2 left-2 z-[2] bg-slate-100 rounded p-3 w-fit'>
-                            <p>Search here...</p>
-                            <div>
-                                {/* <UseAutocomplete /> */}
-                                <AAutoCI2
-                                    address={address}
-                                    setAddress={setAddress}
 
-                                // setAddress={setAddress}
-                                // handleManualInputChange={handleManualInputChange}
-                                // streetAndNumber={address.streetAndNumber}
-                                />
-                            </div>
-
-                        </div>
-                        : <></>
-                    }
-                </>
 
                 <>
+
                     <Map
                         ref={mapRef}
                         className='z-[1]'
@@ -130,6 +112,26 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
                         bearing={0}
 
                     >
+                        <>
+                            {pick ?
+                                <div style={{ fontSize: "1rem" }} className='text-normal flex flex-col absolute top-2 left-2 z-[2] bg-slate-100 rounded p-3 w-fit gap-2'>
+                                    <p style={{ fontSize: "1rem" }} className='text-normal'>Search here...</p>
+                                    <div>
+                                        {/* <UseAutocomplete /> */}
+                                        <AAutoCI2
+                                            address={address}
+                                            setAddress={setAddress}
+
+                                        // setAddress={setAddress}
+                                        // handleManualInputChange={handleManualInputChange}
+                                        // streetAndNumber={address.streetAndNumber}
+                                        />
+                                    </div>
+
+                                </div>
+                                : <></>
+                            }
+                        </>
                         {pickAddress && pickAddress.origin && pickAddress.origin.latitude ?
                             <Marker latitude={pickAddress.origin.latitude} longitude={pickAddress.origin.longitude}
                                 color='red'
@@ -145,8 +147,9 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
                             ></Marker>
                             : <></>
                         }
-
-                        <Marker latitude={userLocation.latitude} longitude={userLocation.longitude}
+                        <FullscreenControl />
+                        <GeolocateControl />
+                        {/* <Marker latitude={userLocation.latitude} longitude={userLocation.longitude}
                         >
                             <div className='h-20 w-20 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
                                 <div className='absolute center h-5 w-5 bg-sky-500 rounded-full'
@@ -157,7 +160,7 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
                                     }}
                                 ></div>
                             </div>
-                        </Marker>
+                        </Marker> */}
                     </Map >
                 </>
 

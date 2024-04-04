@@ -56,6 +56,7 @@ import Tabs from "../../components/Tabs"
 // import { Axios } from 'axios';
 import axios from "axios";
 import ACreateTrip from 'src/components/ACreateTrip';
+import { CircularProgress } from '@mui/material';
 // ----------------------------------------------------------------------
 
 const style = {
@@ -118,6 +119,7 @@ export default function UserTableRow({
   const [pickAddress, setPickAddress] = useState();
   const [pick, setPick] = useState(false);
   const [field, setField] = useState('');
+  const [createTripStatus, setCreateTripStatus] = useState(false);
 
   const access_token = import.meta.env.VITE_APP_MAPBOX_API_KEY;
 
@@ -316,7 +318,7 @@ export default function UserTableRow({
                   <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Origin</p>
                   <div className='flex flex-col h-fit w-full p-2'>
                     {locationIns && locationIns.origin.latitude ?
-                      <p><span>Location: </span>{locationIns.origin.place_name}</p>
+                      <p className='font-semibold'><span>Location: </span>{locationIns.origin.place_name}</p>
                       :
                       <button
                         className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100'
@@ -387,7 +389,22 @@ export default function UserTableRow({
                   </div>
                   : <></>
                 }
+                {locationIns && locationIns.origin && locationIns.destination ?
+                  <button
+                    className="rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2"
+                    style={{ width: 'calc(100%)' }}
+                    onClick={() => { setCreateTripStatus("loading") }}
+                    disabled={createTripStatus == "loading"}
+                  >
+                    {createTripStatus == "loading" ?
+                      <CircularProgress size={22} color='grey' />
+                      : <span>Create Trip</span>
+                    }
 
+                    {/* Create Trip */}
+                  </button>
+                  : <></>
+                }
               </div>
               {/* <ACreateTrip /> */}
             </div>
