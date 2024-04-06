@@ -285,12 +285,12 @@ export default function UserPage() {
                         <UserTableRow
                           Data={tabData}
                           key={row.data._id}
-                          name={row.data.VEHNO}
+                          vehicleNumber={row.data.VEHNO}
                           vehicleType={row.data.VehicleType}
                           status="Null"
-                          company={row.DriverName}
-                          avatarUrl={row.avatarUrl}
-                          isVerified={row.isVerified}
+                          // company={row.DriverName}
+                          // avatarUrl={row.avatarUrl}
+                          // isVerified={row.isVerified}
                           selected={selected.indexOf(row.name) !== -1}
                           handleClick={(event) => handleClick(event, row.name)}
                         />

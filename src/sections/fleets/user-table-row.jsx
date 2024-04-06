@@ -20,7 +20,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
-import { faCancel, faClock, faCross, faLocation, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCancel, faClock, faCross, faEdit, faLocation, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { MapProvider } from 'react-simple-maps';
 import ModalMap from 'src/components/Modal/Map';
@@ -102,8 +102,8 @@ const ADateTimePicker = () => {
 
 export default function UserTableRow({
   selected,
-  name,
   vehicleType,
+  vehicleNumber,
   company,
   role,
   isVerified,
@@ -185,6 +185,10 @@ export default function UserTableRow({
   //   fetchFleets();
   // }, []);
 
+  useEffect(() => {
+    console.log(locationIns);
+  }, [locationIns])
+
   const handleChangeLocation = (ftext) => {
     const dumpick = pick;
     const dumPickAdd = pickAddress;
@@ -192,6 +196,27 @@ export default function UserTableRow({
       setPick(true);
       setField(ftext);
     }
+  }
+
+  const handleCreateTrip = async () => {
+    const data = {
+      vehicle: {
+        vehicleNumber: vehicleNumber,
+        vehicleType: vehicleType,
+      },
+      fleet: {
+        ...locationIns
+      }
+    }
+    await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/createtrip`, data)
+      .then((res) => {
+        setCreateTripStatus("");
+
+      })
+      .catch((err) => {
+        setCreateTripStatus("");
+      })
+
   }
 
   return (
@@ -213,7 +238,7 @@ export default function UserTableRow({
           <Stack direction="column" alignItems="start" spacing={0.5}>
             <p className="text-sm">{vehicleType}</p>
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {vehicleNumber}
             </Typography>
           </Stack>
         </TableCell>
@@ -312,16 +337,25 @@ export default function UserTableRow({
                 <ModalMap pick={pick} setPick={setPick} pickAddress={locationIns} setPickAddress={setLocationIns} field={field} />
               </div>
               <div style={{ width: "30%" }} className="w-full h-full flex flex-col gap-4">
-                <div className='h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
-
+                <div
+                  className='h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2'
                 >
                   <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Origin</p>
                   <div className='flex flex-col h-fit w-full p-2'>
                     {locationIns && locationIns.origin.latitude ?
-                      <p className='font-semibold'><span>Location: </span>{locationIns.origin.place_name}</p>
+                      <div className='flex justify-between font-semibold'>
+                        <p>
+                          <span>Location: </span>{locationIns.origin.place_name}
+                        </p>
+
+                        <button
+                          // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
+                          onClick={() => handleChangeLocation("origin")}
+                        ><FontAwesomeIcon icon={faEdit} /></button>
+                      </div>
                       :
                       <button
-                        className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100'
+                        className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300'
                         onClick={() => handleChangeLocation("origin")}
                       >Pick Location</button>
                     }
@@ -341,7 +375,17 @@ export default function UserTableRow({
                             className="p-2 text-sm"
                             defaultValue={today}
                             views={['year', 'month', 'day', 'hours', 'minutes']}
-                            onAccept={(newValue) => { setTime(time => newValue) }}
+                            onAccept={(newValue) => {
+                              setLocationIns({
+                                ...locationIns, origin:
+                                {
+                                  latitude: locationIns.origin.latitude,
+                                  longitude: locationIns.origin.longitude,
+                                  place_name: locationIns.origin.place_name,
+                                  time: newValue
+                                }
+                              })
+                            }}
                           />
                         </DemoItem>
                       </DemoContainer>
@@ -356,10 +400,20 @@ export default function UserTableRow({
                     <p className='text-normal font-semibold bg-cyan-100 w-full p-2'>Destination</p>
                     <div className='flex flex-col h-fit w-full p-2'>
                       {locationIns && locationIns.destination.latitude ?
-                        <p><span>Location: </span>{locationIns.destination.place_name}</p>
+                        <div className='flex justify-between font-semibold'>
+                          <p>
+                            <span>Location: </span>{locationIns.destination.place_name}
+                          </p>
+
+                          <button
+                            // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
+                            onClick={() => handleChangeLocation("destination")}
+                          ><FontAwesomeIcon icon={faEdit} /></button>
+                        </div>
+                        // <p><span>Location: </span>{locationIns.destination.place_name}</p>
                         :
                         <button
-                          className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100'
+                          className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300'
                           onClick={() => handleChangeLocation("destination")}
                         >Pick Location</button>
                       }
@@ -377,9 +431,19 @@ export default function UserTableRow({
                           <DemoItem label="" className="p-2 text-sm">
                             <DateTimePicker
                               className="p-2 text-sm"
-                              defaultValue={today}
+                              // defaultValue={today}
                               views={['year', 'month', 'day', 'hours', 'minutes']}
-                              onAccept={(newValue) => { setTime(time => newValue) }}
+                              onAccept={(newValue) => {
+                                setLocationIns({
+                                  ...locationIns, destination:
+                                  {
+                                    latitude: locationIns.destination.latitude,
+                                    longitude: locationIns.destination.longitude,
+                                    place_name: locationIns.destination.place_name,
+                                    time: newValue
+                                  }
+                                })
+                              }}
                             />
                           </DemoItem>
                         </DemoContainer>
@@ -393,7 +457,7 @@ export default function UserTableRow({
                   <button
                     className="rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2"
                     style={{ width: 'calc(100%)' }}
-                    onClick={() => { setCreateTripStatus("loading") }}
+                    onClick={() => { setCreateTripStatus("loading"); handleCreateTrip(); }}
                     disabled={createTripStatus == "loading"}
                   >
                     {createTripStatus == "loading" ?
@@ -468,6 +532,7 @@ export default function UserTableRow({
     </>
   );
 }
+
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
   company: PropTypes.any,
