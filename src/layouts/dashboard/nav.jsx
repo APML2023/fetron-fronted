@@ -23,6 +23,7 @@ import Scrollbar from 'src/components/scrollbar';
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
 import { useLocation } from 'react-router-dom';
+import { display } from '@mui/system';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
@@ -164,13 +165,19 @@ Nav.propTypes = {
 // ----------------------------------------------------------------------
 
 // function NavItem({ item }) {
+//   const[open , setOpen ]= useState(false)
 //   const pathname = usePathname();
 
 //   const active = item.path === pathname;
 
+//   const handleToggle =()=>{
+//     setOpen(!open);
+//   }
+
 //   return (
 //     <ListItemButton
-//       component={RouterLink}
+//     onClick={handleToggle}
+//       component={item.children ? 'div' : RouterLink}
 //       href={item.path}
 //       sx={{
 //         minHeight: 44,
@@ -192,7 +199,7 @@ Nav.propTypes = {
 //       <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
 //         {item.icon}
 //       </Box>
-
+  
 //       <Stack>
 //         <Typography variant="subtitle1">{item.title}</Typography>
 //         <Box sx={{ marginLeft: '1rem' }}>
@@ -232,7 +239,7 @@ function NavItem({ item }) {
     <>
       <ListItemButton
         onClick={item.children && handleToggle}
-        component={item.children ? 'div' : RouterLink}
+        component={item.children ? 'Box' : RouterLink}
         to={item.path}
         sx={{
           minHeight: 44,
