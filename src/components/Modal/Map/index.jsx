@@ -29,7 +29,7 @@ const parkLayer = {
 const TOKEN = import.meta.env.VITE_APP_MAPBOX_API_KEY; // Set your mapbox token here
 
 
-export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, field }) {
+export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, field, status, current_fleet }) {
     const [userLocation, setUserLocation] = React.useState({ latitude: "", longitude: "" });
     const [viewState, setViewState] = React.useState({
         longitude: "",
@@ -37,7 +37,6 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
         zoom: 10
     });
     const mapRef = React.useRef();
-
 
     React.useEffect(() => {
         navigator.geolocation.getCurrentPosition((e) => {
@@ -93,14 +92,12 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
         }
     }, [address])
 
+    // console.log(current_fleet);
+
     return (
         <>{viewState && viewState.latitude && viewState.longitude ?
-
             <div className='relative w-full h-full'>
-
-
                 <>
-
                     <Map
                         ref={mapRef}
                         className='z-[1]'
@@ -110,7 +107,6 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
                         mapboxAccessToken={TOKEN}
                         pitch={0}
                         bearing={0}
-
                     >
                         <>
                             {pick ?
@@ -132,21 +128,68 @@ export default function ModalMap({ pick, setPick, pickAddress, setPickAddress, f
                                 : <></>
                             }
                         </>
-                        {pickAddress && pickAddress.origin && pickAddress.origin.latitude ?
-                            <Marker latitude={pickAddress.origin.latitude} longitude={pickAddress.origin.longitude}
-                                color='red'
-                            // draggable={true}
-                            ></Marker>
-                            : <></>
-                        }
+                        <>
+                            {status == 0 ?
+                                <>
+                                    {pickAddress && pickAddress.origin && pickAddress.origin.latitude ?
+                                        <Marker latitude={pickAddress.origin.latitude} longitude={pickAddress.origin.longitude}
+                                            color='red'
+                                        // draggable={true}
+                                        ></Marker>
+                                        : <></>
+                                    }
 
-                        {pickAddress && pickAddress.destination && pickAddress.destination.latitude ?
-                            <Marker latitude={pickAddress.destination.latitude} longitude={pickAddress.destination.longitude}
-                                color='green'
-                            // draggable={true}
-                            ></Marker>
-                            : <></>
-                        }
+                                    {pickAddress && pickAddress.destination && pickAddress.destination.latitude ?
+                                        <Marker latitude={pickAddress.destination.latitude} longitude={pickAddress.destination.longitude}
+                                            color='green'
+                                        // draggable={true}
+                                        ></Marker>
+                                        : <></>
+                                    }
+                                </>
+                                : <></>
+                            }
+                        </>
+
+                        <>
+                            {status == 1 ?
+                                <>
+                                    {current_fleet && current_fleet.origin && current_fleet.destination ?
+                                        <>
+                                            <Marker latitude={current_fleet.origin.latitude} longitude={current_fleet.origin.longitude}
+                                                color='red'
+                                            >
+                                            </Marker>
+                                            <Marker latitude={current_fleet.destination.latitude} longitude={current_fleet.destination.longitude}
+                                                color='green'
+                                            // draggable={true}
+                                            ></Marker>
+                                            {pickAddress && pickAddress.origin && pickAddress.origin.latitude ?
+                                                <Marker latitude={pickAddress.origin.latitude} longitude={pickAddress.origin.longitude}
+                                                >
+                                                    <div className='h-10 w-10 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
+                                                        <div className='absolute center h-3 w-3 bg-sky-500 rounded-full'
+                                                            style={{
+                                                                top: "50%",
+                                                                left: "50%",
+                                                                transform: "translate(-50%, -50%)",
+                                                            }}
+                                                        ></div>
+                                                    </div>
+                                                </Marker>
+
+                                                : <></>
+                                            }
+                                        </>
+                                        : <></>
+                                    }
+
+                                </>
+                                : <></>
+                            }
+                        </>
+
+
                         <FullscreenControl />
                         <GeolocateControl />
                         {/* <Marker latitude={userLocation.latitude} longitude={userLocation.longitude}

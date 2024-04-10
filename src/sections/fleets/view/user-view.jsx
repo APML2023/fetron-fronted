@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TabList from '@mui/lab/TabList';
 import TabContext from '@mui/lab/TabContext';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Toolbar from '@mui/material/Toolbar';
 // import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -35,20 +35,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
 import axios from 'axios';
-// import "../Styles/Style.css"
-// ----------------------------------------------------------------------
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -95,6 +82,7 @@ export default function UserPage() {
 
   const navigate = useNavigate();
   const pathname = usePathname();
+  var pn = pathname.split("/")[2];
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -165,8 +153,8 @@ export default function UserPage() {
   };
 
   useEffect(() => {
-    var pn = pathname.split("/")[2];
-    console.log(pn);
+    // var pn = pathname.split("/")[2];
+    // console.log(pn);
     // setValue(pn);
     var new_value = 1;
     if (!pn) {
@@ -180,28 +168,47 @@ export default function UserPage() {
         return;
       }
     }
-  }, [pathname])
+  }, [pn])
 
   const theme = useTheme();
 
   const lgUp = useResponsive('up', 'lg');
+  // const pathName = useLocation().pathname;
 
   useEffect(() => {
-    async function getAllVehicles() {
-      await axios.get("http://localhost:5050/y/vehicle/erpvehicles",
-        { withCredentials: true }
-      )
-        .then((res) => {
-          // console.log(res.data);
-          setTabData(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
+    // if(pathName)
+    if (pn == "enroute-for-pickup") {
+      async function getAllVehicles() {
+        await axios.get("http://localhost:5050/y/vehicle/allvehicles",
+          { withCredentials: true }
+        )
+          .then((res) => {
+            // console.log(res.data);
+            setTabData(res.data.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+      getAllVehicles();
     }
-    getAllVehicles();
-  }, [])
-  console.log(tabData);
+    else {
+      async function getAllVehicles() {
+        await axios.get("http://localhost:5050/y/vehicle/erpvehicles",
+          { withCredentials: true }
+        )
+          .then((res) => {
+            // console.log(res.data);
+            setTabData(res.data.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+      getAllVehicles();
+    }
+  }, [pn])
+  // console.log(tabData);
   return (
     <>
 
@@ -239,10 +246,6 @@ export default function UserPage() {
               onFilterName={handleFilterByName}
             />
           </Toolbar>
-          {/* 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New User
-        </Button> */}
           <Box sx={{
             borderBottom: 1, borderColor: 'divider', marginBottom: 2,
           }}>
@@ -264,6 +267,7 @@ export default function UserPage() {
             {/* <Scrollbar> */}
             <TableContainer sx={{ overflowY: 'auto', maxHeight: "60vh" }}>
               <Table sx={{ minWidth: 800 }}>
+
                 <UserTableHead
                   order={order}
                   orderBy={orderBy}
@@ -274,42 +278,69 @@ export default function UserPage() {
                   headLabel={[
                     { id: 'Veh', label: 'Vehicle' },
                     { id: 'summary', label: 'Summary' },
-                    { id: 'role', label: 'Driver Info.' },
+                    { id: 'origin', label: 'Origin' },
+                    { id: 'destination', label: 'Destination' },
                     { id: 'status', label: 'Status' }
-                  ]} xx
+                  ]}
                 />
-                <TableBody>
-                  {tabData && tabData.length ?
-                    <>
-                      {tabData.map((row) => (
-                        <UserTableRow
-                          Data={tabData}
-                          key={row.data._id}
-                          name={row.data.VEHNO}
-                          vehicleType={row.data.VehicleType}
-                          status="Null"
-                          company={row.DriverName}
-                          avatarUrl={row.avatarUrl}
-                          isVerified={row.isVerified}
-                          selected={selected.indexOf(row.name) !== -1}
-                          handleClick={(event) => handleClick(event, row.name)}
-                        />
-                      ))}
-                    </>
-                    :
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                      <CircularProgress />
-                    </Box>
+                {pn == "enroute-for-pickup" ?
+                  <TableBody>
+                    {tabData && tabData.length ?
+                      <>
+                        {tabData.map((row) => (
+                          <UserTableRow
+                            Data={tabData}
+                            key={row._id}
+                            vehicleNumber={row.vehicleNumber}
+                            vehicleType={row.vehicleType}
+                            status={pn}
+                            vehicleData={row}
+                            // company={row.DriverName}
+                            // avatarUrl={row.avatarUrl}
+                            // isVerified={row.isVerified}
+                            selected={selected.indexOf(row.name) !== -1}
+                            handleClick={(event) => handleClick(event, row.name)}
+                          />
+                        ))}
+                      </>
+                      :
+                      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                        <CircularProgress />
+                      </Box>
+                    }
+                  </TableBody>
+                  :
+                  <></>
+                }
+                {pn == "undefined" || pn != "enroute-for-pickup" ?
+                  <TableBody>
+                    {tabData && tabData.length ?
+                      <>
+                        {tabData.map((row) => (
+                          <UserTableRow
+                            Data={tabData}
+                            key={row?.data?._id}
+                            vehicleNumber={row?.data?.VEHNO}
+                            vehicleType={row?.data?.VehicleType}
+                            status="available"
+                            vehicleData={row.data}
+                            // company={row.DriverName}
+                            // avatarUrl={row.avatarUrl}
+                            // isVerified={row.isVerified}
+                            selected={selected.indexOf(row.name) !== -1}
+                            handleClick={(event) => handleClick(event, row.name)}
+                          />
+                        ))}
+                      </>
+                      :
+                      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                        <CircularProgress />
+                      </Box>
+                    }
+                  </TableBody>
+                  : <></>
+                }
 
-
-                    // <TableEmptyRows
-                    //   height={77}
-                    //   emptyRows={emptyRows(page, rowsPerPage, users.length)}
-                    // />
-
-                    // {notFound && <TableNoData query={filterName} />}
-                  }
-                </TableBody>
               </Table>
             </TableContainer>
             {/* </Scrollbar> */}
