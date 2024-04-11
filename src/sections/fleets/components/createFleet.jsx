@@ -104,7 +104,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                             </div>
                         </div>
                         <div style={{ background: "rgba(255,255,255,0.4)" }} className=" transition-all duration-500 ease-out border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-11 z-[1]">
-                            <button className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
+                            <button className="flex items-center relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse active:border- duration-300 active:text-green-900" >
                                 Available
                             </button>
                             <button className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
@@ -113,12 +113,12 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                             <button
                                 // onMouseEnter={handleMouseEnter}
                                 // onMouseLeave={handleMouseLeave}
-                                className="flex items-center relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse active:border- duration-300 active:text-green-900"
+                                className=" flex items-center rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit"
                                 onClick={() => setIsOpen(!isOpen)}
                             >
                                 Intransit
                                 {!isOpen ? (
-                                    <IoMdArrowDropup className="h-3" />
+                                    <IoMdArrowDropdown className="h-3" />
                                 ) : (
                                     <IoMdArrowDropup className="h-3" />
                                 )}

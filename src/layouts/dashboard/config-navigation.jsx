@@ -1,5 +1,5 @@
 import SvgColor from 'src/components/svg-color';
-
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 // ----------------------------------------------------------------------
 
 const icon = (name) => (
@@ -19,11 +19,11 @@ const navConfig = [
     children : [
       {
         subTitle:'Fleet Monitoring',
-        subpath:'/fleet-Monitoring',
+        subpath:'/fleetMonitoring',
       },
       {
         subTitle:'Load Assginment',
-        subpath:'load-Assginment',
+        subpath:'/loadAssginment',
       }
     ]
   },
@@ -41,7 +41,22 @@ const navConfig = [
   },
   {
     title: 'Order Management',
-    path: '/404'
+    path: '/404',
+    children:[
+      {
+        subTitle:"Contract",
+        path:"/Contract"
+      },{
+        subTitle:"Sales",
+        path:"/Sales",
+        nestedNav:[
+          {
+          childTitle:"Order",
+          path:"/order"
+        }
+      ]
+      }
+    ]
   },
   {
     title: 'login',

@@ -27,13 +27,18 @@ export default function Router() {
         {
           path: 'fleets',
           element: (
-            <FleetPage>
-              <Suspense>
-                <Outlet />
-              </Suspense>
-            </FleetPage>
+            ""
           ),
+
           children: [
+            // {path:"fleetMonitoring", element: (
+            //   <FleetPage>
+            //     <Suspense>
+            //       <Outlet />
+            //     </Suspense>
+            //   </FleetPage>
+            // )},
+            
             { path: "all", element: {} },
             { path: "available", element: {} },
             { path: "enroute-for-pickup", element: {} },
@@ -43,6 +48,14 @@ export default function Router() {
             { path: "Completed", element: {} }
           ]
         },
+        {path:"fleetMonitoring",element: (
+          <FleetPage>
+            <Suspense>
+              <Outlet />
+            </Suspense>
+          </FleetPage>
+        )},
+        {path:"loadAssignment",element:{}},
         { path: 'products', element: <ProductsPage/> },
         { path: 'blog', element: <BlogPage /> },
 

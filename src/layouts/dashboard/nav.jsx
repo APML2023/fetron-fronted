@@ -23,7 +23,7 @@ import Scrollbar from 'src/components/scrollbar';
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
 import { useLocation } from 'react-router-dom';
-import { display } from '@mui/system';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
@@ -164,69 +164,10 @@ Nav.propTypes = {
 
 // ----------------------------------------------------------------------
 
-// function NavItem({ item }) {
-//   const[open , setOpen ]= useState(false)
-//   const pathname = usePathname();
 
-//   const active = item.path === pathname;
-
-//   const handleToggle =()=>{
-//     setOpen(!open);
-//   }
-
-//   return (
-//     <ListItemButton
-//     onClick={handleToggle}
-//       component={item.children ? 'div' : RouterLink}
-//       href={item.path}
-//       sx={{
-//         minHeight: 44,
-//         borderRadius: 0.75,
-//         typography: 'body2',
-//         color: 'text.secondary',
-//         textTransform: 'capitalize',
-//         fontWeight: 'fontWeightMedium',
-//         ...(active && {
-//           color: 'primary.main',
-//           fontWeight: 'fontWeightSemiBold',
-//           bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-//           '&:hover': {
-//             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
-//           },
-//         }),
-//       }}
-//     >
-//       <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
-//         {item.icon}
-//       </Box>
-  
-//       <Stack>
-//         <Typography variant="subtitle1">{item.title}</Typography>
-//         <Box sx={{ marginLeft: '1rem' }}>
-//           {item.children &&
-//             item.children.length > 0 &&
-//             item.children.map((child, index) => (
-//               <Typography
-//                 sx={{
-//                   '&:hover': {
-//                     bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
-//                   },
-//                 }}
-//                 key={index}
-//                 variant="subtitle2"
-//               >
-//                 {child.subTitle}
-//               </Typography>
-//             ))}
-//         </Box>
-//       </Stack>
-//     </ListItemButton>
-//   );
-// }
 function NavItem({ item }) {
   const location = useLocation();
   const [open, setOpen] = useState(false);
-
   const pathname = location.pathname;
 
   const handleToggle = () => {
@@ -234,14 +175,17 @@ function NavItem({ item }) {
   };
 
   const active = item.path === pathname;
+  const isFleet = item.section === 'Fleet Management';
 
   return (
     <>
       <ListItemButton
         onClick={item.children && handleToggle}
-        component={item.children ? 'Box' : RouterLink}
+        component={item.children ? Box : RouterLink} // Fix component prop for non-children items
         to={item.path}
         sx={{
+          display: 'flex',
+          alignItems: 'center',
           minHeight: 44,
           borderRadius: 0.75,
           typography: 'body2',
@@ -261,29 +205,33 @@ function NavItem({ item }) {
         <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
           {item.icon}
         </Box>
-
         <Typography variant="subtitle1">{item.title}</Typography>
+        {item.children && (open ? <IoMdArrowDropup className="h-3" /> : <IoMdArrowDropdown className="h-3" />)}
       </ListItemButton>
 
       {item.children && (
-        <Stack
-          sx={{
-            display: open ? 'block' : 'none',
-            ml: 4,
-          }}
-        >
+        <Stack sx={{ display: open ? 'block' : 'none' }}>
           {item.children.map((child, index) => (
             <ListItemButton
               key={index}
-              component={RouterLink}
-              to={child.path}
+              component={RouterLink} 
+              to={child.subpath}
               sx={{
+                marginLeft:"4rem",
+                minHeight: 44,
+                borderRadius: 0.75,
                 typography: 'body2',
-                textTransform: 'capitalize',
                 color: 'text.secondary',
-                '&:hover': {
+                textTransform: 'capitalize',
+                fontWeight: 'fontWeightMedium',
+                ...(active && {
+                  color: 'primary.main',
+                  fontWeight: 'fontWeightSemiBold',
                   bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-                },
+                  '&:hover': {
+                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+                  },
+                }),
               }}
             >
               <Typography variant="subtitle2">{child.subTitle}</Typography>
@@ -291,10 +239,11 @@ function NavItem({ item }) {
           ))}
         </Stack>
       )}
+      {console.log(pathname)}
     </>
   );
+  
 }
-
 NavItem.propTypes = {
   item: PropTypes.object,
 };
