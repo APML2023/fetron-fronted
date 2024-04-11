@@ -72,7 +72,6 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
             })
 
     }
-
     return (
         <>
             <Modal

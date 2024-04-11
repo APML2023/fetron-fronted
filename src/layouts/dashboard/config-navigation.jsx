@@ -40,21 +40,16 @@ const navConfig = [
     path: '/404'
   },
   {
-    title: 'Order Management',
-    path: '/404',
+    title: 'Master',
+    path: '/master',
     children:[
       {
-        subTitle:"Contract",
-        path:"/Contract"
-      },{
-        subTitle:"Sales",
-        path:"/Sales",
-        nestedNav:[
-          {
-          childTitle:"Order",
-          path:"/order"
-        }
-      ]
+        subTitle:"Driver",
+        path:"/driver"
+      },
+      {
+        subTitle:"Vehicles",
+        path:"/vehicles",
       }
     ]
   },

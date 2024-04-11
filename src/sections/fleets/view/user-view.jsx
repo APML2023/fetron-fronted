@@ -253,7 +253,7 @@ export default function UserPage() {
               {typeOfFleet.map((el, in2) => {
                 // console.log(in2);
                 return (
-                  <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleets/${el.path}`) }} />
+                  <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleetMonitoring/${el.path}`) }} />
                 )
               })}
             </TabList>

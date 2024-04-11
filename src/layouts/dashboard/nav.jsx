@@ -175,7 +175,6 @@ function NavItem({ item }) {
   };
 
   const active = item.path === pathname;
-  const isFleet = item.section === 'Fleet Management';
 
   return (
     <>
@@ -206,7 +205,9 @@ function NavItem({ item }) {
           {item.icon}
         </Box>
         <Typography variant="subtitle1">{item.title}</Typography>
+        <Box sx={{marginLeft:"10px"}}>
         {item.children && (open ? <IoMdArrowDropup className="h-3" /> : <IoMdArrowDropdown className="h-3" />)}
+        </Box>
       </ListItemButton>
 
       {item.children && (
