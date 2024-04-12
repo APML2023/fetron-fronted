@@ -9,10 +9,8 @@ export const FleetPage = lazy(() => import('src/pages/fleet'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
-export const Driver = lazy(()=>import('src/pages/driver'));
-
+export const LoadAss = lazy(()=>import('src/pages/loadAss'));
 // ----------------------------------------------------------------------
-
 export default function Router() {
   const routes = useRoutes([
     {
@@ -57,19 +55,18 @@ export default function Router() {
           { path: "Completed", element: {} }
         ]
       },
-        {path:"loadAssignment",element:{}},
+        {path:"loadAssginment",element:<LoadAss/>},
         { path: 'products', element: <ProductsPage/> },
-        { path: 'blog', element: <BlogPage /> },
-      ],
-    },
-    {
-      path:"master",
-      element:(""),
-      children:[
-        {path:"driver",
-      element:<Driver/>
+        { path: 'blog', element: <BlogPage />},
+        {path:"master",element:("")},
+
+        {path:"driver",element: {},
+        children: [
+          { path: "driverList", element: {} },
+          { path: "Pending", element: {} },
+        ]
       }
-      ]
+      ],
     },
     {
       path: 'login',
@@ -84,6 +81,5 @@ export default function Router() {
       element: <Navigate to="/404" replace />,
     },
   ]);
-
   return routes;
 }

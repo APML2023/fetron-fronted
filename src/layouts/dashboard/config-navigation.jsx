@@ -36,10 +36,6 @@ const navConfig = [
     path: '/blog'
   },
   {
-    title: 'Issue Tracking',
-    path: '/404'
-  },
-  {
     title: 'Master',
     path: '/master',
     children:[
