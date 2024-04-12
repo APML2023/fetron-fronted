@@ -86,7 +86,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                     <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
                         <div style={{ background: "rgba(255,255,255,0.7)" }} className="flex justify-between p-3 border-solid border-b-2 border-black bg-transparent backdrop-blur-lg sticky top-0 z-[1]">
                             <div className="flex justify-center flex-row content-center">
-                                <p className="text-normal font-semibold">NL01AC4734</p>
+                                <p className="text-normal font-semibold">{vehicleNumber ? vehicleNumber : ""}</p>
                             </div>
                             <div className="flex justify-center content-center gap-3 px-2">
                                 <button>

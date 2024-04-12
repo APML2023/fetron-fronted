@@ -177,36 +177,36 @@ export default function UserPage() {
 
   useEffect(() => {
     // if(pathName)
-    if (pn == "enroute-for-pickup") {
-      async function getAllVehicles() {
-        await axios.get("http://localhost:5050/y/vehicle/allvehicles",
-          { withCredentials: true }
-        )
-          .then((res) => {
-            // console.log(res.data);
-            setTabData(res.data.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-      }
-      getAllVehicles();
+    // if (pn == "enroute-for-pickup") {
+    //   async function getAllVehicles() {
+    //     await axios.get("http://localhost:5050/y/vehicle/allvehicles",
+    //       { withCredentials: true }
+    //     )
+    //       .then((res) => {
+    //         // console.log(res.data);
+    //         setTabData(res.data.data);
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       })
+    //   }
+    //   getAllVehicles();
+    // }
+    // else {
+    async function getAllVehicles() {
+      await axios.get("http://localhost:5050/y/vehicle/erpvehicles",
+        { withCredentials: true }
+      )
+        .then((res) => {
+          // console.log(res.data);
+          setTabData(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     }
-    else {
-      async function getAllVehicles() {
-        await axios.get("http://localhost:5050/y/vehicle/erpvehicles",
-          { withCredentials: true }
-        )
-          .then((res) => {
-            // console.log(res.data);
-            setTabData(res.data.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-      }
-      getAllVehicles();
-    }
+    getAllVehicles();
+    // }
   }, [pn])
   // console.log(tabData);
   return (
@@ -284,31 +284,46 @@ export default function UserPage() {
                   ]}
                 />
                 {pn == "enroute-for-pickup" ?
-                  <TableBody>
+                  <>
                     {tabData && tabData.length ?
-                      <>
-                        {tabData.map((row) => (
-                          <UserTableRow
-                            Data={tabData}
-                            key={row._id}
-                            vehicleNumber={row.vehicleNumber}
-                            vehicleType={row.vehicleType}
-                            status={pn}
-                            vehicleData={row}
-                            // company={row.DriverName}
-                            // avatarUrl={row.avatarUrl}
-                            // isVerified={row.isVerified}
-                            selected={selected.indexOf(row.name) !== -1}
-                            handleClick={(event) => handleClick(event, row.name)}
-                          />
-                        ))}
-                      </>
+                      <TableBody>
+                        {tabData.map((row) => {
+                          return <>
+                            {
+                              row?.current_fleet && row?.current_fleet.length && row?.current_fleet[0].fleetstatus?.available === "false"
+                                && !row?.current_fleet[0].fleetstatus?.atpickup
+                                ?
+                                // && console.log(row) ?
+                                <UserTableRow
+                                  // Data={tabData}
+                                  key={row?.data?._id}
+                                  vehicleNumber={row?.data?.VEHNO}
+                                  vehicleType={row?.data?.VehicleType}
+                                  status="enroute-for-pickup"
+                                  vehicleData={row}
+                                  // company={row.DriverName}
+                                  // avatarUrl={row.avatarUrl}
+                                  // isVerified={row.isVerified}
+                                  selected={selected.indexOf(row.name) !== -1}
+                                  handleClick={(event) => handleClick(event, row.name)}
+                                />
+                                // <p>Hello</p>
+                                : <></>
+                            }
+                          </>
+
+                        }
+                        )
+                        }
+                      </TableBody>
                       :
-                      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                        <CircularProgress />
-                      </Box>
+                      <TableBody>
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                          <CircularProgress />
+                        </Box>
+                      </TableBody>
                     }
-                  </TableBody>
+                  </>
                   :
                   <></>
                 }
