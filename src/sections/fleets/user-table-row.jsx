@@ -31,6 +31,11 @@ export default function UserTableRow({
     // console.log(locationIns);
   }, [locationIns])
 
+  if (status == "enroute-for-pickup") {
+    console.log(vehicleData);
+  }
+
+
   return (
     <>
       <TableRow
@@ -82,7 +87,7 @@ export default function UserTableRow({
       {
         status == "enroute-for-pickup" ?
 
-          <EnroutePickupFleetModal vehicleData={vehicleData} status={status} mopen={mopen} setMOpen={setMOpen} />
+          <EnroutePickupFleetModal vehicleData={vehicleData} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
           :
           <CreateFleetModal vehicleType={vehicleType} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
       }

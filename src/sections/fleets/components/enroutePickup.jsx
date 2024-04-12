@@ -29,7 +29,7 @@ const today = dayjs();
 const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
 
-export default function EnroutePickupFleetModal({ vehicleData, status, mopen, setMOpen }) {
+export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, status, mopen, setMOpen }) {
     const [isOpen, setIsOpen] = useState(false);
     const [locationIns, setLocationIns] = useState({ origin: 0 });
     const [pickAddress, setPickAddress] = useState();
@@ -40,6 +40,8 @@ export default function EnroutePickupFleetModal({ vehicleData, status, mopen, se
     useEffect(() => {
         // console.log(locationIns);
     }, [locationIns])
+
+    console.log(vehicleData);
 
     const handleChangeLocation = (ftext) => {
         const dumpick = pick;
@@ -77,7 +79,7 @@ export default function EnroutePickupFleetModal({ vehicleData, status, mopen, se
         const data = {
             data: { origin: { ...locationIns.origin }, destination: { ...vehicleData.current_fleet[0].destination } },
             option: 0,
-            vehicleNumber: vehicleData.vehicleNumber
+            vehicleNumber: vehicleNumber
         }
         // console.log(data);
         await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/updateEnroute`, data)
