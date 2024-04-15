@@ -16,8 +16,8 @@ export const typeOfFleet = [
     },
     {
         id: 4,
-        name: 'At Enroute',
-        path: "at-enroute"
+        name: 'At Pickup',
+        path: "at-pickup"
     },
     {
         id: 5,

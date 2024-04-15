@@ -49,7 +49,7 @@ export default function Router() {
           { path: "all", element: {} },
           { path: "available", element: {} },
           { path: "enroute-for-pickup", element: {} },
-          { path: "at-enroute", element: {} },
+          { path: "at-pickup", element: {} },
           { path: "intransit", element: {} },
           { path: "unloading", element: {} },
           { path: "Completed", element: {} }
