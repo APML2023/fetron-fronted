@@ -9,6 +9,8 @@ import Label from 'src/components/label';
 import axios from "axios";
 import CreateFleetModal from './components/createFleet';
 import EnroutePickupFleetModal from './components/enroutePickup';
+import Pickup from "./components/pickup"
+import Atpickup from './components/Atpickup';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
@@ -64,38 +66,16 @@ export default function UserTableRow({
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
       </TableRow>
-      {/* <Popover
-        open={!!open}
-        anchorEl={open}
-        onClose={handleCloseMenu}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: { width: 140 },
-        }}
-      >
-        <MenuItem onClick={handleCloseMenu}>
-          <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
-          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
-      </Popover> */}
       {
         status == "enroute-for-pickup" ?
 
-          <EnroutePickupFleetModal vehicleData={vehicleData} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
+          <Atpickup vehicleData={vehicleData} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
           :
           <CreateFleetModal vehicleType={vehicleType} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
       }
-
     </>
   );
 }
-
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
   company: PropTypes.any,
