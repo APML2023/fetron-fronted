@@ -28,19 +28,19 @@ import Scrollbar from 'src/components/scrollbar';
 const NOTIFICATIONS = [
   {
     id: faker.string.uuid(),
-    title: 'Your order is placed',
-    description: 'waiting for shipping',
+    title: 'Your Trip has been Created',
+    description: 'waiting for pickup',
     avatar: null,
-    type: 'order_placed',
+    type: 'trip_created',
     createdAt: set(new Date(), { hours: 10, minutes: 30 }),
     isUnRead: true,
   },
   {
     id: faker.string.uuid(),
-    title: faker.person.fullName(),
-    description: 'answered to your comment on the Minimal',
+    // title: faker.person.fullName(),
+    description: 'Vehicle document expiry',
     avatar: '/assets/images/avatars/avatar_2.jpg',
-    type: 'friend_interactive',
+    type: 'driver_interactive',
     createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
     isUnRead: true,
   },
@@ -56,7 +56,7 @@ const NOTIFICATIONS = [
   {
     id: faker.string.uuid(),
     title: 'You have new mail',
-    description: 'sent from Guido Padberg',
+    description: 'sent from XYZ',
     avatar: null,
     type: 'mail',
     createdAt: sub(new Date(), { days: 2, hours: 3, minutes: 30 }),
@@ -242,7 +242,7 @@ function renderContent(notification) {
     </Typography>
   );
 
-  if (notification.type === 'order_placed') {
+  if (notification.type === 'trip_created') {
     return {
       avatar: <img alt={notification.title} src="/assets/icons/ic_notification_package.svg" />,
       title,

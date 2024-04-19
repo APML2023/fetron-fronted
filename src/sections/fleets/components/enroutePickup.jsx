@@ -111,7 +111,7 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                     <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
                         <div style={{ background: "rgba(255,255,255,0.7)" }} className="flex justify-between p-3 border-solid border-b-2 border-black bg-transparent backdrop-blur-lg sticky top-0 z-[1]">
                             <div className="flex justify-center flex-row content-center">
-                                <p className="text-normal font-semibold">Enroute for pickup | {vehicleData?.vehicleNumber}</p>
+                                <p className="text-normal font-semibold">Enroute for pickup | {vehicleData?vehicleNumber:""}</p>
                             </div>
                             <div className="flex justify-center content-center gap-3 px-2">
                                 <button>
@@ -174,7 +174,7 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                                                         className="h-1 bg-gray-500"
                                                         style={{ minWidth: '15rem', maxWidth: 'calc(100vw - 14rem)' }}
                                                     ></div>
-                                                    <div className="w-5 h-5 bg-red-900 rounded-full mr-3"></div>
+                                                    <div className="w-5 h-5 rounded-full mr-3"></div>
                                                 </div>
                                                 <div className="flex justify-between w-full font-semibold text-sm">
                                                     <p className="w-1/3 p-1 bg-green-100">{vehicleData.current_fleet[0].fleetstatus["enroute-for-pickup"]}</p>
@@ -190,7 +190,7 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                                                 {locationIns && locationIns.origin.latitude ?
                                                     <div className='flex justify-between font-semibold'>
                                                         <p>
-                                                            <span>Location: </span>{locationIns.origin.place_name}
+                                                            <span> PickUp Location: </span>{locationIns.origin.place_name}
                                                         </p>
 
                                                         <button
@@ -262,7 +262,8 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                                                 {locationIns && locationIns.origin.latitude ?
                                                     <div className='flex justify-between font-semibold'>
                                                         <p>
-                                                            <span>Location: </span>{locationIns.origin.place_name}
+                                                            <span>Pickup Location : </span>
+                                                            {locationIns.origin.place_name}
                                                         </p>
 
                                                         <button
