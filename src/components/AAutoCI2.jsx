@@ -88,13 +88,14 @@ export default function AAutoCI2({
                     onChange={handleChange}
                     className="rounded p-2 "
                 />
-                <ul className="addressSuggestions bg-white w-full">
-                    {suggestions?.map((suggestion, index) => (
-                        <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                            {suggestion.place_name}
-                        </li>
-                    ))}
-                </ul>
+                {suggestions && suggestions.length ?
+                    <ul className="addressSuggestions bg-white w-full">
+                        {suggestions?.map((suggestion, index) => (
+                            <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                                {suggestion.place_name}
+                            </li>
+                        ))}
+                    </ul> : <></>}
             </div>
         </div>
     );

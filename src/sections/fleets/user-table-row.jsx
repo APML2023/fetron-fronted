@@ -69,7 +69,7 @@ export default function UserTableRow({
       {
         status == "enroute-for-pickup" ?
 
-          <Atpickup vehicleData={vehicleData} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
+          <EnroutePickupFleetModal vehicleData={vehicleData} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
           :
           <CreateFleetModal vehicleType={vehicleType} vehicleNumber={vehicleNumber} status={status} mopen={mopen} setMOpen={setMOpen} />
       }

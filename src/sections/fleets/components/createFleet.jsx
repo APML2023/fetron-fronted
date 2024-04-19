@@ -1,4 +1,4 @@
-import { faBell, faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faCancel, faCross, faEdit, faX, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, CircularProgress, Modal } from '@mui/material';
 import Tabs from '../../../components/Tabs';
@@ -39,85 +39,91 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
   const [field, setField] = useState('');
   const [createTripStatus, setCreateTripStatus] = useState(false);
   const [components, setComponents] = useState([]);
+
+  const [waypoints, setWaypoints] = useState([]);
+
+  // const []
   const removeComponent = (index) => {
     const updatedComponents = [...components];
     updatedComponents.splice(index, 1); // Remove the component at the specified index
     setComponents(updatedComponents);
   };
 
- const addComponent = () =>{
+  const addComponent = () => {
     setComponents([...components,
 
-<div key={components.length} className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
-                  <p className="text-normal font-semibold bg-green-500 w-full p-2">Route</p>
-                  <div className="flex flex-col h-fit w-full p-2">
-                    {locationIns && locationIns.origin.latitude ? (
-                      <div className="flex justify-between font-semibold">
-                        <p>
-                          <span>Location: </span>
-                          {locationIns.origin.place_name}
-                        </p>
+    <div key={components.length} className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
+      <p className="text-normal font-semibold bg-green-500 w-full p-2">Route</p>
+      <div className="flex flex-col h-fit w-full p-2">
+        {locationIns && locationIns.origin.latitude ? (
+          <div className="flex justify-between font-semibold">
+            <p>
+              <span>Location: </span>
+              {locationIns.origin.place_name}
+            </p>
 
-                        <button
-                          // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
-                          onClick={() => {
-                            setLocationIns({
-                              ...locationIns,
-                              origin: {
-                                latitude: locationIns.origin.latitude,
-                                longitude: locationIns.origin.longitude,
-                                place_name: locationIns.origin.place_name,
-                                time: newValue,
-                              },
-                            });
-                            handleChangeLocation('origin');
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
-                        onClick={() => handleChangeLocation('origin')}
-                      >
-                        Pick Location
-                      </button>
-                    )}
+            <button
+              // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
+              onClick={() => {
+                setLocationIns({
+                  ...locationIns,
+                  origin: {
+                    latitude: locationIns.origin.latitude,
+                    longitude: locationIns.origin.longitude,
+                    place_name: locationIns.origin.place_name,
+                    time: newValue,
+                  },
+                });
+                handleChangeLocation('origin');
+              }}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </button>
+          </div>
+        ) : (
+          <button
+            className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
+            onClick={() => handleChangeLocation('origin')}
+          >
+            Pick Location
+          </button>
+        )}
 
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer
-                        components={[
-                          'DatePicker',
-                          'DateTimePicker',
-                          'TimePicker',
-                          'DateRangePicker',
-                          'DateTimeRangePicker',
-                        ]}
-                      >
-                        <DemoItem label="" className="p-2 text-sm">
-                          <DateTimePicker
-                            className="p-2 text-sm"
-                            defaultValue={today}
-                            views={['year', 'month', 'day', 'hours', 'minutes']}
-                            onAccept={(newValue) => {
-                              setLocationIns({
-                                ...locationIns,
-                                origin: {
-                                  latitude: locationIns.origin.latitude,
-                                  longitude: locationIns.origin.longitude,
-                                  place_name: locationIns.origin.place_name,
-                                  time: newValue,
-                                },
-                              });
-                            }}
-                          />
-                        </DemoItem>
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </div>
-    </div>])
- }
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer
+            components={[
+              'DatePicker',
+              'DateTimePicker',
+              'TimePicker',
+              'DateRangePicker',
+              'DateTimeRangePicker',
+            ]}
+          >
+            <DemoItem label="" className="p-2 text-sm">
+              <DateTimePicker
+                className="p-2 text-sm"
+                defaultValue={today}
+                views={['year', 'month', 'day', 'hours', 'minutes']}
+                onAccept={(newValue) => {
+                  setLocationIns({
+                    ...locationIns,
+                    origin: {
+                      latitude: locationIns.origin.latitude,
+                      longitude: locationIns.origin.longitude,
+                      place_name: locationIns.origin.place_name,
+                      time: newValue,
+                    },
+                  });
+                }}
+              />
+            </DemoItem>
+          </DemoContainer>
+        </LocalizationProvider>
+      </div>
+    </div>
+
+    ])
+  }
 
   useEffect(() => {
     console.log(locationIns);
@@ -126,7 +132,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
   const handleChangeLocation = (ftext) => {
     const dumpick = pick;
     const dumPickAdd = pickAddress;
-    if (!pick) {
+    if (!dumpick) {
       setPick(true);
       setField(ftext);
     }
@@ -218,7 +224,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
               </div>
               {/* )} */}
             </div>
-            <div className="flex gap-4 w-full h-full p-4 mt-14 ">
+            <div className="flex gap-4 w-full h-full p-4 mt-14 overflow-hidden">
               <div
                 style={{ minHeight: 'calc(100% - 2rem)', width: '70%' }}
                 className="relative border-2 border-solid border-slate-400 overflow-hidden z-[0] rounded-md "
@@ -230,62 +236,25 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                   setPickAddress={setLocationIns}
                   field={field}
                   status={0}
+                  waypoints={waypoints}
+                  setWaypoints={setWaypoints}
                 />
               </div>
-              <div style={{ width: '30%' }} className="w-full h-full flex flex-col gap-4">
-                <div className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
-                  <p className="text-normal font-semibold bg-cyan-100 w-full p-2">Origin</p>
-                  <div className="flex flex-col h-fit w-full p-2">
-                    {locationIns && locationIns.origin.latitude ? (
-                      <div className="flex justify-between font-semibold">
-                        <p>
-                          <span>Location: </span>
-                          {locationIns.origin.place_name}
-                        </p>
+              <div style={{ width: '30%' }} className='h-full overflow-auto pr-2'>
+                <div className="w-full h-fit flex flex-col gap-4 overflow-auto">
+                  <div className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
+                    <p className="text-normal font-semibold bg-cyan-100 w-full p-2">Origin</p>
+                    <div className="flex flex-col h-fit w-full p-2">
+                      {locationIns && locationIns.origin.latitude ? (
+                        <div className="flex justify-between font-semibold">
+                          <p>
+                            <span>Location: </span>
+                            {locationIns.origin.place_name}
+                          </p>
 
-                        <button
-                          // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
-                          onClick={() => {
-                            setLocationIns({
-                              ...locationIns,
-                              origin: {
-                                latitude: locationIns.origin.latitude,
-                                longitude: locationIns.origin.longitude,
-                                place_name: locationIns.origin.place_name,
-                                time: newValue,
-                              },
-                            });
-                            handleChangeLocation('origin');
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faEdit} />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
-                        onClick={() => handleChangeLocation('origin')}
-                      >
-                        Pick Location
-                      </button>
-                    )}
-
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer
-                        components={[
-                          'DatePicker',
-                          'DateTimePicker',
-                          'TimePicker',
-                          'DateRangePicker',
-                          'DateTimeRangePicker',
-                        ]}
-                      >
-                        <DemoItem label="" className="p-2 text-sm">
-                          <DateTimePicker
-                            className="p-2 text-sm"
-                            defaultValue={today}
-                            views={['year', 'month', 'day', 'hours', 'minutes']}
-                            onAccept={(newValue) => {
+                          <button
+                            // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
+                            onClick={() => {
                               setLocationIns({
                                 ...locationIns,
                                 origin: {
@@ -295,48 +264,16 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                                   time: newValue,
                                 },
                               });
+                              handleChangeLocation('origin');
                             }}
-                          />
-                        </DemoItem>
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </div>
-                </div>
-                 <div>
-                    <div className='flex items-center'>
-      <IoMdAddCircle className='text-blue-600' onClick={addComponent}/>
-      <button onClick={addComponent} className='text-blue-600 ml-1'>via (click to add multiple points)</button>
-                    </div>
-      {components.map((component, index) => (
-        <div key={index}>
-          {component}
-          <MdCancel className='text-blue-600 h-10 w-5' onClick={() => removeComponent(index)}/>
-        </div>
-      ))}
-    </div>
-                {locationIns && locationIns.origin ? (
-                  <div className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
-                    <p className="text-normal font-semibold bg-cyan-100 w-full p-2">Destination</p>
-                    <div className="flex flex-col h-fit w-full p-2">
-                      {locationIns && locationIns.destination.latitude ? (
-                        <div className="flex justify-between font-semibold">
-                          <p>
-                            <span>Location: </span>
-                            {locationIns.destination.place_name}
-                          </p>
-
-                          <button
-                            // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
-                            onClick={() => handleChangeLocation('destination')}
                           >
                             <FontAwesomeIcon icon={faEdit} />
                           </button>
                         </div>
                       ) : (
-                        // <p><span>Location: </span>{locationIns.destination.place_name}</p>
                         <button
                           className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
-                          onClick={() => handleChangeLocation('destination')}
+                          onClick={() => handleChangeLocation('origin')}
                         >
                           Pick Location
                         </button>
@@ -355,15 +292,15 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                           <DemoItem label="" className="p-2 text-sm">
                             <DateTimePicker
                               className="p-2 text-sm"
-                              // defaultValue={today}
+                              defaultValue={today}
                               views={['year', 'month', 'day', 'hours', 'minutes']}
                               onAccept={(newValue) => {
                                 setLocationIns({
                                   ...locationIns,
-                                  destination: {
-                                    latitude: locationIns.destination.latitude,
-                                    longitude: locationIns.destination.longitude,
-                                    place_name: locationIns.destination.place_name,
+                                  origin: {
+                                    latitude: locationIns.origin.latitude,
+                                    longitude: locationIns.origin.longitude,
+                                    place_name: locationIns.origin.place_name,
                                     time: newValue,
                                   },
                                 });
@@ -374,29 +311,185 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                       </LocalizationProvider>
                     </div>
                   </div>
-                ) : (
-                  <></>
-                )}
-                {locationIns && locationIns.origin && locationIns.destination ? (
-                  <button
-                    className="rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2"
-                    style={{ width: 'calc(100%)' }}
-                    onClick={() => {
-                      setCreateTripStatus('loading');
-                      handleCreateTrip();
-                    }}
-                    disabled={createTripStatus == 'loading'}
-                  >
-                    {createTripStatus == 'loading' ? (
-                      <CircularProgress size={22} color="grey" />
-                    ) : (
-                      <span>Create Trip</span>
-                    )}
-                  </button>
-                ) : (
-                  <></>
-                )}
+                  {/* <div>
+                    <div className='flex items-center'>
+                      <IoMdAddCircle className='text-blue-600' onClick={addComponent} />
+                      <button onClick={addComponent} className='text-blue-600 ml-1'>via (click to add multiple points)</button>
+                    </div>
+                    <FontAwesomeIcon icon={faCancel} />
+                    {components.map((component, index) => (
+                      <div key={index}>
+                        {component}
+                        <MdCancel className='text-blue-600 h-10 w-5' onClick={() => removeComponent(index)} />
+                      </div>
+                    ))}
+                  </div> */}
+                  {locationIns && locationIns.origin ? (
+                    <>
+
+                      {/* <div className='w-full border-t-2 border-dashed border-t-slate-500'></div> */}
+                      <div className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2 pb-2">
+                        <div className='flex justify-between items-center px-2 p-1 bg-green-200 w-full'>
+                          <p className="text-normal font-semibold  w-full ">Waypoints</p>
+                          <button className='p-2 rounded-lg bg-slate-200 w-fit'
+                            onClick={() => {
+                              var wwd = [...waypoints];
+                              wwd.push("");
+                              setWaypoints([...wwd])
+                            }}
+                          >Add</button>
+                        </div>
+                        {waypoints.map((el, i) => {
+                          return (
+                            <div key={`ww${i}`}
+                              style={{ width: "calc(100% - 1rem)" }}
+                              className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
+                              <div className='flex justify-between items-center p-2 bg-green-100 w-full'>
+                                <p className="text-normal font-semibold  w-full ">Waypoint {i + 1}</p>
+                                <button className='bg-slate-100 text-red-800 px-1 rounded-full text-sm hover:bg-red-900 hover:text-white'
+                                  onClick={() => {
+                                    var wwp = [...waypoints];
+                                    wwp.splice(i, 1);
+                                    setWaypoints(wwp);
+                                  }
+                                  }
+                                ><FontAwesomeIcon icon={faXmark} /></button>
+                              </div>
+
+                              <div className="flex flex-col h-fit w-full p-2">
+                                {el && el.latitude ? (
+                                  <div className="flex justify-between font-semibold">
+                                    <p>
+                                      <span>Location: </span>
+                                      {el?.place_name}
+                                    </p>
+
+                                    <button
+                                      // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
+                                      onClick={() => {
+                                        var ww = [...waypoints];
+                                        ww[i] = {
+                                          latitude: el?.latitude,
+                                          longitude: el?.longitude,
+                                          place_name: el?.place_name,
+                                          // time: newValue,
+                                        };
+                                        setWaypoints([...ww]);
+                                        handleChangeLocation(`w${i}`);
+                                      }}
+                                    >
+                                      <FontAwesomeIcon icon={faEdit} />
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
+                                    onClick={() => {
+                                      // var ww = [...waypoints];
+                                      // ww[i] = {
+                                      //   latitude: el.latitude,
+                                      //   longitude: waypoints[i].longitude,
+                                      //   place_name: waypoints[i].place_name,
+                                      //   time: newValue,
+                                      // };
+                                      // setWaypoints([...ww]);
+                                      handleChangeLocation(`w${i}`);
+                                    }}
+                                  >
+                                    Pick Location
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          )
+
+                        })}
+                      </div>
+                      <div className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
+                        <p className="text-normal font-semibold bg-cyan-100 w-full p-2">Destination</p>
+                        <div className="flex flex-col h-fit w-full p-2">
+                          {locationIns && locationIns.destination.latitude ? (
+                            <div className="flex justify-between font-semibold">
+                              <p>
+                                <span>Location: </span>
+                                {locationIns.destination.place_name}
+                              </p>
+
+                              <button
+                                // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
+                                onClick={() => handleChangeLocation('destination')}
+                              >
+                                <FontAwesomeIcon icon={faEdit} />
+                              </button>
+                            </div>
+                          ) : (
+                            // <p><span>Location: </span>{locationIns.destination.place_name}</p>
+                            <button
+                              className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
+                              onClick={() => handleChangeLocation('destination')}
+                            >
+                              Pick Location
+                            </button>
+                          )}
+
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer
+                              components={[
+                                'DatePicker',
+                                'DateTimePicker',
+                                'TimePicker',
+                                'DateRangePicker',
+                                'DateTimeRangePicker',
+                              ]}
+                            >
+                              <DemoItem label="" className="p-2 text-sm">
+                                <DateTimePicker
+                                  className="p-2 text-sm"
+                                  // defaultValue={today}
+                                  views={['year', 'month', 'day', 'hours', 'minutes']}
+                                  onAccept={(newValue) => {
+                                    setLocationIns({
+                                      ...locationIns,
+                                      destination: {
+                                        latitude: locationIns.destination.latitude,
+                                        longitude: locationIns.destination.longitude,
+                                        place_name: locationIns.destination.place_name,
+                                        time: newValue,
+                                      },
+                                    });
+                                  }}
+                                />
+                              </DemoItem>
+                            </DemoContainer>
+                          </LocalizationProvider>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  {locationIns && locationIns.origin && locationIns.destination ? (
+                    <button
+                      className="rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2"
+                      style={{ width: 'calc(100%)' }}
+                      onClick={() => {
+                        setCreateTripStatus('loading');
+                        handleCreateTrip();
+                      }}
+                      disabled={createTripStatus == 'loading'}
+                    >
+                      {createTripStatus == 'loading' ? (
+                        <CircularProgress size={22} color="grey" />
+                      ) : (
+                        <span>Create Trip</span>
+                      )}
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
+
             </div>
           </div>
         </Box>
