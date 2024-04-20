@@ -9,7 +9,7 @@ export const FleetPage = lazy(() => import('src/pages/fleet'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
-export const LoadAss = lazy(()=>import('src/pages/loadAss'));
+export const LoadAss = lazy(() => import('src/pages/loadAss'));
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
@@ -38,39 +38,41 @@ export default function Router() {
           //   { path: "Completed", element: {} }
           // ]
         },
-        {path:"fleetMonitoring",element: (
-          <FleetPage>
-            <Suspense>
-              <Outlet />
-            </Suspense>
-          </FleetPage>
-        ),
-        children: [
-          { path: "all", element: {} },
-          { path: "available", element: {} },
-          { path: "enroute-for-pickup", element: {} },
-          { path: "at-pickup", element: {} },
-          { path: "intransit", element: {} },
-          { path: "unloading", element: {} },
-          { path: "Completed", element: {} }
-        ]
-      },
-        {path:"loadAssginment",element:<LoadAss/>},
-        { path: 'products', element: <ProductsPage/> },
-        { path: 'blog', element: <BlogPage />},
-        {path:"master",element:("")},
+        {
+          path: "fleetMonitoring", element: (
+            <FleetPage>
+              <Suspense>
+                <Outlet />
+              </Suspense>
+            </FleetPage>
+          ),
+          children: [
+            { path: "all", element: {} },
+            { path: "available", element: {} },
+            { path: "enroute-for-pickup", element: {} },
+            { path: "at-pickup", element: {} },
+            { path: "intransit", element: {} },
+            { path: "unloading", element: {} },
+            { path: "completed", element: {} }
+          ]
+        },
+        { path: "loadAssginment", element: <LoadAss /> },
+        { path: 'products', element: <ProductsPage /> },
+        { path: 'blog', element: <BlogPage /> },
+        { path: "master", element: ("") },
 
-        {path:"driver",element: {},
-        children: [
-          { path: "driverList", element: {} },
-          { path: "Pending", element: {} },
-        ]
-      }
+        {
+          path: "driver", element: {},
+          children: [
+            { path: "driverList", element: {} },
+            { path: "Pending", element: {} },
+          ]
+        }
       ],
     },
     {
       path: 'login',
-      element:<LoginPage />,
+      element: <LoginPage />,
     },
     {
       path: '404',

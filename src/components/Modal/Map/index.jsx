@@ -10,7 +10,7 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import UseAutocomplete from 'src/components/AAutocompleteInput';
 import AAutoCI2 from 'src/components/AAutoCI2';
-import { Line } from 'react-simple-maps';
+import { Line, ZoomableGroup } from 'react-simple-maps';
 
 
 
@@ -58,9 +58,17 @@ export default function ModalMap({
 
     const [address, setAddress] = React.useState({ longitude: "", latitude: "", place_name: "" });
 
+
     React.useEffect(() => {
+        if (!waypoints) { return }
         var wwp = [...waypoints];
         var wp = [];
+        if (pickAddress && pickAddress.origin && pickAddress.origin.latitude) {
+            wp.push([
+                Math.max(pickAddress.origin.latitude, pickAddress.origin.longitude),
+                Math.min(pickAddress.origin.latitude, pickAddress.origin.longitude)
+            ])
+        }
         wwp.forEach((el, i) => {
             if (el.latitude && el.longitude) {
                 wp.push([
@@ -69,6 +77,12 @@ export default function ModalMap({
                 ])
             }
         })
+        if (pickAddress && pickAddress.destination && pickAddress.destination.latitude) {
+            wp.push([
+                Math.max(pickAddress.destination.latitude, pickAddress.destination.longitude),
+                Math.min(pickAddress.destination.latitude, pickAddress.destination.longitude)
+            ])
+        }
         // console.log(wp);
         // setWpData([...wp]);
         var ddOne = {
@@ -83,7 +97,7 @@ export default function ModalMap({
         setDataOne({
             ...ddOne
         })
-    }, [waypoints]);
+    }, [waypoints, pickAddress]);
 
     React.useEffect(() => {
         navigator.geolocation.getCurrentPosition((e) => {
@@ -150,7 +164,7 @@ export default function ModalMap({
                 dumPickAdd[field] = dumAddress;
                 setPickAddress({ ...dumPickAdd });
                 // moveCamera();
-                mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 2000, zoom: 14 });
+                // mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 2000, zoom: 14 });
             }
         }
     }, [address])
@@ -186,7 +200,7 @@ export default function ModalMap({
                                         "line-cap": "round"
                                     }}
                                     paint={{
-                                        // "line-color": "rgba(3, 170, 238, 1)",
+                                        "line-color": "rgba(3, 170, 238, 1)",
                                         "line-width": 3
                                     }}
                                 />
@@ -241,7 +255,7 @@ export default function ModalMap({
                                                     // color='blue'
                                                     // draggable={true}
                                                     >
-                                                        <div className='h-8 w-8 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
+                                                        <div className='h-6 w-6 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
                                                             <div className='absolute center h-3 w-3 bg-sky-500 rounded-full'
                                                                 style={{
                                                                     top: "50%",
@@ -299,7 +313,7 @@ export default function ModalMap({
                             }
                         </>
 
-
+                        {/* <ZoomableGroup /> */}
                         <FullscreenControl />
                         <GeolocateControl />
                         {/* <Marker latitude={userLocation.latitude} longitude={userLocation.longitude}

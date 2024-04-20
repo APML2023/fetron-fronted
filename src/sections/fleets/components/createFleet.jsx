@@ -147,6 +147,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
       },
       fleet: {
         ...locationIns,
+        waypoints: waypoints
       },
     };
     await axios

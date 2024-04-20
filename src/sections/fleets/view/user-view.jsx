@@ -16,7 +16,7 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Skeleton, TableCell, TableRow } from '@mui/material';
 
 import { users } from 'src/_mock/user';
 // import Iconify from 'src/components/iconify';
@@ -80,9 +80,15 @@ export default function UserPage() {
 
   const [tabData, setTabData] = useState();
 
+  const [skipValue, setSkipValue] = useState(0);
+
+  const [fetchVehicleLoading, setFVLoading] = useState(false);
+
   const navigate = useNavigate();
   const pathname = usePathname();
   var pn = pathname.split("/")[2];
+
+
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -194,7 +200,16 @@ export default function UserPage() {
     // }
     // else {
     async function getAllVehicles() {
-      await axios.get("http://localhost:5050/y/vehicle/erpvehicles",
+      pn = pathname.split("/")[2];
+      setFVLoading(true);
+      var dpn = pn;
+      var ssk = skipValue;
+      if (!dpn || dpn == "" || dpn == "all") {
+        dpn = "available";
+      }
+      dpn = dpn.replace("-", "_")
+      dpn = dpn.replace("-", "_")
+      await axios.get(`http://localhost:5050/y/vehicle/erpvehicles?status=${dpn}&skip=${ssk}`,
         { withCredentials: true }
       )
         .then((res) => {
@@ -202,12 +217,15 @@ export default function UserPage() {
           setTabData(res.data.data);
         })
         .catch((err) => {
-          console.log(err);
+          setTabData([]);
+          window.alert("Some error occurred")
+          // console.log(err);
         })
+      setFVLoading(false);
     }
     getAllVehicles();
     // }
-  }, [pn])
+  }, [pathname])
   // console.log(tabData);
   return (
     <>
@@ -283,7 +301,7 @@ export default function UserPage() {
                     { id: 'status', label: 'Status' }
                   ]}
                 />
-                {pn == "enroute-for-pickup" ?
+                {/* {pn == "enroute-for-pickup" ?
                   <>
                     {tabData && tabData.length ?
                       <TableBody>
@@ -326,35 +344,58 @@ export default function UserPage() {
                   </>
                   :
                   <></>
-                }
-                {pn == "undefined" || pn != "enroute-for-pickup" ?
-                  <TableBody>
-                    {tabData && tabData.length ?
-                      <>
-                        {tabData.map((row) => (
-                          <UserTableRow
-                            Data={tabData}
-                            key={row?.data?._id}
-                            vehicleNumber={row?.data?.VEHNO}
-                            vehicleType={row?.data?.VehicleType}
-                            status="available"
-                            vehicleData={row.data}
-                            // company={row.DriverName}
-                            // avatarUrl={row.avatarUrl}
-                            // isVerified={row.isVerified}
-                            selected={selected.indexOf(row.name) !== -1}
-                            handleClick={(event) => handleClick(event, row.name)}
-                          />
-                        ))}
-                      </>
-                      :
-                      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-                        <CircularProgress />
-                      </Box>
-                    }
-                  </TableBody>
-                  : <></>
-                }
+                } */}
+                {/* {pn == "undefined" || pn != "enroute-for-pickup" ? */}
+                <TableBody>
+                  {tabData && tabData.length ?
+                    <>
+                      {tabData.map((row) => (
+                        <UserTableRow
+                          Data={tabData}
+                          key={row?.data?._id}
+                          vehicleNumber={row?.data?.VEHNO}
+                          vehicleType={row?.data?.VehicleType}
+                          status="available"
+                          vehicleData={row}
+                          // company={row.DriverName}
+                          // avatarUrl={row.avatarUrl}
+                          // isVerified={row.isVerified}
+                          selected={selected.indexOf(row.name) !== -1}
+                          handleClick={(event) => handleClick(event, row.name)}
+                        />
+                      ))}
+                    </>
+                    :
+                    <>
+                      {
+                        fetchVehicleLoading ?
+                          <TableRow
+                            tabIndex={- 1}
+                            role="checkbox"
+                            selected={selected}
+                            className=" hover:bg-gray-100 cursor-pointer transition-colors duration-200 ease-in-out"
+                          // onClick={(e) => {
+                          //   setMOpen((mopen) => !mopen);
+                          // }}
+                          >
+                            <TableCell><Skeleton variant="text" width={100} height={100} /></TableCell>
+                            <TableCell><Skeleton variant="text" width={200} height={100} /></TableCell>
+                            <TableCell><Skeleton variant="text" width={100} height={100} /></TableCell>
+
+                            <TableCell><Skeleton variant="text" width={100} height={100} /></TableCell>
+
+                            <TableCell>
+                              <Skeleton variant="text" width={100} height={100} />
+                            </TableCell>
+                          </TableRow>
+                          : <div className='w-full h-full p-4 flex justify-center items-center'>No data</div>
+                      }
+                    </>
+                  }
+
+                </TableBody>
+                {/* : <></>
+                } */}
 
               </Table>
             </TableContainer>
@@ -365,14 +406,14 @@ export default function UserPage() {
               count={users.length}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
-              rowsPerPageOptions={[5, 10, 25]}
+              // rowsPerPageOptions={[5, 10, 25]}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Card>
         </Box>
 
 
-      </Container>
+      </Container >
     </>
 
   );
