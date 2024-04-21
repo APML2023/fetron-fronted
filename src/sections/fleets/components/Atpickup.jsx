@@ -9,6 +9,11 @@ import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import ModalMap from 'src/components/Modal/Map';
 import AtabHeader from 'src/components/AtabHeader';
 import AinfoBox from 'src/components/AinfoBox';
+import { FaHome } from 'react-icons/fa';
+import { IoCheckmarkDoneCircle } from 'react-icons/io5';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -32,17 +37,65 @@ export default function EnroutePickupFleetModal({
   status,
   mopen,
   setMOpen,
+  setFetchAgain
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [locationIns, setLocationIns] = useState({ origin: 0 });
   const [pick, setPick] = useState(false);
   const [field, setField] = useState('');
+  const [pickupTime, setPickupTime] = useState();
+  const [unloadingD, setUnloadD] = useState({
+    unloading: {
+      start: "",
+      end: ""
+    }
+  })
+  const [createTripStatus, setCreateTripStatus] = useState(false);
 
   useEffect(() => {
-    // console.log(locationIns);
-  }, [locationIns]);
+    if (vehicleData &&
+      vehicleData?.current_fleet[0]?.fleetstatus?.enroute_for_pickup?.waypoints
+    ) {
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+      var cctime = vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.waypoints;
+      cctime = cctime[cctime.length - 1].time;
+      cctime = `${cctime.split('T')[1].split('.')[0].substring(0, 5)}, ${cctime.split('T')[0]} `;
+      // console.log(cctime);
+      setPickupTime(cctime);
+      // const dateTime = cctime.toLocaleDateString('en-US', dateOptions);
+      // console.log(dateTime);
+    }
 
-  console.log(vehicleData);
+  }, [vehicleData])
+
+  const handleMarkStarted = async () => {
+    if (!unloadingD.unloading.start || !unloadingD.unloading.end) {
+      window.alert("Please fill all fields")
+      setCreateTripStatus('');
+      return;
+    }
+    const dataPost = {
+      vehicleNumber: vehicleNumber,
+      fleetId: vehicleData.current_fleet[0]._id,
+      data: { ...unloadingD }
+    }
+    await axios
+      .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/atpickup`, dataPost)
+      .then((res) => {
+        setFetchAgain(true);
+        setCreateTripStatus('');
+        window.alert('Success');
+        setMOpen((mopen) => !mopen);
+        // setMOpen((mopen) => !mopen);
+      })
+      .catch((err) => {
+        setCreateTripStatus('');
+        window.alert("Some error occurred");
+      });
+  }
+
+  // console.log(vehicleData);
   return (
     <>
       <Modal
@@ -55,18 +108,13 @@ export default function EnroutePickupFleetModal({
       >
         <Box sx={style} className="overflow-hidden ">
           <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
-          <AtabHeader
-            tabHeader={`Enroute for Pickup | ${vehicleData?vehicleNumber:""}`}
-            cancelIcon={<FontAwesomeIcon
-              icon={faXmark}
-              onClick={() => {
-                setMOpen(false);
-              }}
-            />}
+            <AtabHeader
+              tabHeader={`At Pickup | ${vehicleData ? vehicleNumber : ""}`}
+              setMOpen={setMOpen}
             />
             <div
               style={{ background: 'rgba(255,255,255,0.4)' }}
-              className=" transition-all duration-500 ease-out border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-11 z-[1]"
+              className=" transition-all duration-500 ease-out border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-14 z-[1]"
             >
               <button className="rounded-lg border-2 border-gray-300 bg-gray-100 p-2 w-fit">
                 Available
@@ -78,7 +126,7 @@ export default function EnroutePickupFleetModal({
                 className="flex items-center relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse active:border- duration-300 active:text-green-900"
                 onClick={() => setIsOpen(!isOpen)}
               >
-                Intransit
+                At-Pickup
                 {!isOpen ? (
                   <IoMdArrowDropdown className="h-3" />
                 ) : (
@@ -93,32 +141,103 @@ export default function EnroutePickupFleetModal({
             </div>
             <div className="flex gap-4 w-full h-full p-4 mt-14 ">
               <div
-                style={{ minHeight: 'calc(100% - 2rem)', width: '65%' }}
+                style={{ minHeight: 'calc(100% - 2rem)', width: '70%' }}
                 className="relative border-2 border-solid border-slate-400 overflow-hidden z-[0] rounded-md"
               >
-                <ModalMap
-                  pick={pick}
-                  setPick={setPick}
-                  pickAddress={locationIns}
-                  setPickAddress={setLocationIns}
-                  field={field}
-                  status={1}
-                  current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                <ModalMap pick={pick} setPick={setPick}
+                  pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
+                  status={3} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                // waypoints={waypoints} setWaypoints={setWaypoints}
                 />
               </div>
-              <div style={{ width: '35%' }} className="w-full h-full flex flex-col gap-4">
-                {vehicleData &&
-                vehicleData.current_fleet &&
-                vehicleData.current_fleet[0].fleetstatus['enroute-for-pickup'] ? (
-                  ""
-                ) : (
-                  <AinfoBox
-                  status="At Pickup"
-                  location="Delhi"
-                  time="at 5:13 PM, 18-Oct"
-                  button ="Mark Departed"
-                  />
-                )}
+              <div style={{ width: '30%' }} className="w-full h-full flex flex-col gap-4">
+                <div className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
+                  <p className="text-normal font-semibold bg-cyan-100 w-full p-2">At Pickup</p>
+
+                  <div className="flex flex-col h-fit w-full px-4 py-2 gap-6">
+                    <p className='flex gap-2'><span className='mt-1'><FaHome /></span> <span className='font-bold'>{vehicleData?.current_fleet[0]?.origin?.place_name}</span></p>
+                    <div className='flex justify-between items-center text-green-900 font-semibold'>
+                      <p className='flex gap-2 '>
+                        <span className='mt-1'><IoCheckmarkDoneCircle style={{ height: '18px', width: '18px' }} /></span>
+                        <span>Arrived at: </span>
+                      </p>
+                      <p>{pickupTime ? pickupTime : ""}</p>
+                    </div>
+                    <div className='flex flex-col gap-4'>
+                      <div className='flex flex-col'>
+                        <p>Unloading start:</p>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer
+                            components={[
+                              'DatePicker',
+                              'DateTimePicker',
+                              'TimePicker',
+                              'DateRangePicker',
+                              'DateTimeRangePicker',
+                            ]}
+                          >
+                            <DemoItem label="" className="p-2 text-sm">
+                              <DateTimePicker
+                                className="p-2 text-sm"
+                                // defaultValue={today}
+                                views={['year', 'month', 'day', 'hours', 'minutes']}
+                                onAccept={(newValue) => {
+                                  const dumUnload = { ...unloadingD };
+                                  dumUnload.unloading.start = newValue;
+                                  setUnloadD({ ...dumUnload })
+                                }}
+                              />
+                            </DemoItem>
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </div>
+                      <div className='flex flex-col'>
+                        <p>Unloading completed:</p>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer
+                            components={[
+                              'DatePicker',
+                              'DateTimePicker',
+                              'TimePicker',
+                              'DateRangePicker',
+                              'DateTimeRangePicker',
+                            ]}
+                          >
+                            <DemoItem label="" className="p-2 text-sm">
+                              <DateTimePicker
+                                className="p-2 text-sm"
+                                // defaultValue={today}
+                                views={['year', 'month', 'day', 'hours', 'minutes']}
+                                onAccept={(newValue) => {
+                                  const dumUnload = { ...unloadingD };
+                                  dumUnload.unloading.end = newValue;
+                                  setUnloadD({ ...dumUnload })
+                                }}
+                              />
+                            </DemoItem>
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      </div>
+                      <button
+                        className="rounded-lg border-2 border-cyan-500 bg-cyan-200 p-2"
+                        style={{ width: 'calc(100%)' }}
+                        onClick={() => {
+                          setCreateTripStatus('loading');
+                          handleMarkStarted();
+                          // handleCreateTrip();
+                        }}
+                      // disabled={createTripStatus == 'loading'}
+                      >
+                        {createTripStatus == 'loading' ? (
+                          <CircularProgress size={22} color="grey" />
+                        ) : (
+                          <span>Mark as Departed</span>
+                        )}
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
               </div>
             </div>
           </div>

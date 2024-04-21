@@ -57,10 +57,48 @@ export default function ModalMap({
     const mapRef = React.useRef();
 
     const [address, setAddress] = React.useState({ longitude: "", latitude: "", place_name: "" });
+    const [jumpTo, setJumpTo] = React.useState({ longitude: "", latitude: "", place_name: "" });
+
+
+    React.useEffect(() => {
+        if (status != 0 && current_fleet && current_fleet.fleetstatus && current_fleet.fleetstatus.enroute_for_pickup &&
+            current_fleet.fleetstatus.enroute_for_pickup.origin && current_fleet.fleetstatus.enroute_for_pickup.destination
+        ) {
+            var ccp = current_fleet.fleetstatus.enroute_for_pickup;
+            var wwp = [];
+            ccp.waypoints.forEach((el, i) => {
+                var kcopy = [
+                    Math.max(el.latitude, el.longitude),
+                    Math.min(el.latitude, el.longitude)
+                ]
+                // if (i != 0) {
+                wwp.push(kcopy);
+                // }
+            })
+            var ddOne = {
+                type: "Feature",
+                // properties: {},
+                geometry: {
+                    type: "LineString",
+                    coordinates: [...wwp]
+                }
+            }
+            console.log(ddOne);
+            setDataOne({
+                ...ddOne
+            })
+        }
+    }, [current_fleet])
+    // console.log(current_fleet);
+
+    React.useEffect(() => {
+        // console.log(dataOne);
+    }, [dataOne])
 
 
     React.useEffect(() => {
         if (!waypoints) { return }
+        if (status != 0) { return }
         var wwp = [...waypoints];
         var wp = [];
         if (pickAddress && pickAddress.origin && pickAddress.origin.latitude) {
@@ -93,6 +131,7 @@ export default function ModalMap({
                 coordinates: [...wp]
             }
         }
+
         // console.log(ddOne);
         setDataOne({
             ...ddOne
@@ -150,7 +189,7 @@ export default function ModalMap({
                 wwp[wi] = dumAddress;
                 setWaypoints([...wwp]);
                 // moveCamera();
-                mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 1000, zoom: 18 });
+                // mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 1000, zoom: 18 });
             }
             else {
                 const dumAddress = { ...address };
@@ -164,12 +203,23 @@ export default function ModalMap({
                 dumPickAdd[field] = dumAddress;
                 setPickAddress({ ...dumPickAdd });
                 // moveCamera();
-                // mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 2000, zoom: 14 });
+                mapRef.current?.flyTo({ center: [dumAddress.longitude, dumAddress.latitude], duration: 2000, zoom: 14 });
             }
         }
     }, [address])
 
-    // console.log(current_fleet);
+    React.useEffect(() => {
+        if (jumpTo && jumpTo.latitude && jumpTo.longitude) {
+            setViewState({
+                ...viewState,
+                latitude: jumpTo.latitude,
+                longitude: jumpTo.longitude,
+            })
+            mapRef.current?.flyTo({ center: [jumpTo.longitude, jumpTo.latitude], duration: 2000, zoom: 14 });
+        }
+    }, [jumpTo])
+
+    console.log(status);
 
     return (
         <>{viewState && viewState.latitude && viewState.longitude ?
@@ -189,7 +239,9 @@ export default function ModalMap({
 
                         </Line> */}
                         {/* {dataOne && */}
-                        {dataOne && dataOne.geometry.coordinates.length ?
+                        {status !== null && status !== "" && dataOne && dataOne.geometry.coordinates.length
+                            && (status == 0 || status == 1 || status == 2)
+                            ?
                             <Source id="polylineLayer" type="geojson" data={dataOne}>
                                 <Layer
                                     id="lineLayer"
@@ -207,6 +259,18 @@ export default function ModalMap({
                             </Source>
                             : <></>}
                         {/* } */}
+                        <>
+                            <div style={{ fontSize: "1rem" }} className='text-normal flex flex-col absolute top-2 right-14 z-[2] bg-red-100 rounded p-2 w-fit gap-2'>
+                                <p style={{ fontSize: "0.9rem" }} className='text-normal'>Jump to...</p>
+                                <AAutoCI2
+                                    address={jumpTo}
+                                    setAddress={setJumpTo}
+                                // setAddress={setAddress}
+                                // handleManualInputChange={handleManualInputChange}
+                                // streetAndNumber={address.streetAndNumber}
+                                />
+                            </div>
+                        </>
 
                         <>
                             {pick ?
@@ -274,20 +338,27 @@ export default function ModalMap({
                                 : <></>
                             }
                         </>
-
                         <>
-                            {status == 1 ?
+                            {status && (status == 1 || status == 2 || status == 3)
+                                && current_fleet && current_fleet.origin && current_fleet.destination
+                                ?
+                                <>
+                                    <Marker latitude={current_fleet.origin.latitude} longitude={current_fleet.origin.longitude}
+                                        color='red'
+                                    >
+                                    </Marker>
+                                    <Marker latitude={current_fleet.destination.latitude} longitude={current_fleet.destination.longitude}
+                                        color='green'
+                                    ></Marker>
+                                </>
+                                : <></>
+                            }
+                        </>
+                        <>
+                            {status == 1 || status == 2 ?
                                 <>
                                     {current_fleet && current_fleet.origin && current_fleet.destination ?
                                         <>
-                                            <Marker latitude={current_fleet.origin.latitude} longitude={current_fleet.origin.longitude}
-                                                color='red'
-                                            >
-                                            </Marker>
-                                            <Marker latitude={current_fleet.destination.latitude} longitude={current_fleet.destination.longitude}
-                                                color='green'
-                                            // draggable={true}
-                                            ></Marker>
                                             {pickAddress && pickAddress.origin && pickAddress.origin.latitude ?
                                                 <Marker latitude={pickAddress.origin.latitude} longitude={pickAddress.origin.longitude}
                                                 >
@@ -303,6 +374,28 @@ export default function ModalMap({
                                                 </Marker>
 
                                                 : <></>
+                                            }
+                                            {
+                                                current_fleet && current_fleet.fleetstatus && current_fleet.fleetstatus.enroute_for_pickup &&
+                                                current_fleet.fleetstatus.enroute_for_pickup.waypoints &&
+                                                current_fleet.fleetstatus.enroute_for_pickup.waypoints.length > 0 &&
+                                                current_fleet.fleetstatus.enroute_for_pickup.waypoints.map((el, i) => {
+                                                    return (
+                                                        <Marker latitude={el.latitude} longitude={el.longitude}
+                                                        >
+                                                            <div className='h-10 w-10 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
+                                                                <div className='absolute center h-3 w-3 bg-sky-500 rounded-full'
+                                                                    style={{
+                                                                        top: "50%",
+                                                                        left: "50%",
+                                                                        transform: "translate(-50%, -50%)",
+                                                                    }}
+                                                                ></div>
+                                                            </div>
+                                                        </Marker>
+                                                    )
+                                                }
+                                                )
                                             }
                                         </>
                                         : <></>

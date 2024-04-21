@@ -13,6 +13,7 @@ import ModalMap from 'src/components/Modal/Map';
 import NotificationsPopover from 'src/layouts/dashboard/common/notifications-popover';
 import { IoMdAddCircle } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
+import AtabHeader from 'src/components/AtabHeader';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -31,7 +32,9 @@ const today = dayjs();
 const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
 
-export default function CreateFleetModal({ vehicleNumber, vehicleType, status, mopen, setMOpen }) {
+export default function CreateFleetModal({ vehicleNumber, vehicleType, status, mopen, setMOpen,
+  fetchAgain, setFetchAgain
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [locationIns, setLocationIns] = useState({ origin: 0, destination: 0 });
   const [pickAddress, setPickAddress] = useState();
@@ -49,84 +52,84 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
     setComponents(updatedComponents);
   };
 
-  const addComponent = () => {
-    setComponents([...components,
+  // const addComponent = () => {
+  //   setComponents([...components,
 
-    <div key={components.length} className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
-      <p className="text-normal font-semibold bg-green-500 w-full p-2">Route</p>
-      <div className="flex flex-col h-fit w-full p-2">
-        {locationIns && locationIns.origin.latitude ? (
-          <div className="flex justify-between font-semibold">
-            <p>
-              <span>Location: </span>
-              {locationIns.origin.place_name}
-            </p>
+  //   <div key={components.length} className="h-fit flex justify-start items-center flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
+  //     <p className="text-normal font-semibold bg-green-500 w-full p-2">Route</p>
+  //     <div className="flex flex-col h-fit w-full p-2">
+  //       {locationIns && locationIns.origin.latitude ? (
+  //         <div className="flex justify-between font-semibold">
+  //           <p>
+  //             <span>Location: </span>
+  //             {locationIns.origin.place_name}
+  //           </p>
 
-            <button
-              // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
-              onClick={() => {
-                setLocationIns({
-                  ...locationIns,
-                  origin: {
-                    latitude: locationIns.origin.latitude,
-                    longitude: locationIns.origin.longitude,
-                    place_name: locationIns.origin.place_name,
-                    time: newValue,
-                  },
-                });
-                handleChangeLocation('origin');
-              }}
-            >
-              <FontAwesomeIcon icon={faEdit} />
-            </button>
-          </div>
-        ) : (
-          <button
-            className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
-            onClick={() => handleChangeLocation('origin')}
-          >
-            Pick Location
-          </button>
-        )}
+  //           <button
+  //             // className='w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-200 hover:border-slate-400'
+  //             onClick={() => {
+  //               setLocationIns({
+  //                 ...locationIns,
+  //                 origin: {
+  //                   latitude: locationIns.origin.latitude,
+  //                   longitude: locationIns.origin.longitude,
+  //                   place_name: locationIns.origin.place_name,
+  //                   time: newValue,
+  //                 },
+  //               });
+  //               handleChangeLocation('origin');
+  //             }}
+  //           >
+  //             <FontAwesomeIcon icon={faEdit} />
+  //           </button>
+  //         </div>
+  //       ) : (
+  //         <button
+  //           className="w-full px-4 py-3 font-semibold border-2 border-solid border-slate-200 rounded hover:bg-slate-100 hover:border-slate-300"
+  //           onClick={() => handleChangeLocation('origin')}
+  //         >
+  //           Pick Location
+  //         </button>
+  //       )}
 
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer
-            components={[
-              'DatePicker',
-              'DateTimePicker',
-              'TimePicker',
-              'DateRangePicker',
-              'DateTimeRangePicker',
-            ]}
-          >
-            <DemoItem label="" className="p-2 text-sm">
-              <DateTimePicker
-                className="p-2 text-sm"
-                defaultValue={today}
-                views={['year', 'month', 'day', 'hours', 'minutes']}
-                onAccept={(newValue) => {
-                  setLocationIns({
-                    ...locationIns,
-                    origin: {
-                      latitude: locationIns.origin.latitude,
-                      longitude: locationIns.origin.longitude,
-                      place_name: locationIns.origin.place_name,
-                      time: newValue,
-                    },
-                  });
-                }}
-              />
-            </DemoItem>
-          </DemoContainer>
-        </LocalizationProvider>
-      </div>
-    </div>
+  //       <LocalizationProvider dateAdapter={AdapterDayjs}>
+  //         <DemoContainer
+  //           components={[
+  //             'DatePicker',
+  //             'DateTimePicker',
+  //             'TimePicker',
+  //             'DateRangePicker',
+  //             'DateTimeRangePicker',
+  //           ]}
+  //         >
+  //           <DemoItem label="" className="p-2 text-sm">
+  //             <DateTimePicker
+  //               className="p-2 text-sm"
+  //               defaultValue={today}
+  //               views={['year', 'month', 'day', 'hours', 'minutes']}
+  //               onAccept={(newValue) => {
+  //                 setLocationIns({
+  //                   ...locationIns,
+  //                   origin: {
+  //                     latitude: locationIns.origin.latitude,
+  //                     longitude: locationIns.origin.longitude,
+  //                     place_name: locationIns.origin.place_name,
+  //                     time: newValue,
+  //                   },
+  //                 });
+  //               }}
+  //             />
+  //           </DemoItem>
+  //         </DemoContainer>
+  //       </LocalizationProvider>
+  //     </div>
+  //   </div>
 
-    ])
-  }
+  //   ])
+  // }
 
   useEffect(() => {
-    console.log(locationIns);
+    // console.log(locationIns);
   }, [locationIns]);
 
   const handleChangeLocation = (ftext) => {
@@ -153,8 +156,10 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
     await axios
       .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/createtrip`, data)
       .then((res) => {
+        setFetchAgain(true);
         setCreateTripStatus('');
         window.alert(res.data.msg);
+        setMOpen((mopen) => !mopen);
         // setMOpen((mopen) => !mopen);
       })
       .catch((err) => {
@@ -162,6 +167,8 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
         window.alert(err.response.data.error);
       });
   };
+
+
   return (
     <>
       <Modal
@@ -174,31 +181,13 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
       >
         <Box sx={style} className="overflow-hidden ">
           <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
-            <div
-              style={{ background: 'rgba(255,255,255,0.7)' }}
-              className="flex justify-between p-3 border-solid border-b-2 border-black bg-transparent backdrop-blur-lg sticky top-0 z-[1]"
-            >
-              <div className="flex justify-center flex-row content-center">
-                <p className="text-normal font-semibold">{vehicleNumber ? vehicleNumber : ''}</p>
-              </div>
-              <div className="flex justify-center content-center gap-3 px-2">
-                <button>
-                  {/* <FontAwesomeIcon icon={faBell} /> */}
-                  <NotificationsPopover />
-                </button>
-                <button>
-                  <FontAwesomeIcon
-                    icon={faXmark}
-                    onClick={() => {
-                      setMOpen(false);
-                    }}
-                  />
-                </button>
-              </div>
-            </div>
+            <AtabHeader
+              tabHeader={`${vehicleNumber ? vehicleNumber : ""}`}
+              setMOpen={setMOpen}
+            />
             <div
               style={{ background: 'rgba(255,255,255,0.4)' }}
-              className=" transition-all duration-500 ease-out border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-11 z-[1]"
+              className=" transition-all duration-500 ease-out border-solid border-b-2 border-slate-300 bg-transparent backdrop-blur-lg fixed flex justify-start content-center flex-wrap w-full h-fit p-2 gap-2 text-sm  top-14 z-[1]"
             >
               <button className="flex items-center relative rounded-lg border-2 border-green-500 bg-emerald-200 p-2 w-fit animate-pulse active:border- duration-300 active:text-green-900">
                 Available

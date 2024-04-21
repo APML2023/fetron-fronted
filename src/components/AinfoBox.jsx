@@ -10,48 +10,37 @@ import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { MdCancel } from 'react-icons/md';
 
 const ADateTimePicker = () => {
-    return (
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer
-          components={[
-            'DatePicker',
-            'DateTimePicker',
-            'TimePicker',
-            'DateRangePicker',
-            'DateTimeRangePicker',
-          ]}
-        >
-          <DemoItem label="">
-            <DateTimePicker
-              defaultValue={today}
-              views={['year', 'month', 'day', 'hours', 'minutes']}
-            />
-          </DemoItem>
-        </DemoContainer>
-      </LocalizationProvider>
-    )
-  }
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer
+        components={[
+          'DatePicker',
+          'DateTimePicker',
+          'TimePicker',
+          'DateRangePicker',
+          'DateTimeRangePicker',
+        ]}
+      >
+        <DemoItem label="">
+          <DateTimePicker
+            defaultValue={today}
+            views={['year', 'month', 'day', 'hours', 'minutes']}
+          />
+        </DemoItem>
+      </DemoContainer>
+    </LocalizationProvider>
+  )
+}
 
-  const today = dayjs();
+const today = dayjs();
 const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
 const AinfoBox = (props) => {
   return (
     <Box
-      sx={{
-        border: '1px solid #DFE3E6',
-        boxSizing: 'border-box',
-        padding: '16px',
-        margin: '10px',
-        borderRadius: '6px',
-      }}
+      className="p-2"
     >
-      <Typography style={{ color: '#5a6872', marginBottom: '1rem' }}>{props.status}</Typography>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <span>
-          <FaHome />
-        </span>
-        <Typography style={{ marginLeft: '8px' }}>{props.location}</Typography>
 
         <Box style={{ display: 'flex' }}>
           <Typography sx={{ fontSize: '12px', color: '#152935', marginLeft: '2.7rem' }}>

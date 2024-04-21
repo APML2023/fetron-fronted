@@ -35,6 +35,8 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import ALoader from 'src/components/ALoader';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -83,6 +85,52 @@ export default function UserPage() {
   const [skipValue, setSkipValue] = useState(0);
 
   const [fetchVehicleLoading, setFVLoading] = useState(false);
+  const [fetchAgain, setFetchAgain] = useState(false);
+
+  // const { isPending, error, data, refetch } = useQuery({
+  //   queryKey: ['fleetData'],
+  //   queryFn: async () => {
+  //     pn = pathname.split("/")[2];
+  //     setFVLoading(true);
+  //     var dpn = pn;
+  //     var ssk = skipValue;
+  //     if (!dpn || dpn == "" || dpn == "all") {
+  //       dpn = "available";
+  //     }
+  //     dpn = dpn.replace("-", "_")
+  //     dpn = dpn.replace("-", "_")
+  //     const result = await axios.get(`http://localhost:5050/y/vehicle/erpvehicles?status=${dpn}&skip=${ssk}`,
+  //       { withCredentials: true }
+  //     )
+  //       .then((res) => {
+  //         // console.log(res.data);
+  //         return res.data.data;
+  //         // setTabData(res.data.data);
+  //       })
+  //     return result;
+  //     // .catch((err) => {
+  //     // setTabData([]);
+  //     // window.alert("Some error occurred")
+  //     // console.log(err);
+  //     // })
+  //     // setFVLoading(false);
+  //   }
+  // })
+
+
+  // useEffect(() => {
+  //   if (isPending) {
+  //     // console.log("Pending....")
+  //     setFVLoading(true);
+  //     setTabData([]);
+  //   }
+  //   else if (data) {
+  //     setFVLoading(false);
+  //     setTabData(data);
+  //     console.log(data);
+  //   }
+  // }, [isPending, data, error]);
+
 
   const navigate = useNavigate();
   const pathname = usePathname();
@@ -174,6 +222,7 @@ export default function UserPage() {
         return;
       }
     }
+    // refetch();
   }, [pn])
 
   const theme = useTheme();
@@ -181,55 +230,47 @@ export default function UserPage() {
   const lgUp = useResponsive('up', 'lg');
   // const pathName = useLocation().pathname;
 
-  useEffect(() => {
-    // if(pathName)
-    // if (pn == "enroute-for-pickup") {
-    //   async function getAllVehicles() {
-    //     await axios.get("http://localhost:5050/y/vehicle/allvehicles",
-    //       { withCredentials: true }
-    //     )
-    //       .then((res) => {
-    //         // console.log(res.data);
-    //         setTabData(res.data.data);
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       })
-    //   }
-    //   getAllVehicles();
-    // }
-    // else {
-    async function getAllVehicles() {
-      pn = pathname.split("/")[2];
-      setFVLoading(true);
-      var dpn = pn;
-      var ssk = skipValue;
-      if (!dpn || dpn == "" || dpn == "all") {
-        dpn = "available";
-      }
-      dpn = dpn.replace("-", "_")
-      dpn = dpn.replace("-", "_")
-      await axios.get(`http://localhost:5050/y/vehicle/erpvehicles?status=${dpn}&skip=${ssk}`,
-        { withCredentials: true }
-      )
-        .then((res) => {
-          // console.log(res.data);
-          setTabData(res.data.data);
-        })
-        .catch((err) => {
-          setTabData([]);
-          window.alert("Some error occurred")
-          // console.log(err);
-        })
-      setFVLoading(false);
+  async function getAllVehicles() {
+    pn = pathname.split("/")[2];
+    setFVLoading(true);
+    var dpn = pn;
+    var ssk = skipValue;
+    if (!dpn || dpn == "") {
+      dpn = "available";
     }
+    dpn = dpn.replace("-", "_")
+    dpn = dpn.replace("-", "_")
+    await axios.get(`http://localhost:5050/y/vehicle/erpvehicles?status=${dpn}&skip=${ssk}`,
+      { withCredentials: true }
+    )
+      .then((res) => {
+        // console.log(res.data);
+        setTabData(res.data.data);
+      })
+      .catch((err) => {
+        setTabData([]);
+        window.alert("Some error occurred")
+        // console.log(err);
+      })
+    setFVLoading(false);
+  }
+
+  useEffect(() => {
     getAllVehicles();
     // }
-  }, [pathname])
-  // console.log(tabData);
+    // refetch();
+  }, [pathname]);
+
+  useEffect(() => {
+    if (fetchAgain) {
+      getAllVehicles();
+      setFetchAgain(false);
+    }
+  }, [fetchAgain])
+
   return (
     <>
-
+      <ALoader isLoading={fetchVehicleLoading} />
       <TabContext value={value}>
         <Box sx={{
           position: 'fixed',
@@ -283,7 +324,7 @@ export default function UserPage() {
         <Box sx={{ paddingTop: "8rem" }}>
           <Card>
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflowY: 'auto', maxHeight: "60vh" }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 15rem)" }}>
               <Table sx={{ minWidth: 800 }}>
 
                 <UserTableHead
@@ -355,8 +396,10 @@ export default function UserPage() {
                           key={row?.data?._id}
                           vehicleNumber={row?.data?.VEHNO}
                           vehicleType={row?.data?.VehicleType}
-                          status="available"
+                          status={row?.current_status ? row.current_status : null}
                           vehicleData={row}
+                          fetchAgain={fetchAgain}
+                          setFetchAgain={setFetchAgain}
                           // company={row.DriverName}
                           // avatarUrl={row.avatarUrl}
                           // isVerified={row.isVerified}
@@ -401,14 +444,14 @@ export default function UserPage() {
             </TableContainer>
             {/* </Scrollbar> */}
 
-            <TablePagination
+            {/* <TablePagination
               page={page}
               count={users.length}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
               // rowsPerPageOptions={[5, 10, 25]}
               onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            /> */}
           </Card>
         </Box>
 
