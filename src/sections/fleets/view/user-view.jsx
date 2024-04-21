@@ -236,7 +236,7 @@ export default function UserPage() {
     var dpn = pn;
     var ssk = skipValue;
     if (!dpn || dpn == "") {
-      dpn = "available";
+      dpn = "all";
     }
     dpn = dpn.replace("-", "_")
     dpn = dpn.replace("-", "_")
