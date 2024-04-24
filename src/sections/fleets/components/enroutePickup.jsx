@@ -1,6 +1,6 @@
 import { faBell, faEdit, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, CircularProgress, Modal } from "@mui/material";
+import { Alert, Box, CircularProgress, Modal, Snackbar } from "@mui/material";
 import Tabs from "../../../components/Tabs"
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -32,7 +32,7 @@ const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
 
 export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, status, mopen, setMOpen,
-    fetchAgain, setFetchAgain
+    fetchAgain, setFetchAgain, setM2open, setvd
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const [locationIns, setLocationIns] = useState({ origin: 0 });
@@ -42,6 +42,7 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
     const [createStartTripStatus, setCreateStartTripStatus] = useState(false);
     const [waypoints, setWaypoints] = useState([]);
     const [atPickupTime, setAtPickupTime] = useState();
+    const [notData, setNotData] = useState(false);
 
     useEffect(() => {
         // console.log(locationIns);
@@ -58,6 +59,32 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
         }
     }
 
+    const fetchIndividualVehicle = async () => {
+        await axios.get(`http://localhost:5050/y/vehicle/oneerp?vnum=${vehicleNumber}`,
+            { withCredentials: true }
+        )
+            .then((res) => {
+                console.log("Data fetched");
+                setvd({ ...res.data.data });
+                vehicleData = res.data.data;
+                // console.log(res.data.data);
+                // console.log(vehicleData);
+                // setMOpen((mopen) => !mopen);
+                // setM2Open(true);
+                setNotData({ msg: "Success", type: "success" });
+                // setCreateTripStatus('');
+                // setTabData(res.data.data);
+            })
+            .catch((err) => {
+                setMOpen((mopen) => !mopen);
+                setFetchAgain(true);
+                // setTabData([]);
+                // window.alert("Some error occurred")
+                // console.log(err);
+            })
+        // setFVLoading(false);
+    }
+
     const updateEnrouteAddOrigin = async () => {
         const data = {
             data: { origin: { ...locationIns.origin }, destination: { ...vehicleData.current_fleet[0].origin } },
@@ -68,11 +95,16 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
         await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/updateEnroute`, data)
             .then((res) => {
                 // console.log(res.data);
-                setFetchAgain(true);
-                setCreateStartTripStatus(false);
-                window.alert("Success!");
+                // setFetchAgain(true);
+                fetchIndividualVehicle();
 
-                setMOpen((mopen) => !mopen);
+                setMOpen(false);
+                setCreateStartTripStatus(false);
+                console.log("En");
+                // window.alert("Success!");
+                setMOpen(true);
+                console.log("Dn");
+                // setMOpen((mopen) => !mopen);
             })
             .catch((err) => {
                 setCreateStartTripStatus(false);
@@ -100,11 +132,12 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
         await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/updateEnroute`, data)
             .then((res) => {
                 // console.log(res.data);
-                setFetchAgain(true);
+                // setFetchAgain(true);
+                fetchIndividualVehicle();
+                setMOpen(mopen => !mopen);
                 setCreateStartTripStatus(false);
-                window.alert("Success!");
-
-                setMOpen((mopen) => !mopen);
+                // window.alert("Success!");
+                setM2open(true);
             })
             .catch((err) => {
                 setCreateStartTripStatus(false);
@@ -132,6 +165,16 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} className="overflow-hidden ">
+                    <Snackbar open={notData ? true : false} autoHideDuration={6000} onClose={() => { setNotData(false) }}>
+                        <Alert
+                            onClose={() => { setNotData(false) }}
+                            severity={notData ? notData.type : ""}
+                            variant="filled"
+                            sx={{ width: '100%' }}
+                        >
+                            {notData ? notData.msg : ""}
+                        </Alert>
+                    </Snackbar>
                     <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
 
                         <AtabHeader
@@ -191,8 +234,8 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                                                         <div className="w-5 h-5 bg-red-900 rounded-full mr-3"></div>
                                                     </div>
                                                     <div className="flex justify-between w-full font-semibold text-sm">
-                                                        <p className="w-1/3 p-1 bg-blue-100">{vehicleData.current_fleet[0].fleetstatus["enroute_for_pickup"].origin.place_name}</p>
-                                                        <p className="w-1/3 p-1 bg-red-100">{vehicleData.current_fleet[0].fleetstatus["enroute_for_pickup"].destination.place_name}</p>
+                                                        <p className="w-1/3 p-1 bg-blue-100">{vehicleData?.current_fleet[0]?.fleetstatus["enroute_for_pickup"]?.origin?.place_name}</p>
+                                                        <p className="w-1/3 p-1 bg-red-100">{vehicleData?.current_fleet[0]?.fleetstatus["enroute_for_pickup"]?.destination?.place_name}</p>
                                                     </div>
                                                 </div>
                                             </div>

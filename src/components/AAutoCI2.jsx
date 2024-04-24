@@ -1,7 +1,7 @@
 import "../css/AutoCompleteInput.scss";
 import PropTypes from "prop-types";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import getPlaces from "../API/getPlaces";
 
 AAutoCI2.propTypes = {
@@ -36,11 +36,24 @@ export default function AAutoCI2({
     const [suggestions, setSuggestions] = useState([]);
     const [inValue, setInValue] = useState("");
 
+    useEffect(() => {
+        if (inValue) {
+            setTimeout(async () => {
+                handleInputChange(inValue);
+
+            }, 1000)
+        }
+        else {
+            setSuggestions([]);
+        }
+
+    }, [inValue]);
+
 
     const handleChange = (event) => {
         // handleManualInputChange(event, "streetAndNumber");
         setInValue(inValue => event.target.value);
-        handleInputChange(event.target.value);
+
         // const newAddress = { ...address };
         // newAddress["streetAndNumber"] = event.target.value;
         // // window.alert(newAddress)
@@ -53,9 +66,13 @@ export default function AAutoCI2({
 
     const handleInputChange = async (query) => {
         // window.alert(query);
+
         const suggesions = await getPlaces(query);
-        // console.log(suggesions);
         setSuggestions(suggesions);
+
+
+        // console.log(suggesions);
+
     };
 
     const handleSuggestionClick = (suggestion) => {

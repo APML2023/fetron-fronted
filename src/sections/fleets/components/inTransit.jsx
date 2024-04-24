@@ -1,6 +1,6 @@
 import { faBell, faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, CircularProgress, Modal } from '@mui/material';
+import { Alert, Box, CircularProgress, Modal, Snackbar } from '@mui/material';
 import Tabs from '../../../components/Tabs';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -37,7 +37,10 @@ export default function InTransit({
     status,
     mopen,
     setMOpen,
-    setFetchAgain
+    setFetchAgain,
+    setM2open,
+    setvd,
+    vd
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const [locationIns, setLocationIns] = useState({ origin: 0 });
@@ -46,6 +49,30 @@ export default function InTransit({
 
     const [createTripStatus, setCreateTripStatus] = useState(false);
     const [arrivalTime, setArrivalTime] = useState();
+    const [notData, setNotData] = useState(false);
+
+    const fetchIndividualVehicle = async () => {
+        await axios.get(`http://localhost:5050/y/vehicle/oneerp?vnum=${vehicleNumber}`,
+            { withCredentials: true }
+        )
+            .then((res) => {
+                setNotData({ msg: "Success", type: "success" });
+                console.log("Data fetched");
+                setvd({ ...res.data.data });
+                const mmd = true;
+                setM2open(mmd);
+
+                setCreateTripStatus(false);
+                // console.log(mmd);
+                setMOpen((mopen) => !mopen);
+            })
+            .catch((err) => {
+                console.log(err);
+                setMOpen((mopen) => !mopen);
+                setFetchAgain(true);
+
+            })
+    }
 
     const handleArrived = async () => {
         if (!arrivalTime) {
@@ -61,10 +88,11 @@ export default function InTransit({
         await axios
             .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/intransit`, dataPost)
             .then((res) => {
-                setFetchAgain(true);
-                setCreateTripStatus('');
-                window.alert('Success');
-                setMOpen((mopen) => !mopen);
+                fetchIndividualVehicle();
+                // setFetchAgain(true);
+                // setCreateTripStatus('');
+                // window.alert('Success');
+                // setMOpen((mopen) => !mopen);
                 // setMOpen((mopen) => !mopen);
             })
             .catch((err) => {
@@ -85,6 +113,16 @@ export default function InTransit({
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} className="overflow-hidden ">
+                    <Snackbar open={notData ? true : false} autoHideDuration={6000} onClose={() => { setNotData(false) }}>
+                        <Alert
+                            onClose={() => { setNotData(false) }}
+                            severity={notData ? notData.type : ""}
+                            variant="filled"
+                            sx={{ width: '100%' }}
+                        >
+                            {notData ? notData.msg : ""}
+                        </Alert>
+                    </Snackbar>
                     <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
                         <AtabHeader
                             tabHeader={`Intransit | ${vehicleData ? vehicleNumber : ""}`}

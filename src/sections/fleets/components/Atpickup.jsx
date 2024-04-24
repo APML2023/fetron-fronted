@@ -1,6 +1,6 @@
 import { faBell, faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, CircularProgress, Modal } from '@mui/material';
+import { Alert, Box, CircularProgress, Modal, Snackbar } from '@mui/material';
 import Tabs from '../../../components/Tabs';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -31,13 +31,16 @@ const today = dayjs();
 const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
 
-export default function EnroutePickupFleetModal({
+export default function AtPickupFleetModal({
   vehicleNumber,
   vehicleData,
   status,
   mopen,
   setMOpen,
-  setFetchAgain
+  fetchAgain,
+  setFetchAgain,
+  setvd,
+  setM2open
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [locationIns, setLocationIns] = useState({ origin: 0 });
@@ -51,6 +54,7 @@ export default function EnroutePickupFleetModal({
     }
   })
   const [createTripStatus, setCreateTripStatus] = useState(false);
+  const [notData, setNotData] = useState(false);
 
   useEffect(() => {
     if (vehicleData &&
@@ -69,6 +73,29 @@ export default function EnroutePickupFleetModal({
 
   }, [vehicleData])
 
+  const fetchIndividualVehicle = async () => {
+    await axios.get(`http://localhost:5050/y/vehicle/oneerp?vnum=${vehicleNumber}`,
+      { withCredentials: true }
+    )
+      .then((res) => {
+        setNotData({ msg: "Success", type: "success" });
+        console.log("Data fetched");
+        setvd({ ...res.data.data });
+        const mmd = true;
+        setM2open(mmd);
+
+        setCreateTripStatus(false);
+        console.log(mmd);
+        setMOpen((mopen) => !mopen);
+      })
+      .catch((err) => {
+        console.log(err);
+        setMOpen((mopen) => !mopen);
+        setFetchAgain(true);
+
+      })
+  }
+
   const handleMarkStarted = async () => {
     if (!unloadingD.unloading.start || !unloadingD.unloading.end) {
       window.alert("Please fill all fields")
@@ -83,10 +110,11 @@ export default function EnroutePickupFleetModal({
     await axios
       .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/atpickup`, dataPost)
       .then((res) => {
-        setFetchAgain(true);
-        setCreateTripStatus('');
-        window.alert('Success');
-        setMOpen((mopen) => !mopen);
+        // setFetchAgain(true);
+        fetchIndividualVehicle();
+
+        // window.alert('Success');
+        // setMOpen((mopen) => !mopen);
         // setMOpen((mopen) => !mopen);
       })
       .catch((err) => {
@@ -107,6 +135,16 @@ export default function EnroutePickupFleetModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style} className="overflow-hidden ">
+          <Snackbar open={notData ? true : false} autoHideDuration={6000} onClose={() => { setNotData(false) }}>
+            <Alert
+              onClose={() => { setNotData(false) }}
+              severity={notData ? notData.type : ""}
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {notData ? notData.msg : ""}
+            </Alert>
+          </Snackbar>
           <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
             <AtabHeader
               tabHeader={`At Pickup | ${vehicleData ? vehicleNumber : ""}`}

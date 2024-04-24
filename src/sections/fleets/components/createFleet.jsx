@@ -1,6 +1,6 @@
 import { faBell, faCancel, faCross, faEdit, faX, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, CircularProgress, Modal } from '@mui/material';
+import { Alert, Box, CircularProgress, Modal, Snackbar } from '@mui/material';
 import Tabs from '../../../components/Tabs';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -33,7 +33,7 @@ const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
 
 export default function CreateFleetModal({ vehicleNumber, vehicleType, status, mopen, setMOpen,
-  fetchAgain, setFetchAgain
+  fetchAgain, setFetchAgain, vd, setvd, setM2Open
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [locationIns, setLocationIns] = useState({ origin: 0, destination: 0 });
@@ -44,6 +44,11 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
   const [components, setComponents] = useState([]);
 
   const [waypoints, setWaypoints] = useState([]);
+  const [goForward, setGoForward] = useState();
+  // const [vData, setVData] = useState();
+  const [notData, setNotData] = useState(false);
+
+
 
   // const []
   const removeComponent = (index) => {
@@ -141,6 +146,29 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
     }
   };
 
+  const fetchIndividualVehicle = async () => {
+    await axios.get(`http://localhost:5050/y/vehicle/oneerp?vnum=${vehicleNumber}`,
+      { withCredentials: true }
+    )
+      .then((res) => {
+        // console.log("Data fetched");
+        setvd(res.data.data);
+        setMOpen((mopen) => !mopen);
+        setM2Open(true);
+        setNotData({ msg: "Success", type: "success" });
+        setCreateTripStatus('');
+        // setTabData(res.data.data);
+      })
+      .catch((err) => {
+        setMOpen((mopen) => !mopen);
+        setFetchAgain(true);
+        // setTabData([]);
+        // window.alert("Some error occurred")
+        // console.log(err);
+      })
+    // setFVLoading(false);
+  }
+
 
   const handleCreateTrip = async () => {
     const data = {
@@ -156,15 +184,20 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
     await axios
       .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/createtrip`, data)
       .then((res) => {
-        setFetchAgain(true);
-        setCreateTripStatus('');
-        window.alert(res.data.msg);
-        setMOpen((mopen) => !mopen);
+
+
+
+        // window.alert(res.data.msg);
+        // setMOpen((mopen) => !mopen);
+        setNotData({ msg: "Fleet created... Fetching updated vehicle data.....", type: "success" });
+        fetchIndividualVehicle();
+        // setFetchAgain(true);
         // setMOpen((mopen) => !mopen);
       })
       .catch((err) => {
         setCreateTripStatus('');
-        window.alert(err.response.data.error);
+        setNotData({ msg: "Some error occurred while updating..", type: "error" });
+        // window.alert(err.response.data.error);
       });
   };
 
@@ -179,7 +212,18 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
+
         <Box sx={style} className="overflow-hidden ">
+          <Snackbar open={notData ? true : false} autoHideDuration={6000} onClose={() => { setNotData(false) }}>
+            <Alert
+              onClose={() => { setNotData(false) }}
+              severity={notData ? notData.type : ""}
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {notData ? notData.msg : ""}
+            </Alert>
+          </Snackbar>
           <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
             <AtabHeader
               tabHeader={`${vehicleNumber ? vehicleNumber : ""}`}

@@ -27,7 +27,7 @@
 .loading-full-bg {
   background: rgba(233, 233, 233, 0.2);
   backdrop-filter: blur(0.2rem);
-  position: absolute;
+  position: fixed;
   z-index: 2000;
   height: 100%;
   width: 100%;
@@ -36,7 +36,7 @@
 }
 
 .loading-full-bg .loader {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   /* width: 100%; */

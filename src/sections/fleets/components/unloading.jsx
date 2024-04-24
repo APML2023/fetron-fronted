@@ -1,6 +1,6 @@
 import { faBell, faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, CircularProgress, Modal } from '@mui/material';
+import { Alert, Box, CircularProgress, Modal, Snackbar } from '@mui/material';
 import Tabs from '../../../components/Tabs';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -14,6 +14,7 @@ import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useNavigate } from 'react-router-dom';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -51,6 +52,8 @@ export default function UnloadingVehicle({
         }
     })
     const [createTripStatus, setCreateTripStatus] = useState(false);
+    const [notData, setNotData] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (vehicleData &&
@@ -83,10 +86,12 @@ export default function UnloadingVehicle({
         await axios
             .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/unloading`, dataPost)
             .then((res) => {
-                setFetchAgain(true);
-                setCreateTripStatus('');
-                window.alert('Success');
-                setMOpen((mopen) => !mopen);
+                setNotData({ msg: "Success", type: "success" });
+                navigate("/fleetMonitoring/completed");
+                // setFetchAgain(true);
+                // setCreateTripStatus('');
+                // window.alert('Success');
+                // setMOpen((mopen) => !mopen);
                 // setMOpen((mopen) => !mopen);
             })
             .catch((err) => {
@@ -107,6 +112,16 @@ export default function UnloadingVehicle({
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} className="overflow-hidden ">
+                    <Snackbar open={notData ? true : false} autoHideDuration={6000} onClose={() => { setNotData(false) }}>
+                        <Alert
+                            onClose={() => { setNotData(false) }}
+                            severity={notData ? notData.type : ""}
+                            variant="filled"
+                            sx={{ width: '100%' }}
+                        >
+                            {notData ? notData.msg : ""}
+                        </Alert>
+                    </Snackbar>
                     <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
                         <AtabHeader
                             tabHeader={`Unloading | ${vehicleData ? vehicleNumber : ""}`}

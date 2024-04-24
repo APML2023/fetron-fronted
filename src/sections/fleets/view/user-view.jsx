@@ -37,6 +37,8 @@ import { bgBlur } from 'src/theme/css';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import ALoader from 'src/components/ALoader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -321,10 +323,19 @@ export default function UserPage() {
         </Box>
       </TabContext>
       <Container sx={{ width: "100%" }}>
+
         <Box sx={{ paddingTop: "8rem" }}>
+          <div className='px-4 py-3 flex justify-end'>
+            <button className='text-sm p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
+              onClick={() => { setFetchAgain(true) }}
+
+            ><FontAwesomeIcon icon={faRefresh} /> Refresh</button>
+          </div>
+
           <Card>
+
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 15rem)" }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 20rem)" }}>
               <Table sx={{ minWidth: 800 }}>
 
                 <UserTableHead
@@ -396,7 +407,7 @@ export default function UserPage() {
                           key={row?.data?._id}
                           vehicleNumber={row?.data?.VEHNO}
                           vehicleType={row?.data?.VehicleType}
-                          status={row?.current_status ? row.current_status : null}
+                          status={row?.current_status ? Number(row.current_status) : null}
                           vehicleData={row}
                           fetchAgain={fetchAgain}
                           setFetchAgain={setFetchAgain}

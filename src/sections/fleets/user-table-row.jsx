@@ -10,7 +10,7 @@ import axios from "axios";
 import CreateFleetModal from './components/createFleet';
 import EnroutePickupFleetModal from './components/enroutePickup';
 import Pickup from "./components/pickup"
-import Atpickup from './components/Atpickup';
+import AtPickupFleetModal from './components/Atpickup';
 import InTransit from './components/inTransit';
 import UnloadingVehicle from './components/unloading';
 // ----------------------------------------------------------------------
@@ -29,10 +29,19 @@ export default function UserTableRow({
   setFetchAgain
 }) {
   const [mopen, setMOpen] = useState(false);
+  const [m2open, setM2Open] = useState(false);
+  const [m3open, setM3Open] = useState(false);
+  const [m4open, setM4Open] = useState(false);
+  const [m5open, setM5Open] = useState(false);
+  const [m6open, setM6Open] = useState(false);
+  const [m7open, setM7Open] = useState(false);
+
   const [locationIns, setLocationIns] = useState({ origin: 0, destination: 0 });
   const [pickAddress, setPickAddress] = useState();
   const [pick, setPick] = useState(false);
   const [vehicalStatus, setVehicalStatus] = useState();
+  const [numStatus, setVNumStatus] = useState();
+  const [vd, setvd] = useState();
 
   useEffect(() => {
     // console.log(locationIns);
@@ -51,7 +60,7 @@ export default function UserTableRow({
   ]
 
   useEffect(() => {
-    console.log(status);
+    // console.log(status);
     if (!status) {
       setVehicalStatus("available");
     }
@@ -64,14 +73,34 @@ export default function UserTableRow({
       }
 
     }
+    setVNumStatus(status);
   }, [status])
 
+  // MH14KA3798
 
-  console.log(status);
+
+  useEffect(() => {
+    // console.log(vd);
+    // if (vd && vd._id) {
+    if (vd && vd._id) {
+      // status = vd.current_status;
+      setVNumStatus(Number(vd.current_status));
+      vehicleData = { ...vd };
+      // setFetchAgain(true);
+      // console.log(Number(vd.current_status));
+      // console.log(vd);
+    }
+    // }
+  }, [vd])
+
+  useEffect(() => {
+    console.log(m4open);
+  }, [m4open])
+  // console.log(numStatus);
 
   return (
     <>
-      {!status ?
+      {!numStatus ?
         <>
           <TableRow
             tabIndex={-1}
@@ -100,19 +129,28 @@ export default function UserTableRow({
             }</TableCell>
 
             <TableCell>
-              <Label color={(status === 'banned' && 'error') || 'success'}>{vehicalStatus}</Label>
+              <Label color={(numStatus === 'banned' && 'error') || 'success'}>{vehicalStatus}</Label>
             </TableCell>
           </TableRow>
+          {/* <EnroutePickupFleetModal vehicleData={vd}
+            vehicleNumber={vehicleNumber} status={1} mopen={m2open}
+            setMOpen={setM2Open}
+            fetchAgain={fetchAgain}
+            setFetchAgain={setFetchAgain}
+          /> */}
           <CreateFleetModal vehicleType={vehicleType}
             vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={mopen}
             setMOpen={setMOpen}
             fetchAgain={fetchAgain}
             setFetchAgain={setFetchAgain}
+            vd={vd}
+            setvd={setvd}
+            setM2Open={setM2Open}
           />
         </> : <></>
       }
       {
-        status == 1 || status == 2 ?
+        numStatus == 1 || numStatus == 2 ?
           <>
             <TableRow
               tabIndex={-1}
@@ -120,7 +158,7 @@ export default function UserTableRow({
               selected={selected}
               className=" hover:bg-gray-100 cursor-pointer transition-colors duration-200 ease-in-out"
               onClick={(e) => {
-                setMOpen((mopen) => !mopen);
+                setM2Open((m2open) => !m2open);
               }}
             >
               <TableCell component="th" scope="row" padding="0.4">
@@ -140,16 +178,20 @@ export default function UserTableRow({
                 <Label color={(status === 'banned' && 'error') || 'success'}>{vehicalStatus}</Label>
               </TableCell>
             </TableRow>
-            <EnroutePickupFleetModal vehicleData={vehicleData}
-              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={mopen}
-              setMOpen={setMOpen}
+
+            <EnroutePickupFleetModal vehicleData={vd ? vd : vehicleData}
+              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={m2open}
+              setMOpen={setM2Open}
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
+              setM2open={setM3Open}
+              vd={vd}
+              setvd={setvd}
             />
           </> : <></>
       }
       {
-        status == 3 ?
+        numStatus == 3 ?
           <>
             <TableRow
               tabIndex={-1}
@@ -157,7 +199,7 @@ export default function UserTableRow({
               selected={selected}
               className=" hover:bg-gray-100 cursor-pointer transition-colors duration-200 ease-in-out"
               onClick={(e) => {
-                setMOpen((mopen) => !mopen);
+                setM3Open(true);
               }}
             >
               <TableCell component="th" scope="row" padding="0.4">
@@ -181,16 +223,18 @@ export default function UserTableRow({
                 <Label color={(status === 'banned' && 'error') || 'success'}>{vehicalStatus}</Label>
               </TableCell>
             </TableRow>
-            <Atpickup vehicleType={vehicleType} vehicleData={vehicleData}
-              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={mopen}
-              setMOpen={setMOpen}
+            <AtPickupFleetModal vehicleType={vehicleType} vehicleData={vd ? vd : vehicleData}
+              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={m3open}
+              setMOpen={setM3Open}
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
+              setvd={setvd}
+              setM2open={setM4Open}
             />
           </> : <></>
       }
       {
-        status == 4 ?
+        numStatus == 4 ?
           <>
             <TableRow
               tabIndex={-1}
@@ -198,7 +242,7 @@ export default function UserTableRow({
               selected={selected}
               className=" hover:bg-gray-100 cursor-pointer transition-colors duration-200 ease-in-out"
               onClick={(e) => {
-                setMOpen((mopen) => !mopen);
+                setM4Open(true);
               }}
             >
               <TableCell component="th" scope="row" padding="0.4">
@@ -222,16 +266,20 @@ export default function UserTableRow({
                 <Label color={(status === 'banned' && 'error') || 'success'}>{vehicalStatus}</Label>
               </TableCell>
             </TableRow>
-            <InTransit vehicleType={vehicleType} vehicleData={vehicleData}
-              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={mopen}
-              setMOpen={setMOpen}
+            <InTransit vehicleType={vehicleType} vehicleData={vd ? vd : vehicleData}
+              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={m4open}
+              setMOpen={setM4Open}
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
+              setM2open={setM5Open}
+              vd={vd}
+              setvd={setvd}
+
             />
           </> : <></>
       }
       {
-        status == 5 ?
+        numStatus == 5 ?
           <>
             <TableRow
               tabIndex={-1}
@@ -239,7 +287,7 @@ export default function UserTableRow({
               selected={selected}
               className=" hover:bg-gray-100 cursor-pointer transition-colors duration-200 ease-in-out"
               onClick={(e) => {
-                setMOpen((mopen) => !mopen);
+                setM5Open(true);
               }}
             >
               <TableCell component="th" scope="row" padding="0.4">
@@ -264,10 +312,13 @@ export default function UserTableRow({
               </TableCell>
             </TableRow>
             <UnloadingVehicle vehicleType={vehicleType} vehicleData={vehicleData}
-              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={mopen}
-              setMOpen={setMOpen}
+              vehicleNumber={vehicleNumber} status={vehicalStatus} mopen={m5open}
+              setMOpen={setM5Open}
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
+              // setM2open={setM5Open}
+              vd={vd}
+              setvd={setvd}
             />
           </> : <></>
       }
