@@ -86,11 +86,17 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
     }
 
     const updateEnrouteAddOrigin = async () => {
+        if (!vehicleData) {
+            window.alert("No Vehicle Data found!");
+            return;
+        }
         const data = {
             data: { origin: { ...locationIns.origin }, destination: { ...vehicleData.current_fleet[0].origin } },
             option: 0,
-            vehicleNumber: vehicleNumber
+            vehicleNumber: vehicleNumber,
+            current_round: vehicleData.current_round
         }
+        console.log(data);
         // console.log(data);
         await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/updateEnroute`, data)
             .then((res) => {
@@ -102,7 +108,10 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                 setCreateStartTripStatus(false);
                 console.log("En");
                 // window.alert("Success!");
-                setMOpen(true);
+                setTimeout(() => {
+                    setMOpen(true);
+                }, 500);
+
                 console.log("Dn");
                 // setMOpen((mopen) => !mopen);
             })

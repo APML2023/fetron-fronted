@@ -154,11 +154,13 @@ export default function ModalMap({
         })
     }, [])
 
+    // React.useEffect(() => {
+    // console.log(viewState);
+    // }, [viewState])
+
     React.useEffect(() => {
-        // console.log(viewState);
+        console.log(viewState);
     }, [viewState])
-
-
 
 
 
@@ -219,7 +221,7 @@ export default function ModalMap({
         }
     }, [jumpTo])
 
-    console.log(status);
+    // console.log(status);
 
     return (
         <>{viewState && viewState.latitude && viewState.longitude ?
