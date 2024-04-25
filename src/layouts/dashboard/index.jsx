@@ -19,8 +19,10 @@ export default function DashboardLayout({ children }) {
       <Box
         sx={{
           minHeight: 1,
+          height: '100%',
           display: 'flex',
           flexDirection: { xs: 'column', lg: 'row' },
+          zIndex: 10000
         }}
       >
         <Nav openNav={openNav} onCloseNav={() => setOpenNav(false)} />

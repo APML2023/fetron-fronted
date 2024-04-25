@@ -21,13 +21,17 @@ export default function Main({ children, sx, ...other }) {
         minHeight: 1,
         display: 'flex',
         flexDirection: 'column',
-        py: `${HEADER.H_MOBILE}px`,
+        // width: '100%',
+        // py: `${HEADER.H_MOBILE}px`,
         ...(lgUp && {
-          px: 2,
-          py: `${HEADER.H_DESKTOP}px`,
+          px: 1,
+          pt: `${HEADER.H_DESKTOP}px`,
+          pb: "2px",
           width: `calc(100% - ${NAV.WIDTH}px)`,
         }),
         ...sx,
+        // pb: "0",
+        // height: "100vh"
       }}
       {...other}
     >

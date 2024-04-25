@@ -119,13 +119,14 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
         height: 40,
         display: 'inline-flex',
         ...sx,
+        borderRadius: 5
       }}
       {...other}
     >
       <img
-        src="../../../public/assets/apml_logo_icon.png" 
+        src="../../../public/assets/apml_logo_icon.png"
         alt="Logo"
-        style={{ width: '100%', height: '100%', cursor: 'pointer' }}
+        style={{ width: '100%', height: '100%' }}
       />
     </Box>
   );

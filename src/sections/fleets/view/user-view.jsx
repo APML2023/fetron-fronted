@@ -39,6 +39,7 @@ import { useQuery } from '@tanstack/react-query';
 import ALoader from 'src/components/ALoader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { width } from '@mui/system';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -273,69 +274,80 @@ export default function UserPage() {
   return (
     <>
       <ALoader isLoading={fetchVehicleLoading} />
-      <TabContext value={value}>
-        <Box sx={{
-          position: 'fixed',
-          width: '100%',
-          // boxShadow: 'none',
-          // height: HEADER.H_MOBILE,
-          zIndex: theme.zIndex.appBar + 10,
-          ...bgBlur({
-            color: theme.palette.background.default,
-          }),
-          // background: "white",
-          // transition: theme.transitions.create(['height'], {
-          //   duration: theme.transitions.duration.shorter,
-          // }),
-          ...(lgUp && {
-            width: `calc(100% - ${NAV.WIDTH + 1}px)`,
-            // height: HEADER.H_DESKTOP,
-          }),
-        }}
-        >
-          <Toolbar
-            sx={{
-              height: 1,
-              px: { lg: 5 },
-            }}
-          >
-            <Typography sx={{ flexGrow: 0 }} variant="h4">Fleets</Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <UserTableToolbar
-              numSelected={selected.length}
-              filterName={filterName}
-              onFilterName={handleFilterByName}
-            />
-          </Toolbar>
+
+      <Container sx={{ width: "100%", maxWidth: "100%" }}>
+        <TabContext value={value} className="w-full" sx={{ width: "100%" }}>
           <Box sx={{
-            borderBottom: 1, borderColor: 'divider', marginBottom: 2,
-          }}>
-            <TabList onChange={handleChange} aria-label="basic tabs example">
-              {typeOfFleet.map((el, in2) => {
-                // console.log(in2);
-                return (
-                  <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleetMonitoring/${el.path}`) }} />
-                )
-              })}
-            </TabList>
+            // position: 'fixed',
+            width: '100%',
+            // boxShadow: 'none',
+            // height: HEADER.H_MOBILE,
+            zIndex: theme.zIndex.appBar + 10,
+            ...bgBlur({
+              color: theme.palette.background.default,
+            }),
+            // background: "white",
+            // transition: theme.transitions.create(['height'], {
+            //   duration: theme.transitions.duration.shorter,
+            // }),
+            // ...(lgUp && {
+            //   width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+            //   // height: HEADER.H_DESKTOP,
+            // }),
+          }}
+          >
+            <Toolbar
+              sx={{
+                // height: 1,
+                // px: { lg: 12 },
+                // width: "100%",
+                // background: "grey"
+              }}
+              className='flex justify-between w-full'
+            >
+              <div className='w-full gap-2 flex justify-start items-center'>
+                <Typography sx={{ flexGrow: 0 }} variant="h5">Fleets</Typography>
+                {/* <Box sx={{ flexGrow: 1 }} /> */}
+                {/* <UserTableToolbar
+                  numSelected={selected.length}
+                  filterName={filterName}
+                  onFilterName={handleFilterByName}
+                /> */}
+              </div>
+
+              {/* <div className=''> */}
+              <button className='text-sm p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
+                onClick={() => { setFetchAgain(true) }}
+
+              >
+                <span className='inline-flex justify-center items-center gap-1'><FontAwesomeIcon icon={faRefresh} /> Refresh</span>
+              </button>
+              {/* </div> */}
+            </Toolbar>
+            <Box sx={{
+              borderBottom: 1, borderColor: 'divider', marginBottom: 2,
+            }}>
+              <TabList onChange={handleChange} aria-label="basic tabs example">
+                {typeOfFleet.map((el, in2) => {
+                  // console.log(in2);
+                  return (
+                    <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleetMonitoring/${el.path}`) }} />
+                  )
+                })}
+              </TabList>
+            </Box>
+
           </Box>
+        </TabContext>
+        <Box
+        //  sx={{ paddingTop: "8rem" }}
+        >
 
-        </Box>
-      </TabContext>
-      <Container sx={{ width: "100%" }}>
-
-        <Box sx={{ paddingTop: "8rem" }}>
-          <div className='px-4 py-3 flex justify-end'>
-            <button className='text-sm p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
-              onClick={() => { setFetchAgain(true) }}
-
-            ><FontAwesomeIcon icon={faRefresh} /> Refresh</button>
-          </div>
 
           <Card>
 
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 20rem)" }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 12rem)" }}>
               <Table sx={{ minWidth: 800 }}>
 
                 <UserTableHead

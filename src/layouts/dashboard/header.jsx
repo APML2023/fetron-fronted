@@ -51,7 +51,7 @@ export default function Header({ onOpenNav }) {
       sx={{
         boxShadow: 'none',
         height: HEADER.H_MOBILE,
-        zIndex: theme.zIndex.appBar + 1,
+        zIndex: 1000,
         ...bgBlur({
           color: theme.palette.background.default,
         }),
@@ -59,7 +59,8 @@ export default function Header({ onOpenNav }) {
           duration: theme.transitions.duration.shorter,
         }),
         ...(lgUp && {
-          width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+          // width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+          width: "100%",
           height: HEADER.H_DESKTOP,
         }),
         py: 0

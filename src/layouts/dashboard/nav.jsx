@@ -24,12 +24,15 @@ import { NAV } from './config-layout';
 import navConfig from './config-navigation';
 import { useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faBars } from '@fortawesome/free-solid-svg-icons';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
+  const [slide, setSlide] = useState();
 
   useEffect(() => {
     if (openNav) {
@@ -57,7 +60,7 @@ export default function Nav({ openNav, onCloseNav }) {
         <Typography variant="subtitle2">
           {/* {account.displayName} */}
           APML
-          </Typography>
+        </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {/* {account.role} */}
           Tracking App
@@ -74,35 +77,6 @@ export default function Nav({ openNav, onCloseNav }) {
     </Stack>
   );
 
-  const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-      <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-        <Box
-          component="img"
-          src="/assets/illustrations/illustration_avatar.png"
-          sx={{ width: 100, position: 'absolute', top: -50 }}
-        />
-
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">Get more?</Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            From only $69
-          </Typography>
-        </Box>
-
-        <Button
-          href="https://material-ui.com/store/items/minimal-dashboard/"
-          target="_blank"
-          variant="contained"
-          color="inherit"
-        >
-          Upgrade to Pro
-        </Button>
-      </Stack>
-    </Box>
-  );
-
   const renderContent = (
     <Scrollbar
       sx={{
@@ -114,7 +88,16 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      <div className='flex justify-between items-center w-full px-5 py-5'>
+        <Logo />
+        <button onClick={() => { setSlide(true) }}
+          className='py-1 px-3 rounded-full bg-slate-200 hover:bg-blue-200'
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+
+      </div>
+
 
       {renderAccount}
 
@@ -127,37 +110,62 @@ export default function Nav({ openNav, onCloseNav }) {
   );
 
   return (
-    <Box
-      sx={{
-        flexShrink: { lg: 0 },
-        width: { lg: NAV.WIDTH },
-      }}
-    >
-      {upLg ? (
-        <Box
-          sx={{
-            height: 1,
-            position: 'fixed',
-            width: NAV.WIDTH,
-            borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
-          }}
+    <>
+      {/* {slide ? */}
+      <div className='h-full w-fit pl-3 pt-3 fixed'
+        style={{ zIndex: 1000 }}
+      >
+        <button onClick={() => { setSlide(false) }}
+          className='py-1 px-3 rounded-full bg-slate-200 hover:bg-blue-200'
         >
-          {renderContent}
-        </Box>
-      ) : (
-        <Drawer
-          open={openNav}
-          onClose={onCloseNav}
-          PaperProps={{
-            sx: {
-              width: NAV.WIDTH,
-            },
-          }}
-        >
-          {renderContent}
-        </Drawer>
-      )}
-    </Box>
+          <FontAwesomeIcon icon={faBars} />
+        </button>
+      </div>
+
+      {/* : */}
+      <Box
+        sx={{
+          // flexShrink: { lg: 0 },
+          width: slide ? "0" : NAV.WIDTH,
+          // width: "0",
+          zIndex: 1001,
+          // left: slide ? { lg: -NAV.WIDTH } : "0",
+          // background: "white",
+          // position: 'fixed',
+          transition: "0.3s all ease-out"
+        }}
+      >
+        {upLg ? (
+          <Box
+            sx={{
+              height: 1,
+              // width: "fit-content",
+              position: slide ? "relative" : "fixed",
+              // width: NAV.WIDTH,
+              background: "white",
+              borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+            }}
+          >
+            {renderContent}
+          </Box>
+        ) : (
+          <Drawer
+            open={openNav}
+            onClose={onCloseNav}
+            PaperProps={{
+              sx: {
+                width: NAV.WIDTH,
+              },
+            }}
+          >
+            {renderContent}
+          </Drawer>
+        )}
+      </Box >
+      {/* } */}
+    </>
+
+
   );
 }
 
@@ -209,8 +217,8 @@ function NavItem({ item }) {
           {item.icon}
         </Box>
         <Typography variant="subtitle1">{item.title}</Typography>
-        <Box sx={{marginLeft:"10px"}}>
-        {item.children && (open ? <IoMdArrowDropup className="h-3" /> : <IoMdArrowDropdown className="h-3" />)}
+        <Box sx={{ marginLeft: "10px" }}>
+          {item.children && (open ? <IoMdArrowDropup className="h-3" /> : <IoMdArrowDropdown className="h-3" />)}
         </Box>
       </ListItemButton>
 
@@ -219,10 +227,10 @@ function NavItem({ item }) {
           {item.children.map((child, index) => (
             <ListItemButton
               key={index}
-              component={RouterLink} 
+              component={RouterLink}
               to={child.subpath}
               sx={{
-                marginLeft:"4rem",
+                marginLeft: "4rem",
                 minHeight: 44,
                 borderRadius: 0.75,
                 typography: 'body2',
@@ -247,7 +255,7 @@ function NavItem({ item }) {
       {console.log(pathname)}
     </>
   );
-  
+
 }
 NavItem.propTypes = {
   item: PropTypes.object,
