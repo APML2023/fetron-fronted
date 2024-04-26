@@ -162,6 +162,7 @@ export default function UnloadingVehicle({
                                 <ModalMap pick={pick} setPick={setPick}
                                     pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
                                     status={3} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                                    vehicleData={vehicleData}
                                 // waypoints={waypoints} setWaypoints={setWaypoints}
                                 />
                             </div>

@@ -69,7 +69,7 @@ export default function PickupFleetModal({
       },
       fleet: {
         ...locationIns,
-        status:"intransit"
+        status: "intransit"
       },
     };
     await axios
@@ -123,13 +123,13 @@ export default function PickupFleetModal({
         <Box sx={style} className="overflow-hidden ">
           <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
             <AtabHeader
-            tabHeader="Enroute for Pickup"
-            cancelIcon={<FontAwesomeIcon
-              icon={faXmark}
-              onClick={() => {
-                setMOpen(false);
-              }}
-            />}
+              tabHeader="Enroute for Pickup"
+              cancelIcon={<FontAwesomeIcon
+                icon={faXmark}
+                onClick={() => {
+                  setMOpen(false);
+                }}
+              />}
             />
             <div
               style={{ background: 'rgba(255,255,255,0.4)' }}
@@ -169,12 +169,13 @@ export default function PickupFleetModal({
                   field={field}
                   status={1}
                   current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                  vehicleData={vehicleData}
                 />
               </div>
               <div style={{ width: '35%' }} className="w-full h-full flex flex-col gap-4">
                 {vehicleData &&
-                vehicleData.current_fleet &&
-                vehicleData.current_fleet[0].fleetstatus['enroute-for-pickup'] ? (
+                  vehicleData.current_fleet &&
+                  vehicleData.current_fleet[0].fleetstatus['enroute-for-pickup'] ? (
                   <>
                     {/* ----------------Route Timeline------------- */}
                     <div className="w-full flex justify-center items-center flex-col py-4 px-3">
@@ -275,15 +276,15 @@ export default function PickupFleetModal({
                       <p className="text-normal font-semibold bg-cyan-100 w-full p-2">
                         Add start location of vehicle to enroute for pickup
                       </p>
-                    <p className='ml-3 font-semibold antialiased'>Current Location</p>
-                    <div className='flex justify-start ml-3 items-center'>
-                    <div className='mr-2 w-2 h-2 bg-blue-700 rounded-full flex justify-center items-center text-center p-2 shadow-xl animate-pulse'></div>
-                    <div className='flex flex-row gap-4'>
-                    <span  className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white '>NA KMs to go</span> 
-                    {/* <p>|</p> */}
-                    <span  className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white'>Updated NA</span>
-                    </div>
-                    </div>
+                      <p className='ml-3 font-semibold antialiased'>Current Location</p>
+                      <div className='flex justify-start ml-3 items-center'>
+                        <div className='mr-2 w-2 h-2 bg-blue-700 rounded-full flex justify-center items-center text-center p-2 shadow-xl animate-pulse'></div>
+                        <div className='flex flex-row gap-4'>
+                          <span className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white '>NA KMs to go</span>
+                          {/* <p>|</p> */}
+                          <span className='flex gap-1 justify-center items-center mx-2 px-4 py-3 bg-cyan-600 rounded-lg text-white'>Updated NA</span>
+                        </div>
+                      </div>
                       <div className="flex flex-col h-fit w-full p-2">
                         {locationIns && locationIns.origin.latitude ? (
                           <div className="flex justify-between font-semibold">
@@ -376,17 +377,17 @@ export default function PickupFleetModal({
 
                 {/* PickUP info */}
                 <div className="h-fit flex justify-start  flex-col border-2 rounded-md border-gray-400  overflow-hidden gap-2">
-                      <p className="text-normal font-semibold bg-cyan-100 w-full p-2">
-                       Pick-Up Info
-                      </p>
-                    <div style={{maxWidth:"calc(100%-25px)"}} className='flex'>
-                    <span className='ml-3 mt-1'><FaHome/></span>
-                    <div className='ml-2 flex flex-col '>Pick up Location {/* Main location */} 
-                    <p className='text-gray-500'>Sub location</p>
-                    <p className='flex gap-1 justify-center items-center px-4 py-3 bg-slate-200 rounded-lg text-blue-600'>{`ETA : 3:15PM, 18-5-22`}</p>
+                  <p className="text-normal font-semibold bg-cyan-100 w-full p-2">
+                    Pick-Up Info
+                  </p>
+                  <div style={{ maxWidth: "calc(100%-25px)" }} className='flex'>
+                    <span className='ml-3 mt-1'><FaHome /></span>
+                    <div className='ml-2 flex flex-col '>Pick up Location {/* Main location */}
+                      <p className='text-gray-500'>Sub location</p>
+                      <p className='flex gap-1 justify-center items-center px-4 py-3 bg-slate-200 rounded-lg text-blue-600'>{`ETA : 3:15PM, 18-5-22`}</p>
                     </div>
-                    </div>
-                    <button onClick={handleChangeLocation} className='flex gap-1  justify-center items-center mx-2 mb-2 px-4 py-3 bg-cyan-600 rounded-lg text-white'>Marked Arrived</button>
+                  </div>
+                  <button onClick={handleChangeLocation} className='flex gap-1  justify-center items-center mx-2 mb-2 px-4 py-3 bg-cyan-600 rounded-lg text-white'>Marked Arrived</button>
                 </div>
               </div>
             </div>

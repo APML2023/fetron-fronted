@@ -93,9 +93,9 @@ export default function UserTableRow({
     // }
   }, [vd])
 
-  useEffect(() => {
-    console.log(m4open);
-  }, [m4open])
+  // useEffect(() => {
+  //   console.log(m4open);
+  // }, [m4open])
   // console.log(numStatus);
 
   return (
@@ -119,7 +119,7 @@ export default function UserTableRow({
                 </Typography>
               </Stack>
             </TableCell>
-            <TableCell></TableCell>
+            <TableCell>{vehicleData?.current_location ? vehicleData?.current_location?.location : ""}</TableCell>
             <TableCell>{vehicleData?.current_fleet[0]?.origin?.place_name ?
               vehicleData?.current_fleet[0]?.origin?.place_name : ""
             }</TableCell>
@@ -146,6 +146,7 @@ export default function UserTableRow({
             vd={vd}
             setvd={setvd}
             setM2Open={setM2Open}
+            vehicleData={vehicleData}
           />
         </> : <></>
       }
@@ -169,7 +170,7 @@ export default function UserTableRow({
                   </Typography>
                 </Stack>
               </TableCell>
-              <TableCell></TableCell>
+              <TableCell>{vehicleData?.current_location ? vehicleData?.current_location?.location : ""}</TableCell>
 
               <TableCell>{vehicleData?.current_fleet ? vehicleData?.current_fleet[0]?.origin.place_name : ""}</TableCell>
               <TableCell>{vehicleData?.current_fleet ? vehicleData?.current_fleet[0]?.destination.place_name : ""}</TableCell>
@@ -210,7 +211,7 @@ export default function UserTableRow({
                   </Typography>
                 </Stack>
               </TableCell>
-              <TableCell></TableCell>
+              <TableCell>{vehicleData?.current_location ? vehicleData?.current_location?.location : ""}</TableCell>
 
               <TableCell>{vehicleData?.current_fleet[0]?.origin?.place_name ?
                 vehicleData?.current_fleet[0]?.origin?.place_name : ""
@@ -253,7 +254,7 @@ export default function UserTableRow({
                   </Typography>
                 </Stack>
               </TableCell>
-              <TableCell></TableCell>
+              <TableCell>{vehicleData?.current_location ? vehicleData?.current_location?.location : ""}</TableCell>
 
               <TableCell>{vehicleData?.current_fleet[0]?.origin?.place_name ?
                 vehicleData?.current_fleet[0]?.origin?.place_name : ""
@@ -298,7 +299,7 @@ export default function UserTableRow({
                   </Typography>
                 </Stack>
               </TableCell>
-              <TableCell></TableCell>
+              <TableCell>{vehicleData?.current_location ? vehicleData?.current_location?.location : ""}</TableCell>
 
               <TableCell>{vehicleData?.current_fleet[0]?.origin?.place_name ?
                 vehicleData?.current_fleet[0]?.origin?.place_name : ""

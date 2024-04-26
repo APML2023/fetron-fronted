@@ -33,7 +33,7 @@ const yesterday = dayjs().subtract(1, 'day');
 const todayStartOfTheDay = today.startOf('day');
 
 export default function CreateFleetModal({ vehicleNumber, vehicleType, status, mopen, setMOpen,
-  fetchAgain, setFetchAgain, vd, setvd, setM2Open
+  fetchAgain, setFetchAgain, vd, setvd, setM2Open, vehicleData
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [locationIns, setLocationIns] = useState({ origin: 0, destination: 0 });
@@ -272,6 +272,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
                   status={0}
                   waypoints={waypoints}
                   setWaypoints={setWaypoints}
+                  vehicleData={vehicleData}
                 />
               </div>
               <div style={{ width: '30%' }} className='h-full overflow-auto pr-2'>

@@ -359,7 +359,7 @@ export default function UserPage() {
                   onSelectAllClick={handleSelectAllClick}
                   headLabel={[
                     { id: 'Veh', label: 'Vehicle' },
-                    { id: 'summary', label: 'Summary' },
+                    { id: 'current_l', label: 'Current Location' },
                     { id: 'origin', label: 'Origin' },
                     { id: 'destination', label: 'Destination' },
                     { id: 'status', label: 'Status' }

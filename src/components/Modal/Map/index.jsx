@@ -11,6 +11,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import UseAutocomplete from 'src/components/AAutocompleteInput';
 import AAutoCI2 from 'src/components/AAutoCI2';
 import { Line, ZoomableGroup } from 'react-simple-maps';
+import axios from 'axios';
+import truckTopViewImg from "../../../assets/truck-topview copy.png";
 
 
 
@@ -34,7 +36,7 @@ const TOKEN = import.meta.env.VITE_APP_MAPBOX_API_KEY; // Set your mapbox token 
 
 export default function ModalMap({
     pick, setPick, pickAddress, setPickAddress, field, status, current_fleet,
-    waypoints, setWaypoints
+    waypoints, setWaypoints, vehicleData
 }) {
 
     // const [wpdata, setWpData] = React.useState([[]]);
@@ -58,6 +60,16 @@ export default function ModalMap({
 
     const [address, setAddress] = React.useState({ longitude: "", latitude: "", place_name: "" });
     const [jumpTo, setJumpTo] = React.useState({ longitude: "", latitude: "", place_name: "" });
+
+    // React.useEffect(() => {
+    //     async function fetchLiveVehicle() {
+    //         await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/vehicle/fetchlive?vehicleNumber=${vehicleNumber}`)
+    //             .then((res) => {
+    //                 console.log(res.data.data);
+    //             })
+    //     }
+    //     fetchLiveVehicle();
+    // }, [])
 
 
     React.useEffect(() => {
@@ -139,19 +151,37 @@ export default function ModalMap({
     }, [waypoints, pickAddress]);
 
     React.useEffect(() => {
-        navigator.geolocation.getCurrentPosition((e) => {
+        if (vehicleData?.current_location) {
             setViewState({
                 ...viewState,
-                latitude: e.coords.latitude,
-                longitude: e.coords.longitude,
+                latitude: vehicleData?.current_location.lat,
+                longitude: vehicleData?.current_location.lngt,
             })
-            setUserLocation({
-                ...userLocation,
-                latitude: e.coords.latitude,
-                longitude: e.coords.longitude,
+            navigator.geolocation.getCurrentPosition((e) => {
+                setUserLocation({
+                    ...userLocation,
+                    latitude: e.coords.latitude,
+                    longitude: e.coords.longitude,
+                })
+                // console.log(e.coords);
             })
-            // console.log(e.coords);
-        })
+        }
+        else {
+            navigator.geolocation.getCurrentPosition((e) => {
+                setViewState({
+                    ...viewState,
+                    latitude: e.coords.latitude,
+                    longitude: e.coords.longitude,
+                })
+                setUserLocation({
+                    ...userLocation,
+                    latitude: e.coords.latitude,
+                    longitude: e.coords.longitude,
+                })
+                // console.log(e.coords);
+            })
+        }
+
     }, [])
 
     // React.useEffect(() => {
@@ -272,6 +302,31 @@ export default function ModalMap({
                                 // streetAndNumber={address.streetAndNumber}
                                 />
                             </div>
+                        </>
+                        <>
+                            {vehicleData?.current_location ?
+                                <Marker latitude={vehicleData?.current_location?.lat} longitude={vehicleData?.current_location?.lngt}
+                                // color='blue'
+                                // draggable={true}
+                                >
+                                    {/* <div className='h-6 w-6 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
+                                        <div className='absolute center h-3 w-3 bg-sky-500 rounded-full'
+                                            style={{
+                                                top: "50%",
+                                                left: "50%",
+                                                transform: "translate(-50%, -50%)",
+                                            }}
+                                        ></div>
+                                    </div> */}
+                                    <img src={truckTopViewImg} style={{
+                                        width: "20px",
+                                        // height: "50px",
+                                        objectFit: "contain",
+                                        transform: `rotate(${vehicleData?.current_location?.angle}deg)`
+                                    }} />
+                                </Marker>
+                                : <></>
+                            }
                         </>
 
                         <>

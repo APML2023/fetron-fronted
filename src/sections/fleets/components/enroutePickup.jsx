@@ -222,6 +222,7 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                                     pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
                                     status={2} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
                                     waypoints={waypoints} setWaypoints={setWaypoints}
+                                    vehicleData={vehicleData}
                                 />
                             </div>
                             <div style={{ width: '30%' }} className='h-full overflow-auto pr-2'>
