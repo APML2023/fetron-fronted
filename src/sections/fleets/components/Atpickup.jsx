@@ -74,7 +74,7 @@ export default function AtPickupFleetModal({
   }, [vehicleData])
 
   const fetchIndividualVehicle = async () => {
-    await axios.get(`http://localhost:5050/y/vehicle/oneerp?vnum=${vehicleNumber}`,
+    await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/vehicle/oneerp?vnum=${vehicleNumber}`,
       { withCredentials: true }
     )
       .then((res) => {

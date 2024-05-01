@@ -38,7 +38,7 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import ALoader from 'src/components/ALoader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { faLessThan, faRefresh } from '@fortawesome/free-solid-svg-icons';
 import { width } from '@mui/system';
 
 function CustomTabPanel(props) {
@@ -86,6 +86,7 @@ export default function UserPage() {
   const [tabData, setTabData] = useState();
 
   const [skipValue, setSkipValue] = useState(0);
+  const [maxSkipValue, setMaxSkipValue] = useState(0);
 
   const [fetchVehicleLoading, setFVLoading] = useState(false);
   const [fetchAgain, setFetchAgain] = useState(false);
@@ -243,12 +244,14 @@ export default function UserPage() {
     }
     dpn = dpn.replace("-", "_")
     dpn = dpn.replace("-", "_")
-    await axios.get(`http://localhost:5050/y/vehicle/erpvehicles?status=${dpn}&skip=${ssk}`,
+    await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/vehicle/erpvehicles?status=${dpn}&skip=${ssk}`,
       { withCredentials: true }
     )
       .then((res) => {
         // console.log(res.data);
         setTabData(res.data.data);
+        setMaxSkipValue(Number(res.data.dataCount));
+        // setMaxSkipValue(23);
       })
       .catch((err) => {
         setTabData([]);
@@ -262,7 +265,9 @@ export default function UserPage() {
     getAllVehicles();
     // }
     // refetch();
-  }, [pathname]);
+  }, [pathname, skipValue]);
+
+
 
   useEffect(() => {
     if (fetchAgain) {
@@ -270,6 +275,8 @@ export default function UserPage() {
       setFetchAgain(false);
     }
   }, [fetchAgain])
+
+  // useEffect(())
 
   return (
     <>
@@ -331,7 +338,11 @@ export default function UserPage() {
                 {typeOfFleet.map((el, in2) => {
                   // console.log(in2);
                   return (
-                    <Tab label={el.name} value={Number(in2 + 1)} onClick={() => { navigate(`/fleetMonitoring/${el.path}`) }} />
+                    <Tab label={el.name} value={Number(in2 + 1)} onClick={() => {
+                      navigate(`/fleetMonitoring/${el.path}`)
+                      setSkipValue(0);
+                      setMaxSkipValue(0);
+                    }} />
                   )
                 })}
               </TabList>
@@ -342,12 +353,41 @@ export default function UserPage() {
         <Box
         //  sx={{ paddingTop: "8rem" }}
         >
-
+          {maxSkipValue > 0 ?
+            <div className='flex justify-end items-center gap-2 pb-1'>
+              <button className='bg-slate-100 rounded-full px-2 py-1 hover:bg-blue-100 disabled:opacity-50 text-xs'
+                disabled={(Number(skipValue) < 10) ? true : false}
+                onClick={() => {
+                  setSkipValue(skipValue - 10)
+                }}
+              ><FontAwesomeIcon icon={faLessThan} /></button>
+              <div className='text-sm'>
+                {(Number(maxSkipValue) - Number(skipValue) > 10) ?
+                  <p>{Number(skipValue) + 1} - {Number(skipValue) + 10}</p>
+                  : <p>{Number(skipValue) + 1} - {Number(maxSkipValue)}</p>
+                }
+              </div>
+              <button className='bg-slate-100 rounded-full px-2 py-1 hover:bg-blue-100 disabled:opacity-50 text-xs'
+                style={{ transform: 'rotate(-180deg)' }}
+                disabled={(Number(maxSkipValue) - Number(skipValue) != 0 &&
+                  Number(maxSkipValue) - Number(skipValue) > 10
+                ) ? false :
+                  true
+                }
+                onClick={() => {
+                  if (Number(skipValue) < Number(maxSkipValue)) {
+                    setSkipValue((Number(maxSkipValue) - Number(skipValue) > 10) ? (Number(skipValue) + 10) : Number(maxSkipValue));
+                  }
+                }}
+              ><FontAwesomeIcon icon={faLessThan} /></button>
+              <p className='text-sm underline underline-blue-900'>Total: {maxSkipValue}</p>
+            </div>
+            : <></>}
 
           <Card>
 
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 12rem)" }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 14rem)" }}>
               <Table sx={{ minWidth: 800 }}>
 
                 <UserTableHead
@@ -417,8 +457,8 @@ export default function UserPage() {
                         <UserTableRow
                           Data={tabData}
                           key={row?.data?._id}
-                          vehicleNumber={row?.data?.VEHNO}
-                          vehicleType={row?.data?.VehicleType}
+                          vehicleNumber={row?.vehicleNumber}
+                          vehicleType={row?.data?.vehicleType}
                           status={row?.current_status ? Number(row.current_status) : null}
                           vehicleData={row}
                           fetchAgain={fetchAgain}

@@ -50,6 +50,15 @@ export default function ModalMap({
         }
     });
 
+    const [pickdataOne, setPickDataOne] = React.useState({
+        type: "Feature",
+        // properties: {},
+        geometry: {
+            type: "LineString",
+            coordinates: []
+        }
+    });
+
     const [userLocation, setUserLocation] = React.useState({ latitude: "", longitude: "" });
     const [viewState, setViewState] = React.useState({
         longitude: "",
@@ -73,18 +82,25 @@ export default function ModalMap({
 
 
     React.useEffect(() => {
+        if (!vehicleData && vehicleData?.current_fleet.length) {
+            return;
+        }
+        current_fleet = vehicleData?.current_fleet[0];
         if (status != 0 && current_fleet && current_fleet.fleetstatus && current_fleet.fleetstatus.enroute_for_pickup &&
             current_fleet.fleetstatus.enroute_for_pickup.origin && current_fleet.fleetstatus.enroute_for_pickup.destination
         ) {
             var ccp = current_fleet.fleetstatus.enroute_for_pickup;
             var wwp = [];
             ccp.waypoints.forEach((el, i) => {
-                var kcopy = [
-                    Math.max(el.latitude, el.longitude),
-                    Math.min(el.latitude, el.longitude)
-                ]
-                // if (i != 0) {
-                wwp.push(kcopy);
+                if (i != 0) {
+                    var kcopy = [
+                        Math.max(el.latitude, el.longitude),
+                        Math.min(el.latitude, el.longitude)
+                    ]
+                    // if (i != 0) {
+                    wwp.push(kcopy);
+                }
+
                 // }
             })
             var ddOne = {
@@ -95,30 +111,94 @@ export default function ModalMap({
                     coordinates: [...wwp]
                 }
             }
-            console.log(ddOne);
+            // console.log(ddOne);
             setDataOne({
                 ...ddOne
             })
+            setPickDataOne({
+                ...pickdataOne,
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
+                        Math.max(ccp.waypoints[0].latitude, ccp.waypoints[0].longitude),
+                        Math.min(ccp.waypoints[0].latitude, ccp.waypoints[0].longitude)
+                    ]
+                }
+            })
         }
-    }, [current_fleet])
+        // console.log(current_fleet);
+    }, [current_fleet, vehicleData]);
     // console.log(current_fleet);
 
-    React.useEffect(() => {
-        // console.log(dataOne);
-    }, [dataOne])
+    // React.useEffect(() => {
+    //     console.log(pickdataOne);
+    //     console.log(dataOne);
+    // }, [pickdataOne, dataOne])
 
 
     React.useEffect(() => {
         if (!waypoints) { return }
-        if (status != 0) { return }
+        // if (status != 0) { return }
         var wwp = [...waypoints];
         var wp = [];
+
         if (pickAddress && pickAddress.origin && pickAddress.origin.latitude) {
+            if (!status || status == 0) {
+                wp.push([
+                    Math.max(pickAddress.origin.latitude, pickAddress.origin.longitude),
+                    Math.min(pickAddress.origin.latitude, pickAddress.origin.longitude)
+                ])
+            }
+            else if (vehicleData && vehicleData.current_fleet.length &&
+                vehicleData.current_fleet[0].fleetstatus && !vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup
+            ) {
+                setPickDataOne({
+                    ...pickdataOne,
+                    geometry: {
+                        type: "LineString",
+                        coordinates: [
+                            [
+                                Math.max(pickAddress.origin.latitude, pickAddress.origin.longitude),
+                                Math.min(pickAddress.origin.latitude, pickAddress.origin.longitude)
+                            ],
+                            [
+                                Math.max(vehicleData.current_fleet[0].origin.latitude, vehicleData.current_fleet[0].origin.longitude),
+                                Math.min(vehicleData.current_fleet[0].origin.latitude, vehicleData.current_fleet[0].origin.longitude)
+                            ]
+                        ]
+                    }
+                })
+            }
+        }
+        if (vehicleData && vehicleData.current_fleet.length &&
+            vehicleData.current_fleet[0].fleetstatus && vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup
+            && vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.origin && vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.destination
+        ) {
+            setPickDataOne({
+                ...pickdataOne,
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
+                        [
+                            Math.max(vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.origin.latitude, vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.origin.longitude),
+                            Math.min(vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.origin.latitude, vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.origin.longitude)
+                        ],
+                        [
+                            Math.max(vehicleData.current_fleet[0].origin.latitude, vehicleData.current_fleet[0].origin.longitude),
+                            Math.min(vehicleData.current_fleet[0].origin.latitude, vehicleData.current_fleet[0].origin.longitude)
+                        ]
+                    ]
+                }
+            })
+        }
+        if (status != 0 && vehicleData?.current_fleet && vehicleData?.current_fleet.length &&
+            vehicleData?.current_fleet[0].origin) {
             wp.push([
-                Math.max(pickAddress.origin.latitude, pickAddress.origin.longitude),
-                Math.min(pickAddress.origin.latitude, pickAddress.origin.longitude)
+                Math.max(vehicleData.current_fleet[0].origin.latitude, vehicleData.current_fleet[0].origin.longitude),
+                Math.min(vehicleData.current_fleet[0].origin.latitude, vehicleData.current_fleet[0].origin.longitude)
             ])
         }
+
         wwp.forEach((el, i) => {
             if (el.latitude && el.longitude) {
                 wp.push([
@@ -127,10 +207,17 @@ export default function ModalMap({
                 ])
             }
         })
-        if (pickAddress && pickAddress.destination && pickAddress.destination.latitude) {
+        if (!status && status == 0 && pickAddress && pickAddress.destination && pickAddress.destination.latitude) {
             wp.push([
                 Math.max(pickAddress.destination.latitude, pickAddress.destination.longitude),
                 Math.min(pickAddress.destination.latitude, pickAddress.destination.longitude)
+            ])
+        }
+        if (status != 0 && vehicleData?.current_fleet && vehicleData?.current_fleet.length &&
+            vehicleData?.current_fleet[0].destination) {
+            wp.push([
+                Math.max(vehicleData.current_fleet[0].destination.latitude, vehicleData.current_fleet[0].destination.longitude),
+                Math.min(vehicleData.current_fleet[0].destination.latitude, vehicleData.current_fleet[0].destination.longitude)
             ])
         }
         // console.log(wp);
@@ -148,49 +235,91 @@ export default function ModalMap({
         setDataOne({
             ...ddOne
         })
-    }, [waypoints, pickAddress]);
+        // console.log(ddOne);
+        // console.log(ddOne);
+    }, [waypoints, pickAddress, current_fleet, vehicleData]);
 
     React.useEffect(() => {
+        // console.log(vehicleData);
+        if (vehicleData?.current_fleet && vehicleData?.current_fleet.length &&
+            vehicleData?.current_fleet[0].waypoints?.length
+        ) {
+            var wwp = [...vehicleData.current_fleet[0].waypoints];
+            setWaypoints([...wwp])
+        }
+        var isGeo = Object.keys(navigator.geolocation).length > 0 ? true : false;
+
         if (vehicleData?.current_location) {
+            // console.log(vehicleData.current_location);
             setViewState({
                 ...viewState,
                 latitude: vehicleData?.current_location.lat,
                 longitude: vehicleData?.current_location.lngt,
             })
-            navigator.geolocation.getCurrentPosition((e) => {
-                setUserLocation({
-                    ...userLocation,
-                    latitude: e.coords.latitude,
-                    longitude: e.coords.longitude,
-                })
-                // console.log(e.coords);
+            setUserLocation({
+                ...userLocation,
+                latitude: vehicleData?.current_location.lat,
+                longitude: vehicleData?.current_location.lngt,
             })
         }
         else {
-            navigator.geolocation.getCurrentPosition((e) => {
-                setViewState({
-                    ...viewState,
-                    latitude: e.coords.latitude,
-                    longitude: e.coords.longitude,
-                })
+            if (vehicleData?.current_fleet
+                && vehicleData?.current_fleet.length &&
+                vehicleData.current_fleet[0].origin) {
+                var dda = vehicleData?.current_fleet[0].origin;
+                // console.log(dda);
                 setUserLocation({
                     ...userLocation,
-                    latitude: e.coords.latitude,
-                    longitude: e.coords.longitude,
+                    latitude: dda.latitude,
+                    longitude: dda.longitude,
                 })
-                // console.log(e.coords);
-            })
+                setViewState({
+                    ...viewState,
+                    latitude: dda.latitude,
+                    longitude: dda.longitude,
+                })
+            }
+            else {
+                if (!isGeo) {
+                    setUserLocation({
+                        ...userLocation,
+                        latitude: 19.0760,
+                        longitude: 72.8777,
+                    })
+                    setViewState({
+                        ...viewState,
+                        latitude: 19.0760,
+                        longitude: 72.8777,
+                    })
+                    return;
+                }
+                else {
+                    navigator.geolocation.getCurrentPosition((e) => {
+                        setUserLocation({
+                            ...userLocation,
+                            latitude: e.coords.latitude,
+                            longitude: e.coords.longitude,
+                        })
+                        // console.log(e.coords);
+                        setViewState({
+                            ...viewState,
+                            latitude: e.coords.latitude,
+                            longitude: e.coords.longitude,
+                        })
+                        // console.log(e.coords);
+                    })
+                }
+            }
         }
-
     }, [])
 
     // React.useEffect(() => {
     // console.log(viewState);
     // }, [viewState])
 
-    React.useEffect(() => {
-        console.log(viewState);
-    }, [viewState])
+    // React.useEffect(() => {
+    //     console.log(viewState);
+    // }, [viewState])
 
 
 
@@ -272,7 +401,7 @@ export default function ModalMap({
                         </Line> */}
                         {/* {dataOne && */}
                         {status !== null && status !== "" && dataOne && dataOne.geometry.coordinates.length
-                            && (status == 0 || status == 1 || status == 2)
+                            // && (status == 0 || status == 1 || status == 2)
                             ?
                             <Source id="polylineLayer" type="geojson" data={dataOne}>
                                 <Layer
@@ -285,6 +414,25 @@ export default function ModalMap({
                                     }}
                                     paint={{
                                         "line-color": "rgba(3, 170, 238, 1)",
+                                        "line-width": 3
+                                    }}
+                                />
+                            </Source>
+                            : <></>}
+                        {status !== null && status !== "" && pickdataOne && pickdataOne.geometry.coordinates.length
+                            // && (status == 0 || status == 1 || status == 2)
+                            ?
+                            <Source id="polylineLayer2" type="geojson" data={pickdataOne}>
+                                <Layer
+                                    id="lineLayer2"
+                                    type="line"
+                                    source="my-data2"
+                                    layout={{
+                                        "line-join": "round",
+                                        "line-cap": "round"
+                                    }}
+                                    paint={{
+                                        "line-color": "rgb(139,0,0)",
                                         "line-width": 3
                                     }}
                                 />
@@ -367,33 +515,36 @@ export default function ModalMap({
                                         ></Marker>
                                         : <></>
                                     }
-                                    {waypoints && waypoints.length > 0 && waypoints.map((el, i) => {
 
-                                        return (
-                                            <>
-                                                {el && el.latitude && el.latitude ?
-                                                    <Marker key={i} latitude={el?.latitude} longitude={el?.longitude}
-                                                    // color='blue'
-                                                    // draggable={true}
-                                                    >
-                                                        <div className='h-6 w-6 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
-                                                            <div className='absolute center h-3 w-3 bg-sky-500 rounded-full'
-                                                                style={{
-                                                                    top: "50%",
-                                                                    left: "50%",
-                                                                    transform: "translate(-50%, -50%)",
-                                                                }}
-                                                            ></div>
-                                                        </div>
-                                                    </Marker>
-                                                    : <></>
-                                                }
-                                            </>
-                                        )
-                                    })}
                                 </>
                                 : <></>
                             }
+                        </>
+                        <>
+                            {waypoints && waypoints.length > 0 && waypoints.map((el, i) => {
+
+                                return (
+                                    <>
+                                        {el && el.latitude && el.latitude ?
+                                            <Marker key={i} latitude={el?.latitude} longitude={el?.longitude}
+                                            // color='blue'
+                                            // draggable={true}
+                                            >
+                                                <div className='h-6 w-6 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
+                                                    <div className='absolute center h-3 w-3 bg-sky-500 rounded-full'
+                                                        style={{
+                                                            top: "50%",
+                                                            left: "50%",
+                                                            transform: "translate(-50%, -50%)",
+                                                        }}
+                                                    ></div>
+                                                </div>
+                                            </Marker>
+                                            : <></>
+                                        }
+                                    </>
+                                )
+                            })}
                         </>
                         <>
                             {status && (status == 1 || status == 2 || status == 3)
