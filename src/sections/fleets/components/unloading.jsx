@@ -53,6 +53,7 @@ export default function UnloadingVehicle({
     })
     const [createTripStatus, setCreateTripStatus] = useState(false);
     const [notData, setNotData] = useState(false);
+    const [waypoints, setWaypoints] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -162,6 +163,7 @@ export default function UnloadingVehicle({
                                 <ModalMap pick={pick} setPick={setPick}
                                     pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
                                     status={3} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                                    waypoints={waypoints} setWaypoints={setWaypoints}
                                     vehicleData={vehicleData}
                                 // waypoints={waypoints} setWaypoints={setWaypoints}
                                 />

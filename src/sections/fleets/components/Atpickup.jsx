@@ -55,6 +55,7 @@ export default function AtPickupFleetModal({
   })
   const [createTripStatus, setCreateTripStatus] = useState(false);
   const [notData, setNotData] = useState(false);
+  const [waypoints, setWaypoints] = useState([]);
 
   useEffect(() => {
     if (vehicleData &&
@@ -85,7 +86,7 @@ export default function AtPickupFleetModal({
         setM2open(mmd);
 
         setCreateTripStatus(false);
-        console.log(mmd);
+        // console.log(mmd);
         setMOpen((mopen) => !mopen);
       })
       .catch((err) => {
@@ -185,6 +186,7 @@ export default function AtPickupFleetModal({
                 <ModalMap pick={pick} setPick={setPick}
                   pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
                   status={3} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                  waypoints={waypoints} setWaypoints={setWaypoints}
                   vehicleData={vehicleData}
                 // waypoints={waypoints} setWaypoints={setWaypoints}
                 />

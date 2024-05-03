@@ -40,15 +40,12 @@ export default function AAutoCI2({
         if (inValue) {
             setTimeout(async () => {
                 handleInputChange(inValue);
-
             }, 1000)
         }
         else {
             setSuggestions([]);
         }
-
     }, [inValue]);
-
 
     const handleChange = (event) => {
         // handleManualInputChange(event, "streetAndNumber");

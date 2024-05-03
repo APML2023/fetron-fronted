@@ -50,6 +50,7 @@ export default function InTransit({
     const [createTripStatus, setCreateTripStatus] = useState(false);
     const [arrivalTime, setArrivalTime] = useState();
     const [notData, setNotData] = useState(false);
+    const [waypoints, setWaypoints] = useState([]);
 
     const fetchIndividualVehicle = async () => {
         await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/vehicle/oneerp?vnum=${vehicleNumber}`,
@@ -163,6 +164,7 @@ export default function InTransit({
                                 <ModalMap pick={pick} setPick={setPick}
                                     pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
                                     status={3} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                                    waypoints={waypoints} setWaypoints={setWaypoints}
                                     vehicleData={vehicleData}
                                 // waypoints={waypoints} setWaypoints={setWaypoints}
                                 />

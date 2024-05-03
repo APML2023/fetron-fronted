@@ -591,8 +591,10 @@ export default function ModalMap({
                                                     return (
                                                         <Marker latitude={el.latitude} longitude={el.longitude}
                                                         >
-                                                            <div className='h-10 w-10 bg-sky-400 rounded-full' style={{ background: "rgba(87, 190, 250,0.4)" }}>
-                                                                <div className='absolute center h-3 w-3 bg-sky-500 rounded-full'
+                                                            <div className='h-10 w-10 rounded-full'
+                                                            style={{ background: "rgba(87, 190, 250,0.4)" }}
+                                                            >
+                                                                <div className='absolute center h-3 w-3 bg-red-500 rounded-full'
                                                                     style={{
                                                                         top: "50%",
                                                                         left: "50%",
