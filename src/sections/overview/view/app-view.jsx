@@ -15,25 +15,96 @@ import AppWidgetSummary from '../app-widget-summary';
 import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { CircularProgress, Skeleton } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
 export default function AppView() {
-  return (
-    <Container maxWidth="xl">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
-      </Typography>
 
-      <Grid container spacing={3}>
-        <Grid xs={12} sm={6} md={3}>
+  const [counts, setCounts] = useState();
+
+  async function fetchCounts() {
+    await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/getfleetcounts`).then((res) => {
+      // console.log(res.data);
+      setCounts(res.data);
+    })
+      .catch((err) => {
+        setCounts("error");
+      })
+  }
+
+  useEffect(() => {
+    fetchCounts();
+  }, [])
+
+  return (
+    <>
+      {!counts ?
+        <div className='flex justify-start items-center flex-col gap-2 w-full h-screen py-4'>
+
+          <Skeleton variant="rectangular" className='w-full rounded-lg h-2/5' style={{ height: "calc(40vh - 5rem)" }} />
+          <Skeleton variant="rectangular" className='w-full rounded-lg' style={{ height: "calc(60vh - 5rem)" }} />
+          {/* <Skeleton variant="rectangular" className='w-full rounded-lg' height={118} /> */}
+        </div>
+        :
+        <Container maxWidth="xl">
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            Hi, Welcome back 👋
+          </Typography>
+
+
+          <div className='w-full h-full flex flex-col justify-start items-start gap-4'>
+            <div className='w-full h-fit flex justify-start items-center gap-2 flex-wrap'>
+              {counts && counts != "error" &&
+                counts.data.map((el) => {
+                  return (
+
+                    <div className='w-52 h-32 bg-slate-100 border-1 border-slate-300 rounded-lg flex flex-col justify-center items-start gap-4 pl-4 hover:bg-slate-200'>
+                      <p className='text-lg font-bold'>{el.field}</p>
+                      <p className='text-2xl text-red-800 text-semibold'>{el.count}</p>
+                    </div>
+
+                  )
+                })
+
+              }
+
+            </div>
+            {/* <Grid xs={12} md={6} lg={4}> */}
+            {counts && counts != "error" &&
+              <AppCurrentVisits
+                title="Current Visits"
+                className="w-full bg-transparent"
+                chart={{
+                  series: [
+                    { label: 'Available', value: counts.obj.available },
+                    { label: 'EnrouteForPickup', value: counts.obj.enrouteForPickup },
+                    { label: 'AtPickup', value: counts.obj.atPickup },
+                    { label: 'InTransit', value: counts.obj.inTransit },
+                    { label: 'Unloading', value: counts.obj.unloading },
+                    { label: 'Completed', value: counts.obj.completed },
+                  ],
+                }}
+              />
+            }
+
+            {/* </Grid> */}
+          </div>
+          {/* <Grid container spacing={3}> */}
+
+
+          {/*   <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Weekly Sales"
-            total={714000}
+            title="All vechiles"
+            total={counts.all}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
           />
         </Grid>
+
+
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
@@ -102,9 +173,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
+        </Grid> */}
+          {/* Pie Chart */}
+          {/* <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
             title="Current Visits"
             chart={{
@@ -116,9 +187,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
+          {/* <Grid xs={12} md={6} lg={8}>
           <AppConversionRates
             title="Conversion Rates"
             subheader="(+43%) than last year"
@@ -137,9 +208,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+          {/* <Grid xs={12} md={6} lg={4}>
           <AppCurrentSubject
             title="Current Subject"
             chart={{
@@ -151,9 +222,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
+          {/* <Grid xs={12} md={6} lg={8}>
           <AppNewsUpdate
             title="News Update"
             list={[...Array(5)].map((_, index) => ({
@@ -164,9 +235,9 @@ export default function AppView() {
               postedAt: faker.date.recent(),
             }))}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+          {/* <Grid xs={12} md={6} lg={4}>
           <AppOrderTimeline
             title="Order Timeline"
             list={[...Array(5)].map((_, index) => ({
@@ -182,9 +253,9 @@ export default function AppView() {
               time: faker.date.past(),
             }))}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+          {/* <Grid xs={12} md={6} lg={4}>
           <AppTrafficBySite
             title="Traffic by Site"
             list={[
@@ -210,9 +281,9 @@ export default function AppView() {
               },
             ]}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
+          {/* <Grid xs={12} md={6} lg={8}>
           <AppTasks
             title="Tasks"
             list={[
@@ -223,8 +294,11 @@ export default function AppView() {
               { id: '5', name: 'Sprint Showcase' },
             ]}
           />
-        </Grid>
-      </Grid>
-    </Container>
+        </Grid> */}
+          {/* </Grid> */}
+        </Container >
+      }
+    </>
+
   );
 }
