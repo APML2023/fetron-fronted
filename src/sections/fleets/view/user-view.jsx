@@ -83,6 +83,7 @@ export default function UserPage() {
   const [value, setValue] = useState();
   const [pathQ, setPathQ] = useState();
 
+  const [allVehicles, setAllVehicles] = useState();
   const [tabData, setTabData] = useState();
 
   const [skipValue, setSkipValue] = useState(0);
@@ -90,6 +91,8 @@ export default function UserPage() {
 
   const [fetchVehicleLoading, setFVLoading] = useState(false);
   const [fetchAgain, setFetchAgain] = useState(false);
+
+  const [searchInput, setSearchInput] = useState("");
 
   // const { isPending, error, data, refetch } = useQuery({
   //   queryKey: ['fleetData'],
@@ -249,7 +252,9 @@ export default function UserPage() {
     )
       .then((res) => {
         // console.log(res.data);
-        setTabData(res.data.data);
+        var dd = [...res.data.data];
+        setAllVehicles([...dd]);
+        setTabData([...dd]);
         setMaxSkipValue(Number(res.data.dataCount));
         // setMaxSkipValue(23);
       })
@@ -275,6 +280,25 @@ export default function UserPage() {
       setFetchAgain(false);
     }
   }, [fetchAgain])
+
+  useEffect(() => {
+    if (searchInput) {
+      var ddum = [...allVehicles];
+      const filteredData = ddum.filter((el) => {
+        return el?.vehicleNumber.toLowerCase().includes(searchInput.toLowerCase()) ||
+          el?.current_location?.location.toLowerCase().includes(searchInput.toLowerCase()) ||
+          el?.current_fleet?.length && el?.current_fleet[0]?.origin?.place_name.toLowerCase().includes(searchInput.toLowerCase()) ||
+          el?.current_fleet?.length && el?.current_fleet[0]?.destination?.place_name.toLowerCase().includes(searchInput.toLowerCase())
+      });
+      setTabData(filteredData);
+    } else {
+      if (allVehicles && allVehicles.length > 0) {
+        setTabData([...allVehicles]);
+      }
+
+      // getAllVehicles();
+    }
+  }, [searchInput]);
 
   // useEffect(())
 
@@ -312,8 +336,8 @@ export default function UserPage() {
               }}
               className='flex justify-between w-full'
             >
-              <div className='w-full gap-2 flex justify-start items-center'>
-                <Typography sx={{ flexGrow: 0 }} variant="h5">Fleets</Typography>
+              <div className='gap-2 flex justify-start items-center'>
+                <Typography variant="h5">Fleets</Typography>
                 {/* <Box sx={{ flexGrow: 1 }} /> */}
                 {/* <UserTableToolbar
                   numSelected={selected.length}
@@ -323,12 +347,54 @@ export default function UserPage() {
               </div>
 
               {/* <div className=''> */}
-              <button className='text-sm p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
-                onClick={() => { setFetchAgain(true) }}
+              <div className='flex justify-end items-center gap-2'>
+                <input
+                  className='border-2 border-slate-200 rounded-lg px-2 py-1'
+                  placeholder='Search..'
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
 
-              >
-                <span className='inline-flex justify-center items-center gap-1'><FontAwesomeIcon icon={faRefresh} /> Refresh</span>
-              </button>
+                <button className='text-sm p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
+                  onClick={() => { setFetchAgain(true) }}
+
+                >
+                  <span className='inline-flex justify-center items-center gap-1'><FontAwesomeIcon icon={faRefresh} /> Refresh</span>
+                </button>
+                {/* <div className='w-fit'> */}
+                {maxSkipValue > 0 ?
+                  <div className='flex justify-end items-center gap-2'>
+                    <button className='bg-slate-100 rounded-full px-2 py-1 hover:bg-blue-100 disabled:opacity-50 text-xs'
+                      disabled={(Number(skipValue) < 10) ? true : false}
+                      onClick={() => {
+                        setSkipValue(skipValue - 10)
+                      }}
+                    ><FontAwesomeIcon icon={faLessThan} /></button>
+                    <div className='text-sm'>
+                      {(Number(maxSkipValue) - Number(skipValue) > 10) ?
+                        <p>{Number(skipValue) + 1} - {Number(skipValue) + 10}</p>
+                        : <p>{Number(skipValue) + 1} - {Number(maxSkipValue)}</p>
+                      }
+                    </div>
+                    <button className='bg-slate-100 rounded-full px-2 py-1 hover:bg-blue-100 disabled:opacity-50 text-xs'
+                      style={{ transform: 'rotate(-180deg)' }}
+                      disabled={(Number(maxSkipValue) - Number(skipValue) != 0 &&
+                        Number(maxSkipValue) - Number(skipValue) > 10
+                      ) ? false :
+                        true
+                      }
+                      onClick={() => {
+                        if (Number(skipValue) < Number(maxSkipValue)) {
+                          setSkipValue((Number(maxSkipValue) - Number(skipValue) > 10) ? (Number(skipValue) + 10) : Number(maxSkipValue));
+                        }
+                      }}
+                    ><FontAwesomeIcon icon={faLessThan} /></button>
+                    <p className='text-sm underline underline-blue-900'>Total: {maxSkipValue}</p>
+                  </div>
+                  : <></>}
+                {/* </div> */}
+              </div>
+
               {/* </div> */}
             </Toolbar>
             <Box sx={{
@@ -353,36 +419,7 @@ export default function UserPage() {
         <Box
         //  sx={{ paddingTop: "8rem" }}
         >
-          {maxSkipValue > 0 ?
-            <div className='flex justify-end items-center gap-2 pb-1'>
-              <button className='bg-slate-100 rounded-full px-2 py-1 hover:bg-blue-100 disabled:opacity-50 text-xs'
-                disabled={(Number(skipValue) < 10) ? true : false}
-                onClick={() => {
-                  setSkipValue(skipValue - 10)
-                }}
-              ><FontAwesomeIcon icon={faLessThan} /></button>
-              <div className='text-sm'>
-                {(Number(maxSkipValue) - Number(skipValue) > 10) ?
-                  <p>{Number(skipValue) + 1} - {Number(skipValue) + 10}</p>
-                  : <p>{Number(skipValue) + 1} - {Number(maxSkipValue)}</p>
-                }
-              </div>
-              <button className='bg-slate-100 rounded-full px-2 py-1 hover:bg-blue-100 disabled:opacity-50 text-xs'
-                style={{ transform: 'rotate(-180deg)' }}
-                disabled={(Number(maxSkipValue) - Number(skipValue) != 0 &&
-                  Number(maxSkipValue) - Number(skipValue) > 10
-                ) ? false :
-                  true
-                }
-                onClick={() => {
-                  if (Number(skipValue) < Number(maxSkipValue)) {
-                    setSkipValue((Number(maxSkipValue) - Number(skipValue) > 10) ? (Number(skipValue) + 10) : Number(maxSkipValue));
-                  }
-                }}
-              ><FontAwesomeIcon icon={faLessThan} /></button>
-              <p className='text-sm underline underline-blue-900'>Total: {maxSkipValue}</p>
-            </div>
-            : <></>}
+
 
           <Card>
 

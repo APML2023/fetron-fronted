@@ -23,17 +23,22 @@ export default function Main({ children, sx, ...other }) {
         flexDirection: 'column',
         // width: '100%',
         // py: `${HEADER.H_MOBILE}px`,
-        ...(lgUp && {
-          px: 1,
-          pt: `${HEADER.H_DESKTOP}px`,
-          pb: "2px",
-          width: `calc(100% - ${NAV.WIDTH}px)`,
-        }),
+        // ...(lgUp && {
+        //   px: 1,
+        //   pt: `${HEADER.H_DESKTOP}px`,
+        //   pb: "2px",
+        //   width: `calc(100% - ${NAV.WIDTH}px)`,
+        // }),
+        px: 1,
+        pt: `${HEADER.H_DESKTOP}px`,
+        pb: "2px",
+        // width: `calc(100% - ${NAV.WIDTH}px)`,
+        width: `calc(100%)`,
         ...sx,
         // pb: "0",
         // height: "100vh"
       }}
-      {...other}
+    // {...other}
     >
       {children}
     </Box>

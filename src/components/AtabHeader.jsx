@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react'
 import NotificationsPopover from 'src/layouts/dashboard/common/notifications-popover';
 
-const AtabHeader = ({ tabHeader, setMOpen }) => {
+const AtabHeader = ({ tabHeader, setMOpen, setFetchAgain }) => {
   return (
     <div style={{ background: "rgba(255,255,255,0.7)" }} className="flex justify-between p-3 border-solid border-b-2 border-black bg-transparent backdrop-blur-lg sticky top-0 z-[1]">
       <div className="flex justify-center flex-row content-center">
@@ -14,6 +14,7 @@ const AtabHeader = ({ tabHeader, setMOpen }) => {
         <NotificationsPopover />
         <button className='bg-slate-100 h-fit py-1 text-red-800 px-2 rounded-full text-sm hover:bg-red-900 hover:text-white'
           onClick={() => {
+            setFetchAgain(true);
             setMOpen(false);
           }}
         >

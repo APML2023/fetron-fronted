@@ -21,7 +21,8 @@ export default function DashboardLayout({ children }) {
           minHeight: 1,
           height: '100%',
           display: 'flex',
-          flexDirection: { xs: 'column', lg: 'row' },
+          // flexDirection: { xs: 'column', lg: 'row' },
+          flexDirection: 'row',
           zIndex: 10000
         }}
       >

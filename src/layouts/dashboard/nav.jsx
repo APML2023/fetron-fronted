@@ -112,6 +112,7 @@ export default function Nav({ openNav, onCloseNav }) {
   return (
     <>
       {/* {slide ? */}
+
       <div className='h-full w-fit pl-3 pt-3 fixed'
         style={{ zIndex: 1000 }}
       >
@@ -129,13 +130,27 @@ export default function Nav({ openNav, onCloseNav }) {
           width: slide ? "0" : NAV.WIDTH,
           // width: "0",
           zIndex: 1001,
-          // left: slide ? { lg: -NAV.WIDTH } : "0",
+
           // background: "white",
           // position: 'fixed',
           transition: "0.3s all ease-out"
         }}
       >
-        {upLg ? (
+        <Box
+          sx={{
+            height: 1,
+            // width: "fit-content",
+            // position: slide ? "relative" : "fixed",
+            // position: 'fixed',
+            // left: slide ? { lg: -NAV.WIDTH } : "0",
+            width: slide ? "0" : NAV.WIDTH,
+            background: "white",
+            borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+          }}
+        >
+          {renderContent}
+        </Box>
+        {/* {upLg ? (
           <Box
             sx={{
               height: 1,
@@ -160,7 +175,7 @@ export default function Nav({ openNav, onCloseNav }) {
           >
             {renderContent}
           </Drawer>
-        )}
+        )} */}
       </Box >
       {/* } */}
     </>

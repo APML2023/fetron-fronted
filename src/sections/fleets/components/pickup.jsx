@@ -124,12 +124,14 @@ export default function PickupFleetModal({
           <div className="w-full h-full flex justify-start content-center flex-col pb-4 overflow-auto ">
             <AtabHeader
               tabHeader="Enroute for Pickup"
-              cancelIcon={<FontAwesomeIcon
-                icon={faXmark}
-                onClick={() => {
-                  setMOpen(false);
-                }}
-              />}
+              // cancelIcon={<FontAwesomeIcon
+              //   icon={faXmark}
+              //   onClick={() => {
+              //     setMOpen(false);
+              //   }}
+              // />}
+              setMOpen={setMOpen}
+              setFetchAgain={setFetchAgain}
             />
             <div
               style={{ background: 'rgba(255,255,255,0.4)' }}

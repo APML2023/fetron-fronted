@@ -108,6 +108,7 @@ export default function InTransit({
             <Modal
                 open={mopen}
                 onClose={() => {
+                    setFetchAgain(true);
                     setMOpen((mopen) => !mopen);
                 }}
                 aria-labelledby="modal-modal-title"
@@ -128,6 +129,7 @@ export default function InTransit({
                         <AtabHeader
                             tabHeader={`Intransit | ${vehicleData ? vehicleNumber : ""}`}
                             setMOpen={setMOpen}
+                            setFetchAgain={setFetchAgain}
                         />
                         <div
                             style={{ background: 'rgba(255,255,255,0.4)' }}

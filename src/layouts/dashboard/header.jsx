@@ -58,11 +58,13 @@ export default function Header({ onOpenNav }) {
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,
         }),
-        ...(lgUp && {
-          // width: `calc(100% - ${NAV.WIDTH + 1}px)`,
-          width: "100%",
-          height: HEADER.H_DESKTOP,
-        }),
+        // ...(lgUp && {
+        //   // width: `calc(100% - ${NAV.WIDTH + 1}px)`,
+        //   width: "100%",
+        //   height: HEADER.H_DESKTOP,
+        // }),
+        width: "100%",
+        height: HEADER.H_DESKTOP,
         py: 0
       }}
     >
