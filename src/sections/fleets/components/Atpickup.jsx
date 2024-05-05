@@ -185,7 +185,7 @@ export default function AtPickupFleetModal({
               >
                 <ModalMap pick={pick} setPick={setPick}
                   pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
-                  status={3} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                  status={vehicleData.current_status} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
                   waypoints={waypoints} setWaypoints={setWaypoints}
                   vehicleData={vehicleData}
                 // waypoints={waypoints} setWaypoints={setWaypoints}

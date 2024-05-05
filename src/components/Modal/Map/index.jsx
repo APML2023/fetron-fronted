@@ -59,6 +59,15 @@ export default function ModalMap({
         }
     });
 
+    const [vehiclePathdataOne, setVehiclePathDataOne] = React.useState({
+        type: "Feature",
+        // properties: {},
+        geometry: {
+            type: "LineString",
+            coordinates: []
+        }
+    });
+
     const [userLocation, setUserLocation] = React.useState({ latitude: "", longitude: "" });
     const [viewState, setViewState] = React.useState({
         longitude: "",
@@ -85,6 +94,31 @@ export default function ModalMap({
         if (!vehicleData && vehicleData?.current_fleet.length) {
             return;
         }
+
+
+        if (vehicleData && vehicleData.vehicle_path) {
+            var vpd = [];
+            vehicleData.vehicle_path.forEach((el, i) => {
+                vpd.push([
+                    Math.max(el.lat, el.lngt),
+                    Math.min(el.lat, el.lngt)
+                ])
+            })
+            var vehicleddOne = {
+                type: "Feature",
+                // properties: {},
+                geometry: {
+                    type: "LineString",
+                    coordinates: [...vpd]
+                }
+            }
+            console.log(vehicleddOne);
+            setVehiclePathDataOne({
+                ...vehicleddOne
+            })
+        }
+
+
         current_fleet = vehicleData?.current_fleet[0];
         if (status != 0 && current_fleet && current_fleet.fleetstatus && current_fleet.fleetstatus.enroute_for_pickup &&
             current_fleet.fleetstatus.enroute_for_pickup.origin && current_fleet.fleetstatus.enroute_for_pickup.destination
@@ -266,7 +300,13 @@ export default function ModalMap({
             if (vehicleData?.current_fleet
                 && vehicleData?.current_fleet.length &&
                 vehicleData.current_fleet[0].origin) {
-                var dda = vehicleData?.current_fleet[0].origin;
+                console.log(status);
+                if (status == 5) {
+                    var dda = vehicleData?.current_fleet[0].destination;
+                }
+                else {
+                    var dda = vehicleData?.current_fleet[0].origin;
+                }
                 // console.log(dda);
                 setUserLocation({
                     ...userLocation,
@@ -399,6 +439,54 @@ export default function ModalMap({
                         {/* <Line>
 
                         </Line> */}
+
+                        {status !== null && status !== "" && vehiclePathdataOne && vehiclePathdataOne.geometry.coordinates.length
+                            // && (status == 0 || status == 1 || status == 2)
+                            ?
+                            <Source id="polylineLayer" type="geojson" data={vehiclePathdataOne}>
+                                <Layer
+                                    id="lineLayer"
+                                    type="line"
+                                    source="my-data"
+                                    layout={{
+                                        "line-join": "round",
+                                        "line-cap": "round"
+                                    }}
+                                    paint={{
+                                        "line-color": "rgb(105,105,105)",
+                                        "line-width": 3
+                                    }}
+                                />
+                            </Source>
+                            : <></>}
+
+                        <>
+                            {vehicleData && vehicleData.vehicle_path && vehicleData.vehicle_path.length > 0 && vehicleData.vehicle_path.map((el, i) => {
+
+                                return (
+                                    <>
+                                        {i != (vehicleData.vehicle_path.length - 1) ?
+                                            <Marker key={i} latitude={el?.lat} longitude={el?.lngt}
+                                            // color='blue'
+                                            // draggable={true}
+                                            >
+                                                <div className='h-4 w-4 bg-sky-400 rounded-full' style={{ background: "rgb(105,105,105)" }}>
+                                                    <div className='absolute center h-2 w-2 bg-sky-500 rounded-full'
+                                                        style={{
+                                                            top: "50%",
+                                                            left: "50%",
+                                                            transform: "translate(-50%, -50%)",
+                                                        }}
+                                                    ></div>
+                                                </div>
+                                            </Marker>
+                                            : <></>
+                                        }
+                                    </>
+                                )
+                            })}
+                        </>
+
                         {/* {dataOne && */}
                         {status !== null && status !== "" && dataOne && dataOne.geometry.coordinates.length
                             // && (status == 0 || status == 1 || status == 2)
@@ -547,7 +635,7 @@ export default function ModalMap({
                             })}
                         </>
                         <>
-                            {status && (status == 1 || status == 2 || status == 3)
+                            {status
                                 && current_fleet && current_fleet.origin && current_fleet.destination
                                 ?
                                 <>
@@ -592,7 +680,7 @@ export default function ModalMap({
                                                         <Marker latitude={el.latitude} longitude={el.longitude}
                                                         >
                                                             <div className='h-10 w-10 rounded-full'
-                                                            style={{ background: "rgba(87, 190, 250,0.4)" }}
+                                                                style={{ background: "rgba(87, 190, 250,0.4)" }}
                                                             >
                                                                 <div className='absolute center h-3 w-3 bg-red-500 rounded-full'
                                                                     style={{

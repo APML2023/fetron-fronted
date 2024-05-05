@@ -220,7 +220,7 @@ export default function EnroutePickupFleetModal({ vehicleNumber, vehicleData, st
                             <div style={{ minHeight: "calc(100% - 2rem)", width: "70%" }} className="relative border-2 border-solid border-slate-400 overflow-hidden z-[0] rounded-md overflow-hidden">
                                 <ModalMap pick={pick} setPick={setPick}
                                     pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
-                                    status={2} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                                    status={vehicleData.current_status} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
                                     waypoints={waypoints} setWaypoints={setWaypoints}
                                     vehicleData={vehicleData}
                                 />

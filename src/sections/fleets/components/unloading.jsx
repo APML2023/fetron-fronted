@@ -84,13 +84,15 @@ export default function UnloadingVehicle({
             fleetId: vehicleData.current_round,
             data: { ...unloadingD.unloading }
         }
+        console.log(dataPost);
         await axios
             .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/unloading`, dataPost)
             .then((res) => {
                 setNotData({ msg: "Success", type: "success" });
                 navigate("/fleetMonitoring/completed");
                 // setFetchAgain(true);
-                // setCreateTripStatus('');
+                setCreateTripStatus('');
+                setMOpen(false);
                 // window.alert('Success');
                 // setMOpen((mopen) => !mopen);
                 // setMOpen((mopen) => !mopen);
@@ -162,7 +164,7 @@ export default function UnloadingVehicle({
                             >
                                 <ModalMap pick={pick} setPick={setPick}
                                     pickAddress={locationIns} setPickAddress={setLocationIns} field={field}
-                                    status={3} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
+                                    status={vehicleData.current_status} current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
                                     waypoints={waypoints} setWaypoints={setWaypoints}
                                     vehicleData={vehicleData}
                                 // waypoints={waypoints} setWaypoints={setWaypoints}

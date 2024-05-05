@@ -167,7 +167,7 @@ export default function PickupFleetModal({
                   pickAddress={locationIns}
                   setPickAddress={setLocationIns}
                   field={field}
-                  status={1}
+                  status={vehicleData.current_status}
                   current_fleet={vehicleData?.current_fleet ? vehicleData?.current_fleet[0] : {}}
                   vehicleData={vehicleData}
                 />
