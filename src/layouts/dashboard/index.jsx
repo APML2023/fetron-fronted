@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }) {
       <Box
         sx={{
           minHeight: 1,
-          height: '100%',
+          height: '100vh',
           display: 'flex',
           // flexDirection: { xs: 'column', lg: 'row' },
           flexDirection: 'row',

@@ -51,26 +51,75 @@ export default function AppView() {
         :
         <Container maxWidth="xl">
           <Typography variant="h4" sx={{ mb: 5 }}>
-            Hi, Welcome back 👋
+            Hi, Welcome to Fetron 👋
           </Typography>
 
 
           <div className='w-full h-full flex flex-col justify-start items-start gap-4'>
-            <div className='w-full h-fit flex justify-start items-center gap-2 flex-wrap'>
-              {counts && counts != "error" &&
-                counts.data.map((el) => {
-                  return (
+            <div className='w-full h-fit flex flex-col rounded-lg bg-slate-100 gap-1 py-1'>
+              <div className='w-full h-fit flex justify-start items-center gap-1 p-1 py-0'>
 
-                    <div className='w-52 h-32 bg-slate-100 border-1 border-slate-300 rounded-lg flex flex-col justify-center items-start gap-4 pl-4 hover:bg-slate-200'>
-                      <p className='text-lg font-bold'>{el.field}</p>
-                      <p className='text-2xl text-red-800 text-semibold'>{el.count}</p>
-                    </div>
+                {counts && counts != "error" &&
+                  counts.data.map((el, i) => {
+                    return (
+                      <>
+                        {i < 3 ?
+                          < div className='w-full h-24 bg-white border-1 border-slate-300 rounded-lg flex flex-col justify-center items-start gap-2 pl-4' >
+                            <p className='text-lg font-bold'>{el.field}</p>
+                            <p className='text-2xl text-red-800 text-semibold'>{el.count}</p>
+                          </div>
+                          : <></>
+                        }
+                      </>
 
-                  )
-                })
+                    )
+                  })
 
-              }
+                }
 
+              </div>
+              <div className='w-full h-fit flex justify-start items-center gap-1 p-1 py-0'>
+
+                {counts && counts != "error" &&
+                  counts.data.map((el, i) => {
+                    return (
+                      <>
+                        {i > 2 && i < 6 ?
+                          < div className='w-full h-24 bg-white border-1 border-slate-300 rounded-lg flex flex-col justify-center items-start gap-2 pl-4 ' >
+                            <p className='text-lg font-bold'>{el.field}</p>
+                            <p className='text-2xl text-red-800 text-semibold'>{el.count}</p>
+                          </div>
+                          : <></>
+                        }
+                      </>
+
+                    )
+                  })
+
+                }
+
+              </div>
+              <div className='w-full h-fit flex justify-start items-center gap-1 p-1 py-0'>
+
+                {counts && counts != "error" &&
+                  counts.data.map((el, i) => {
+                    return (
+                      <>
+                        {i > 5 ?
+                          < div className='w-full h-24 bg-white border-1 border-slate-300 rounded-lg flex flex-col justify-center items-start gap-2 pl-4 ' >
+                            <p className='text-lg font-bold'>{el.field}</p>
+                            <p className='text-2xl text-red-800 text-semibold'>{el.count}</p>
+                          </div>
+                          : <></>
+                        }
+                      </>
+
+                    )
+                  })
+
+                }
+
+              </div>
             </div>
             {/* <Grid xs={12} md={6} lg={4}> */}
             {counts && counts != "error" &&

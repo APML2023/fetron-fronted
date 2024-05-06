@@ -21,6 +21,8 @@ export default function Main({ children, sx, ...other }) {
         minHeight: 1,
         display: 'flex',
         flexDirection: 'column',
+        height: '100vh',
+        overflow: 'auto',
         // width: '100%',
         // py: `${HEADER.H_MOBILE}px`,
         // ...(lgUp && {

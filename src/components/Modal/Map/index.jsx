@@ -454,7 +454,7 @@ export default function ModalMap({
                                     }}
                                     paint={{
                                         "line-color": "rgb(105,105,105)",
-                                        "line-width": 3
+                                        "line-width": 2
                                     }}
                                 />
                             </Source>

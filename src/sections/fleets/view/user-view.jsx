@@ -38,7 +38,7 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import ALoader from 'src/components/ALoader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLessThan, faRefresh } from '@fortawesome/free-solid-svg-icons';
+import { faLessThan, faRefresh, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { width } from '@mui/system';
 
 function CustomTabPanel(props) {
@@ -93,6 +93,9 @@ export default function UserPage() {
   const [fetchAgain, setFetchAgain] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
+  const [searchArr, setSearchArr] = useState([]);
+
+  const [openSearch, setOpenSearch] = useState(false);
 
   // const { isPending, error, data, refetch } = useQuery({
   //   queryKey: ['fleetData'],
@@ -281,33 +284,134 @@ export default function UserPage() {
     }
   }, [fetchAgain])
 
-  useEffect(() => {
+  const handleSearchInput = async () => {
     if (searchInput) {
-      var ddum = [...allVehicles];
-      const filteredData = ddum.filter((el) => {
-        return el?.vehicleNumber.toLowerCase().includes(searchInput.toLowerCase()) ||
-          el?.current_location?.location.toLowerCase().includes(searchInput.toLowerCase()) ||
-          el?.current_fleet?.length && el?.current_fleet[0]?.origin?.place_name.toLowerCase().includes(searchInput.toLowerCase()) ||
-          el?.current_fleet?.length && el?.current_fleet[0]?.destination?.place_name.toLowerCase().includes(searchInput.toLowerCase())
-      });
-      setTabData(filteredData);
+      // var ddum = [...allVehicles];
+      // const filteredData = ddum.filter((el) => {
+      //   return el?.vehicleNumber.toLowerCase().includes(searchInput.toLowerCase()) ||
+      //     el?.current_location?.location.toLowerCase().includes(searchInput.toLowerCase()) ||
+      //     el?.current_fleet?.length && el?.current_fleet[0]?.origin?.place_name.toLowerCase().includes(searchInput.toLowerCase()) ||
+      //     el?.current_fleet?.length && el?.current_fleet[0]?.destination?.place_name.toLowerCase().includes(searchInput.toLowerCase())
+      // });
+      // setTabData(filteredData);
+      const ssinput = searchInput.toUpperCase();
+      setSearchArr("loading");
+      await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/vehicle/search?search=${ssinput}`)
+        .then((res) => {
+          const dumdata = [...res.data.data];
+          setSearchArr([...dumdata]);
+        })
     } else {
-      if (allVehicles && allVehicles.length > 0) {
-        setTabData([...allVehicles]);
-      }
+      setSearchArr([]);
+      // if (allVehicles && allVehicles.length > 0) {
+      //   setTabData([...allVehicles]);
+      // }
 
       // getAllVehicles();
     }
+  }
+
+  useEffect(() => {
+    // setTimeout(() => {
+    //   handleSearchInput();
+    // }, 200)
+    // handleSearchInput();
   }, [searchInput]);
+
+  useEffect(() => {
+    if (openSearch) {
+      document.getElementById("searchInputId").focus();
+    }
+  }, [openSearch]);
 
   // useEffect(())
 
   return (
     <>
       <ALoader isLoading={fetchVehicleLoading} />
+      {openSearch ?
+        <div className='flex justify-center items-center flex-col fixed top-0 left-0 w-screen h-screen'
+          style={{ zIndex: '2000', background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(0.1rem)', pointerEvents: '' }}
+        >
+          <button className='fixed top-0 left-0 w-screen h-screen z-10 cursor-default' onClick={() => { setOpenSearch(false) }}></button>
+          <div className='flex justify-center items-center flex-col bg-slate-100 z-20 rounded-lg py-4 border-2 border-white border-solid border-cyan-600' style={{
+            maxWidth: 'calc(90vw)',
+            minWidth: 'calc(50vw)',
+          }}>
+            <form
+              // onClick={() => { handleSearchInput() }} 
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSearchInput();
+              }}
+              className='w-full px-2 flex justify-center items-center gap-1'>
+              <input id="searchInputId"
+                className='border-2 border-slate-200 rounded-lg px-3 py-2 w-full border-2 border-cyan-100 focus:border-cyan-700 outline-0'
+                placeholder='Type... and press Enter to Search'
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              // type='submit'
+              />
+              <button className='bg-slate-700 text-white py-1 px-2 rounded-full'
+                onClick={() => { handleSearchInput(); }}
+              ><FontAwesomeIcon icon={faSearch} /></button>
+            </form>
+            <div className='w-full h-0.5 bg-slate-400 my-2'></div>
+
+            {searchInput && searchArr && searchArr.length && searchArr != "loading" ?
+              <div className='flex flex-col w-full rounded-lg gap-1 px-2 max-h-58 overflow-auto'
+                style={{ maxHeight: 'calc(100vh - 20rem)' }}
+              >
+
+                {
+                  searchArr.map((el, index) => {
+                    const cc = el.current_status;
+                    return (
+                      <button className='bg-white w-full p-2 py-3 flex justify-between rounded-md hover:bg-cyan-900 hover:text-white'>
+                        <span className='text-sm font-bold'>{el.vehicleNumber}</span>
+                        <span className='text-xs'>
+                          {!cc || cc == 0 ? "Available" :
+                            (cc == 1 || cc == 2 ? "Enroute for pickup" :
+                              cc == 3 ? "At Pickup" :
+                                cc == 4 ? "Intransit" :
+                                  cc == 5 ? "Unloading" :
+                                    cc == 6 ? "Completed" : "")
+                          }
+                        </span>
+                      </button>
+                    )
+                  })
+                }
+              </div>
+              : <>
+                {searchInput && searchArr == "loading" ?
+                  <div className='flex flex-col w-full rounded-lg px-2 gap-1 max-h-58 overflow-auto'
+                    style={{ maxHeight: 'calc(100vh - 20rem)' }}
+                  >
+                    <div className='w-full h-8 bg-slate-300 rounded-md'></div>
+                    <div className='w-full h-8 bg-slate-300 rounded-md'></div>
+                    <div className='w-full h-8 bg-slate-300 rounded-md'></div>
+                    <div className='w-full h-8 bg-slate-300 rounded-md'></div>
+                    <div className='w-full h-8 bg-slate-300 rounded-md'></div>
+                  </div>
+                  : <p>No Search</p>
+                }
+              </>
+            }
+
+
+          </div>
+
+
+
+
+        </div>
+        : <></>
+      }
 
       <Container sx={{ width: "100%", maxWidth: "100%" }}>
-        <TabContext value={value} className="w-full" sx={{ width: "100%" }}>
+        <TabContext value={value} className="w-full z-59" sx={{ width: "100%" }}>
           <Box sx={{
             // position: 'fixed',
             width: '100%',
@@ -347,14 +451,13 @@ export default function UserPage() {
               </div>
 
               {/* <div className=''> */}
-              <div className='flex justify-end items-center gap-2'>
-                <input
-                  className='border-2 border-slate-200 rounded-lg px-2 py-1'
-                  placeholder='Search..'
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                />
+              <div className='flex justify-end items-center gap-2 z-50'>
 
+
+                <button
+                  className=' p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
+                  onClick={() => { setOpenSearch(true) }}
+                >Search</button>
                 <button className='text-sm p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
                   onClick={() => { setFetchAgain(true) }}
 
@@ -417,6 +520,7 @@ export default function UserPage() {
           </Box>
         </TabContext>
         <Box
+        // className="z-40"
         //  sx={{ paddingTop: "8rem" }}
         >
 
@@ -424,7 +528,7 @@ export default function UserPage() {
           <Card>
 
             {/* <Scrollbar> */}
-            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 14rem)" }}>
+            <TableContainer sx={{ overflowY: 'auto', maxHeight: "calc(100vh - 12.5rem)" }} >
               <Table sx={{ minWidth: 800 }}>
 
                 <UserTableHead
