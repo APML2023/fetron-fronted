@@ -103,14 +103,14 @@ export default function UserTableRow({
 
   useEffect(() => {
     if (vehicleData) {
-      console.log(vehicleData);
+      // console.log(vehicleData);
       setUpVehData({ ...vehicleData });
       var cs = vehicleData?.current_status;
       if (!cs) {
         setVNumStatus(numStatus => 0);
       }
       else {
-        console.log(cs);
+        // console.log(cs);
         setVNumStatus(numStatus => Number(cs));
       }
 
@@ -135,7 +135,7 @@ export default function UserTableRow({
   }, [vd])
 
   useEffect(() => {
-    console.log("Num Status " + numStatus);
+    // console.log("Num Status " + numStatus);
   }, [numStatus])
 
   // useEffect(() => {

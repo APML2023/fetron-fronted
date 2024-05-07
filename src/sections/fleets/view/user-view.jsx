@@ -146,7 +146,7 @@ export default function UserPage() {
 
   const navigate = useNavigate();
   const pathname = usePathname();
-  var pn = pathname.split("/")[2];
+  var pn = pathname.split("/")[3];
 
 
 
@@ -227,6 +227,7 @@ export default function UserPage() {
       setValue(1);
       return;
     }
+    console.log(pn);
     for (var i = 0; i < typeOfFleet.length; i++) {
       if (typeOfFleet[i].path == pn) {
         console.log(typeOfFleet[i].id);
@@ -243,7 +244,8 @@ export default function UserPage() {
   // const pathName = useLocation().pathname;
 
   async function getAllVehicles() {
-    pn = pathname.split("/")[2];
+    pn = pathname.split("/")[3];
+    console.log(pn);
     setFVLoading(true);
     var dpn = pn;
     var ssk = skipValue;
@@ -505,7 +507,6 @@ export default function UserPage() {
                     setDoMOpen(false);
                     setFetchAgain(true)
                   }}
-
                 >
                   <span className='inline-flex justify-center items-center gap-1'><FontAwesomeIcon icon={faRefresh} /> Refresh</span>
                 </button>
@@ -553,7 +554,7 @@ export default function UserPage() {
                   // console.log(in2);
                   return (
                     <Tab label={el.name} value={Number(in2 + 1)} onClick={() => {
-                      navigate(`/fleetMonitoring/${el.path}`)
+                      navigate(`/fleets/fleet-monitoring/${el.path}`)
                       setSkipValue(0);
                       setMaxSkipValue(0);
                     }} />

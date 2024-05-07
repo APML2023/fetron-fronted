@@ -1,35 +1,43 @@
 import SvgColor from 'src/components/svg-color';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartLine, faDriversLicense, faMagnifyingGlass, faMagnifyingGlassChart, faPerson, faScrewdriverWrench, faTruck, faTruckArrowRight, faUsers } from '@fortawesome/free-solid-svg-icons';
 // ----------------------------------------------------------------------
 
 const icon = (name) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
 
+const dashboardIcon = () => {
+  return <FontAwesomeIcon icon={faChartLine} className='text-normal' />
+}
+
 const navConfig = [
   {
-    title: 'live Tracking',
+    title: 'Dashboard',
     path: '/',
-    icon: icon('ic_analytics'),
+    icon: <FontAwesomeIcon icon={faChartLine} className='text-normal' />
   },
   {
     title: 'Fleet Managment',
     path: '/fleets',
-    icon: icon('ic_fleets'),
-    children : [
+    icon: <FontAwesomeIcon icon={faTruck} className='text-normal' />,
+    children: [
       {
-        subTitle:'Fleet Monitoring',
-        subpath:'/fleetMonitoring',
+        subTitle: 'Fleet Monitoring',
+        subpath: '/fleet-monitoring',
+        icon: <FontAwesomeIcon icon={faMagnifyingGlassChart} className='text-normal' />,
       },
       {
-        subTitle:'Load Assginment',
-        subpath:'/loadAssginment',
+        subTitle: 'Load Assginment',
+        subpath: '/load-assignment',
       }
     ]
   },
   {
     title: 'Shipment',
-    path: '/products'
+    path: '/products',
+    icon: <FontAwesomeIcon icon={faTruckArrowRight} />
   },
   {
     title: 'Consignment',
@@ -38,14 +46,17 @@ const navConfig = [
   {
     title: 'Master',
     path: '/master',
-    children:[
+    icon: <FontAwesomeIcon icon={faScrewdriverWrench} className='text-normal' />,
+    children: [
       {
-        subTitle:"Driver",
-        path:"/driver"
+        subTitle: "Vehicle",
+        subpath: "/vehicle",
+        icon: <FontAwesomeIcon icon={faTruck} className='text-normal' />
       },
       {
-        subTitle:"Vehicles",
-        path:"/vehicles",
+        subTitle: "Driver",
+        subpath: "/driver",
+        icon: <FontAwesomeIcon icon={faUsers} className='text-normal' />
       }
     ]
   },

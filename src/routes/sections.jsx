@@ -10,6 +10,8 @@ export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const LoadAss = lazy(() => import('src/pages/loadAss'));
+export const MasterVehicle = lazy(() => import('src/pages/masterVehicle'));
+
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
@@ -23,23 +25,9 @@ export default function Router() {
       ),
       children: [
         { element: <IndexPage />, index: true },
+
         {
-          path: 'fleets',
-          element: (
-            ""
-          ),
-          // children: [
-          //   { path: "all", element: {} },
-          //   { path: "available", element: {} },
-          //   { path: "enroute-for-pickup", element: {} },
-          //   { path: "at-enroute", element: {} },
-          //   { path: "intransit", element: {} },
-          //   { path: "unloading", element: {} },
-          //   { path: "Completed", element: {} }
-          // ]
-        },
-        {
-          path: "fleetMonitoring", element: (
+          path: "fleets/fleet-monitoring", element: (
             <FleetPage>
               <Suspense>
                 <Outlet />
@@ -56,10 +44,10 @@ export default function Router() {
             { path: "completed", element: {} }
           ]
         },
-        { path: "loadAssginment", element: <LoadAss /> },
+        { path: "load-assignment", element: <LoadAss /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: "master", element: ("") },
+        { path: "master/vehicle", element: <MasterVehicle /> },
 
         {
           path: "driver", element: {},

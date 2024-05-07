@@ -25,7 +25,7 @@ import navConfig from './config-navigation';
 import { useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faBars, faChartLine } from '@fortawesome/free-solid-svg-icons';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
@@ -196,12 +196,17 @@ function NavItem({ item }) {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const pathname = location.pathname;
+  const par = pathname.split('/');
+
 
   const handleToggle = () => {
     setOpen(!open);
   };
 
-  const active = item.path === pathname;
+  // console.log(pathname.split("/"));
+
+  // const active = pathname.includes(item.path);
+  // console.log(item.path, pathname);
 
   return (
     <>
@@ -218,7 +223,7 @@ function NavItem({ item }) {
           color: 'text.secondary',
           textTransform: 'capitalize',
           fontWeight: 'fontWeightMedium',
-          ...(active && {
+          ...(par[1] == item.path.split("/")[1] && {
             color: 'primary.main',
             fontWeight: 'fontWeightSemiBold',
             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
@@ -228,8 +233,9 @@ function NavItem({ item }) {
           }),
         }}
       >
-        <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+        <Box component="span" sx={{ width: 24, height: 24, mr: 1 }}>
           {item.icon}
+          {/* <FontAwesomeIcon icon={faChartLine} className='text-normal' /> */}
         </Box>
         <Typography variant="subtitle1">{item.title}</Typography>
         <Box sx={{ marginLeft: "10px" }}>
@@ -243,16 +249,16 @@ function NavItem({ item }) {
             <ListItemButton
               key={index}
               component={RouterLink}
-              to={child.subpath}
+              to={item.path + child.subpath}
               sx={{
-                marginLeft: "4rem",
+                marginLeft: "2rem",
                 minHeight: 44,
                 borderRadius: 0.75,
                 typography: 'body2',
                 color: 'text.secondary',
                 textTransform: 'capitalize',
                 fontWeight: 'fontWeightMedium',
-                ...(active && {
+                ...(child.subpath && par[2] == child.subpath.split("/")[1] && {
                   color: 'primary.main',
                   fontWeight: 'fontWeightSemiBold',
                   bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
@@ -262,12 +268,16 @@ function NavItem({ item }) {
                 }),
               }}
             >
+              <Box component="span" sx={{ width: 24, height: 24, mr: 1 }}>
+                {child?.icon ? child.icon : ""}
+                {/* <FontAwesomeIcon icon={faChartLine} className='text-normal' /> */}
+              </Box>
               <Typography variant="subtitle2">{child.subTitle}</Typography>
             </ListItemButton>
           ))}
         </Stack>
       )}
-      {console.log(pathname)}
+      {/* {console.log(pathname)} */}
     </>
   );
 
