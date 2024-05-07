@@ -97,6 +97,8 @@ export default function UserPage() {
 
   const [openSearch, setOpenSearch] = useState(false);
 
+  const [domopen, setDoMOpen] = useState();
+
   // const { isPending, error, data, refetch } = useQuery({
   //   queryKey: ['fleetData'],
   //   queryFn: async () => {
@@ -165,23 +167,23 @@ export default function UserPage() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+  // const handleClick = (event, name) => {
+  //   const selectedIndex = selected.indexOf(name);
+  //   let newSelected = [];
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, name);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selected.slice(0, selectedIndex),
+  //       selected.slice(selectedIndex + 1)
+  //     );
+  //   }
+  //   setSelected(newSelected);
+  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -322,7 +324,42 @@ export default function UserPage() {
     if (openSearch) {
       document.getElementById("searchInputId").focus();
     }
+    else {
+      setDoMOpen(false);
+    }
   }, [openSearch]);
+
+  const fetchIndividualVehicle = async (erpvehicleNumber) => {
+    await axios.get(`${import.meta.env.VITE_APP_BACKEND_URL}/y/vehicle/oneerp?vnum=${erpvehicleNumber}`,
+      { withCredentials: true }
+    )
+      .then((res) => {
+        // setNotData({ msg: "Success", type: "success" });
+        // console.log("Data fetched");
+        // setvd({ ...res.data.data });
+        // const mmd = true;
+        // setM2open(mmd);
+
+        // setCreateTripStatus(false);
+        // console.log(mmd);
+        // setMOpen((mopen) => !mopen);
+        const vdata = res.data.data;
+        if (!vdata) {
+          window.alert("Error occurred in fetching data...");
+        }
+        if (!vdata?.current_status) {
+          vdata.current_status = 0;
+        }
+        setDoMOpen(vdata);
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert("Error occurred in fetching data...");
+        // setMOpen((mopen) => !mopen);
+        // setFetchAgain(true);
+
+      })
+  }
 
   // useEffect(())
 
@@ -331,10 +368,10 @@ export default function UserPage() {
       <ALoader isLoading={fetchVehicleLoading} />
       {openSearch ?
         <div className='flex justify-center items-center flex-col fixed top-0 left-0 w-screen h-screen'
-          style={{ zIndex: '2000', background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(0.1rem)', pointerEvents: '' }}
+          style={{ zIndex: '1200', background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(0.1rem)', pointerEvents: '' }}
         >
           <button className='fixed top-0 left-0 w-screen h-screen z-10 cursor-default' onClick={() => { setOpenSearch(false) }}></button>
-          <div className='flex justify-center items-center flex-col bg-slate-100 z-20 rounded-lg py-4 border-2 border-white border-solid border-cyan-600' style={{
+          <div className='flex justify-center items-center flex-col bg-slate-100 z-20 rounded-lg py-4 border-2 border-cyan-700 border-solid border-cyan-600' style={{
             maxWidth: 'calc(90vw)',
             minWidth: 'calc(50vw)',
           }}>
@@ -368,7 +405,12 @@ export default function UserPage() {
                   searchArr.map((el, index) => {
                     const cc = el.current_status;
                     return (
-                      <button className='bg-white w-full p-2 py-3 flex justify-between rounded-md hover:bg-cyan-900 hover:text-white'>
+                      <button className='bg-white w-full p-2 py-3 flex justify-between rounded-md hover:bg-cyan-900 hover:text-white'
+                        onClick={() => {
+                          // setOpenSearch(false); 
+                          fetchIndividualVehicle(el.vehicleNumber)
+                        }}
+                      >
                         <span className='text-sm font-bold'>{el.vehicleNumber}</span>
                         <span className='text-xs'>
                           {!cc || cc == 0 ? "Available" :
@@ -459,7 +501,10 @@ export default function UserPage() {
                   onClick={() => { setOpenSearch(true) }}
                 >Search</button>
                 <button className='text-sm p-2 bg-slate-100 rounded-lg hover:bg-slate-200'
-                  onClick={() => { setFetchAgain(true) }}
+                  onClick={() => {
+                    setDoMOpen(false);
+                    setFetchAgain(true)
+                  }}
 
                 >
                   <span className='inline-flex justify-center items-center gap-1'><FontAwesomeIcon icon={faRefresh} /> Refresh</span>
@@ -594,23 +639,32 @@ export default function UserPage() {
                 <TableBody>
                   {tabData && tabData.length ?
                     <>
-                      {tabData.map((row) => (
+                      {domopen && domopen._id ?
                         <UserTableRow
-                          Data={tabData}
-                          key={row?.data?._id}
-                          vehicleNumber={row?.vehicleNumber}
-                          vehicleType={row?.data?.vehicleType}
-                          status={row?.current_status ? Number(row.current_status) : null}
-                          vehicleData={row}
+                          vehicleData={domopen}
                           fetchAgain={fetchAgain}
                           setFetchAgain={setFetchAgain}
-                          // company={row.DriverName}
-                          // avatarUrl={row.avatarUrl}
-                          // isVerified={row.isVerified}
-                          selected={selected.indexOf(row.name) !== -1}
-                          handleClick={(event) => handleClick(event, row.name)}
+                          selected={true}
+                          // handleClick={(event) => handleClick(event, row.name)}
+                          domopen={domopen}
+
                         />
-                      ))}
+                        :
+                        <>
+                          {tabData.map((row) => (
+                            <UserTableRow
+                              key={row?.data?._id}
+                              vehicleData={row}
+                              fetchAgain={fetchAgain}
+                              setFetchAgain={setFetchAgain}
+                              selected={false}
+                              // handleClick={(event) => handleClick(event, row.name)}
+                              domopen={false}
+                            />
+                          ))}
+                        </>
+                      }
+
                     </>
                     :
                     <>

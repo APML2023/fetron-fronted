@@ -64,10 +64,14 @@ export default function AtPickupFleetModal({
       const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
       var cctime = vehicleData.current_fleet[0].fleetstatus.enroute_for_pickup.waypoints;
-      cctime = cctime[cctime.length - 1].time;
-      cctime = `${cctime.split('T')[1].split('.')[0].substring(0, 5)}, ${cctime.split('T')[0]} `;
-      // console.log(cctime);
-      setPickupTime(cctime);
+      // console.log(cctime[cctime.length - 1].time);
+      if (cctime && cctime.length > 0 && cctime[cctime.length - 1] && cctime[cctime.length - 1]?.time) {
+        cctime = cctime[cctime.length - 1].time;
+        cctime = `${cctime.split('T')[1].split('.')[0].substring(0, 5)}, ${cctime.split('T')[0]} `;
+        // console.log(cctime);
+        setPickupTime(cctime);
+      }
+
       // const dateTime = cctime.toLocaleDateString('en-US', dateOptions);
       // console.log(dateTime);
     }
@@ -208,7 +212,7 @@ export default function AtPickupFleetModal({
                     </div>
                     <div className='flex flex-col gap-4'>
                       <div className='flex flex-col'>
-                        <p>Unloading start:</p>
+                        <p>Loading start:</p>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DemoContainer
                             components={[
@@ -235,7 +239,7 @@ export default function AtPickupFleetModal({
                         </LocalizationProvider>
                       </div>
                       <div className='flex flex-col'>
-                        <p>Unloading completed:</p>
+                        <p>Loading completed:</p>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DemoContainer
                             components={[
