@@ -453,8 +453,8 @@ export default function ModalMap({
                                         "line-cap": "round"
                                     }}
                                     paint={{
-                                        "line-color": "rgb(105,105,105)",
-                                        "line-width": 2
+                                        "line-color": "rgb(105,120,105)",
+                                        "line-width": 3
                                     }}
                                 />
                             </Source>
@@ -470,8 +470,8 @@ export default function ModalMap({
                                             // color='blue'
                                             // draggable={true}
                                             >
-                                                <div className='h-4 w-4 bg-sky-400 rounded-full' style={{ background: "rgb(105,105,105)" }}>
-                                                    <div className='absolute center h-2 w-2 bg-sky-500 rounded-full'
+                                                <div className='h-2 w-2 bg-sky-400 rounded-full' style={{ background: "rgb(105,105,105)" }}>
+                                                    <div className='absolute center h-1 w-1 bg-green-500 rounded-full'
                                                         style={{
                                                             top: "50%",
                                                             left: "50%",
