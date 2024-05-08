@@ -31,8 +31,8 @@ const navConfig = [
         icon: <FontAwesomeIcon icon={faMagnifyingGlassChart} className='text-normal' />,
       },
       {
-        subTitle: 'Load Assginment',
-        subpath: '/load-assignment',
+        subTitle: 'Tickets',
+        subpath: '/tickets',
       }
     ]
   },

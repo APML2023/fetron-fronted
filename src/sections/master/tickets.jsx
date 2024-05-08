@@ -22,6 +22,7 @@ import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
 import axios from 'axios';
 import { AccordionCustomIcon } from 'src/components/AAccordian';
+import FleetTable from "./fleetTicketTable"
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,8 +95,8 @@ export default function UserPage() {
         <Box sx={{
           position: 'fixed',
           width: '100%',
-          // boxShadow: 'none',
-          // height: HEADER.H_MOBILE,
+          boxShadow: 'none',
+          height: HEADER.H_MOBILE,
           zIndex: theme.zIndex.appBar + 10,
           ...bgBlur({
             color: theme.palette.background.default,
@@ -122,37 +123,9 @@ export default function UserPage() {
 
         </Box>
       </TabContext>
-      <Container sx={{ width: "100%" }}>
         <Box sx={{ paddingTop: "8rem" }}>
-          <Card>
-            <TableContainer sx={{ overflowY: 'auto', maxHeight: "60vh" }}>
-              <Table sx={{ minWidth: 800 }}>
-                <UserTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  rowCount={users.length}
-                  numSelected={selected.length}
-                  // onRequestSort={handleSort}
-                  onSelectAllClick={handleSelectAllClick}
-                  headLabel={[
-                   { id: 'total', label: 'TOTAL VLRs' },
-                    { id: 'indents', label: 'TOTAL INDENTs' },
-                    { id: 'totalEnquiries', label: 'TOTAL TP ENQUIRIES' },
-                    { id: 'bids', label: 'TOTAL BIDs' },
-                    { id: 'unplanneds', label: 'TOTAL UNPLANNEDs' }
-                  ]}
-                />
-              </Table>
-            </TableContainer>
-          </Card>
-                <AccordionCustomIcon
-                head="APML PALWAL HUB - 2 VLR "
-                baseLoc="Base Location" loc="Chow Maharastra"
-                indentsNos="0" button="Find Load"
-                vrlsNos="0" nosCon="0"
-                />
+            <FleetTable/>
         </Box>
-      </Container>
     </>
 
   );
