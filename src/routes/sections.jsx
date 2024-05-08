@@ -44,7 +44,7 @@ export default function Router() {
             { path: "completed", element: {} }
           ]
         },
-        { path: "load-assignment", element: <LoadAss /> },
+        { path: "tickets", element: <LoadAss /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: "master/vehicle", element: <MasterVehicle /> },

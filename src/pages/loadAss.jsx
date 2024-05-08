@@ -1,10 +1,10 @@
 import React from 'react'
 
-import Load from "../sections/master/loadAssigment"
+import Ticket from "../sections/master/tickets"
 
 const LoadAss = () => (
     <div>
-<Load/>
+<Ticket/>
     </div>
   )
 
