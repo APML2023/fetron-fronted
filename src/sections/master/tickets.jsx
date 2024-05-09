@@ -22,7 +22,7 @@ import { HEADER, NAV } from 'src/layouts/dashboard/config-layout';
 import { bgBlur } from 'src/theme/css';
 import axios from 'axios';
 import { AccordionCustomIcon } from 'src/components/AAccordian';
-import FleetTable from "./fleetTicketTable"
+import FleetTable from "./table"
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -112,7 +112,7 @@ export default function UserPage() {
               px: { lg: 5 },
             }}
           >
-            <Typography sx={{ flexGrow: 0 }} variant="h4">Load Vs Available</Typography>
+            <Typography sx={{ flexGrow: 0 }} variant="h4">Fleet Tickets</Typography>
             <Box sx={{ flexGrow: 1 }} />
             <UserTableToolbar
               numSelected={selected.length}
