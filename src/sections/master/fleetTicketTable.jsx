@@ -11,19 +11,30 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { MdKeyboardArrowUp } from "react-icons/md";
-function createData(name, ) {
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import { MdKeyboardArrowUp } from 'react-icons/md';
+function createData(name) {
   return {
     name,
-    history: [
+    value: [
       {
-        vehNo: '2020-01-05',
-        summary: '11091700',
-        driverInfo: 3,
-        currentStatus: 'Vee',
-        requestStatus :"Delayed"
+        type: 'newTyre',
+        vehNo: 'NH7248',
+        summary: 'Tyre-Type',
+        subTicket: 'APML10032',
+        driverInfo: 'Mandal',
+        currentStatus: 'NH 44, Sector - 6, Channi Himmat, Jammu, 180015',
+        requestStatus: 'Delayed',
       },
+      // {
+      //   type: 'accident',
+      //   vehNo: '2020-01-05',
+      //   summary: 'Tyre-Type',
+      //   subTicket: 'APML10032',
+      //   driverInfo: 'NH 44, Sector - 6, Channi Himmat, Jammu, 180015',
+      //   currentStatus: 'Vee',
+      //   requestStatus: 'Delayed'
+      // }
     ],
   };
 }
@@ -31,16 +42,12 @@ function createData(name, ) {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
- const [isShow , setIsShow] = React.useState(false);
+  const [isShow, setIsShow] = React.useState(false);
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
           </IconButton>
         </TableCell>
@@ -69,24 +76,31 @@ function Row(props) {
                   </TableRow> */}
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.vehNo}>
-                      <TableCell  component="th" scope="row">
-                        {historyRow.summary}
+                  {row.value.map((historyRow) => (
+                    <TableRow align='right' key={historyRow.vehNo}>
+                      <TableCell align='right' component="th" scope="row">
+                        {historyRow.vehNo}
                       </TableCell>
-                      <TableCell >{historyRow.summary}</TableCell>
-                      <TableCell >{historyRow.driverInfo}</TableCell>
-                      <TableCell  className='relative'
-                      onMouseEnter={()=>setIsShow(true)}
-                      onMouseLeave={()=>setIsShow(false)} >
-                      {
-                          isShow && (
-                              <div className='absolute'>
-                                <ButtonTable/>
-                              </div>
-                          )
-                      }
+                      <TableCell align='right'>
+                        <p>{historyRow.summary}</p>
+                        <p className="text-xs text-blue-600 ">{historyRow.subTicket}</p>
+                      </TableCell>
+                      <TableCell align='right'>{historyRow.driverInfo}</TableCell>
+                      <TableCell align='right'>{historyRow.currentStatus}</TableCell>
+                      <TableCell
+                        className="relative"
+                        onMouseEnter={() => setIsShow(true)}
+                        onMouseLeave={() => setIsShow(false)}
+                      >
+                        {isShow && (
+                          <div className="absolute">
+                            <ButtonTable />
+                          </div>
+                        )}
                         {historyRow.requestStatus}
+                      </TableCell>
+                      <TableCell>
+                        {/* <button className='bg-gray-100 border-2 border-blue-400 rounded-md p-1 shadow-slate-400 hover:bg-blue-600'>Mark Resolved</button> */}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -99,9 +113,7 @@ function Row(props) {
     </React.Fragment>
   );
 }
-const rows = [
-  createData('New Tyre -4'),
-];
+const rows = [createData('New Tyre'), createData('Accident')];
 
 export default function CollapsibleTable() {
   return (
@@ -110,26 +122,29 @@ export default function CollapsibleTable() {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell >Vehicle Info.</TableCell>
-            <TableCell >Summary</TableCell>
-            <TableCell >Driver Info.</TableCell>
-            <TableCell >Current Status</TableCell>
-            <TableCell >Request Status</TableCell>
+            <TableCell>Vehicle Info.</TableCell>
+            <TableCell>Summary</TableCell>
+            <TableCell>Driver Info.</TableCell>
+            <TableCell>Current Status</TableCell>
+            <TableCell>Request Status</TableCell>
+            {/* <TableCell >Updates</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row  key={row.name} row={row} />
+            <Row key={row.name} row={row} />
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
 }
- function ButtonTable(){
-    return(
-        <div>
-        <button className='bg-gray-100 border-2 border-blue-400 rounded-md p-1 shadow-slate-400'>Mark Resolved</button>
-         </div>
-    )
+function ButtonTable() {
+  return (
+    <div>
+      <button className="bg-gray-100 border-2 border-blue-400 rounded-md p-1 shadow-slate-400 hover:bg-blue-600">
+        Mark Resolved
+      </button>
+    </div>
+  );
 }
