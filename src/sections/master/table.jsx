@@ -15,6 +15,7 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
+
   const TABLE_ROWS = [
     {
       img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
@@ -112,6 +113,7 @@ import {
                 ))}
               </tr>
             </thead>
+            
             <tbody>
               {TABLE_ROWS.map(
                 ({ img,vehNo ,vehInfo, summary, ticketNO,driverInfo, driverNo ,currentStatus, RequestStatus }, index) => {
@@ -121,7 +123,7 @@ import {
                     : "p-4 border-b border-blue-gray-50";
   
                   return (
-                    <tr key={name}>
+                    <tr  key={vehNo}>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
                           {/* <Avatar src={img} alt={name} size="sm" /> */}
@@ -198,7 +200,7 @@ import {
                         {/* <Button className='bg-black ml-4'>
                           Markd
                         </Button> */}
-                      </td>
+                      </td>    
                     </tr>
                   );
                 },
@@ -207,6 +209,7 @@ import {
           </table>
         </CardBody>
       </Card>
+      
       </div>
     )
   }
