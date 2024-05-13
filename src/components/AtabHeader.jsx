@@ -14,13 +14,12 @@ const AtabHeader = ({ tabHeader, setMOpen, setFetchAgain }) => {
         <NotificationsPopover />
         <button className='bg-slate-100 h-fit py-1 text-red-800 px-2 rounded-full text-sm hover:bg-red-900 hover:text-white'
           onClick={() => {
-            setFetchAgain(true);
+            // setFetchAgain(true);
             setMOpen(false);
           }}
         >
           <FontAwesomeIcon
             icon={faXmark}
-
           />
         </button>
       </div>

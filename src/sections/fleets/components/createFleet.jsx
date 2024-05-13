@@ -181,12 +181,36 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
         waypoints: waypoints
       },
     };
+    // console.log(locationIns);
+    if (!locationIns.origin || !locationIns.origin.place_name || !locationIns.origin.latitude || !locationIns.origin.longitude
+      // || !locationIns.origin.time
+    ) {
+      // setNotData({ msg: "Please select origin location", type: "error" });
+      window.alert("Please select origin location")
+      setCreateTripStatus('');
+      return;
+    }
+    if (!locationIns.origin.time) {
+      window.alert("Please select origin time");
+      setCreateTripStatus('');
+      return;
+    }
+    if (!locationIns.destination || !locationIns.destination.place_name || !locationIns.destination.latitude || !locationIns.destination.longitude
+      // || !locationIns.destination.time
+    ) {
+      // setNotData({ msg: "Please select origin location", type: "error" });
+      window.alert("Please select destination location")
+      setCreateTripStatus('');
+      return;
+    }
+    if (!locationIns.destination.time) {
+      window.alert("Please select destination time");
+      setCreateTripStatus('');
+      return;
+    }
     await axios
       .post(`${import.meta.env.VITE_APP_BACKEND_URL}/y/fleets/createtrip`, data)
       .then((res) => {
-
-
-
         // window.alert(res.data.msg);
         // setMOpen((mopen) => !mopen);
         setNotData({ msg: "Fleet created... Fetching updated vehicle data.....", type: "success" });
@@ -207,7 +231,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
       <Modal
         open={mopen}
         onClose={() => {
-          setFetchAgain(true);
+          // setFetchAgain(true);
           setMOpen((mopen) => !mopen);
 
         }}
@@ -230,7 +254,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
             <AtabHeader
               tabHeader={`${vehicleNumber ? vehicleNumber : ""}`}
               setMOpen={setMOpen}
-              setFetchAgain={setFetchAgain}
+            // setFetchAgain={setFetchAgain}
             />
             <div
               style={{ background: 'rgba(255,255,255,0.4)' }}

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
+import FleetReportPage from 'src/pages/report';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -57,6 +58,9 @@ export default function Router() {
           ]
         }
       ],
+    },
+    {
+      path: 'vehicle/report', element: <FleetReportPage />
     },
     {
       path: 'login',

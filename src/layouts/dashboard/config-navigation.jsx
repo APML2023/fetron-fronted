@@ -1,7 +1,9 @@
 import SvgColor from 'src/components/svg-color';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faDriversLicense, faMagnifyingGlass, faMagnifyingGlassChart, faPerson, faScrewdriverWrench, faTruck, faTruckArrowRight, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faDriversLicense, faMagnifyingGlass, faMagnifyingGlassChart, faPager, faPerson, faScrewdriverWrench, faTruck, faTruckArrowRight, faUsers } from '@fortawesome/free-solid-svg-icons';
+// import { title } from 'process';
+import { FaPagelines } from 'react-icons/fa';
 // ----------------------------------------------------------------------
 
 const icon = (name) => (
@@ -38,6 +40,11 @@ const navConfig = [
     title: 'Shipment',
     path: '/products',
     icon: <FontAwesomeIcon icon={faTruckArrowRight} />
+  },
+  {
+    title: 'Live Report',
+    path: '/vehicle/report',
+    icon: <FontAwesomeIcon icon={faPager} className='text-normal' />
   },
   {
     title: 'Consignment',
