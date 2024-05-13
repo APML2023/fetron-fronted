@@ -370,11 +370,21 @@ function FleetReportWithNotify() {
                                     // onRequestSort={handleSort}
                                     onSelectAllClick={handleSelectAllClick}
                                     headLabel={[
-                                        { id: 'Veh', label: 'Vehicle' },
+                                        { id: 'Veh', label: 'Vehicle no' },
+                                        { id: 'capacity', label: 'Capacity' },
+                                        { id: 'driverName', label: 'Driver name' },
+                                        { id: 'driverNo', label: 'Driver no' },
+                                        { id: 'driverName', label: 'Driver name' },
+                                        { id: 'from', label: 'From' },
+                                        { id: 'to', label: 'To' },
+                                        { id: 'status', label: 'Status' },
                                         { id: 'current_l', label: 'Current Location' },
-                                        { id: 'origin', label: 'Origin' },
-                                        { id: 'destination', label: 'Destination' },
-                                        { id: 'status', label: 'Status' }
+                                        { id: 'pending_km', label: 'Pending km' },
+                                        { id: 'time', label: 'Time' },
+                                        { id: 'party_name', label: 'Party Name' },
+                                        { id: 'cons_name', label: 'Consignment name' },
+                                        { id: 'yest_km', label: 'Yesterday km' },
+                                        { id: 'remark', label: 'Remark' },
                                     ]}
                                 />
                                 {/* {pn == "undefined" || pn != "enroute-for-pickup" ? */}
@@ -402,17 +412,17 @@ function FleetReportWithNotify() {
                                                             // setMOpen((mopen) => !mopen);
                                                         }}
                                                     >
-                                                        <TableCell component="th" scope="row" sx={{ padding: "0.1rem 0.2rem", paddingLeft: "0.5rem" }}>
-                                                            <Stack direction="column" alignItems="start" spacing={0.1}>
-                                                                <p className="text-xs">{upVehData?.data?.vehicleType}</p>
-                                                                <p className='text-xs font-semibold' noWrap>
-                                                                    {upVehData?.vehicleNumber}
-                                                                </p>
-                                                            </Stack>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem", paddingLeft: "0.5rem" }}>
+                                                            <p className='text-xs font-semibold' noWrap>
+                                                                {upVehData?.vehicleNumber}
+                                                            </p>
+
                                                         </TableCell>
-                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}>
-                                                            <p className="text-xs">{upVehData?.current_location ? upVehData?.current_location?.location : ""}</p>
-                                                        </TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+
                                                         <TableCell sx={{ padding: "0.1rem 0.2rem" }}>
                                                             <p className="text-xs">{upVehData?.current_fleet[0]?.origin?.place_name ?
                                                                 upVehData?.current_fleet[0]?.origin?.place_name : ""
@@ -424,7 +434,6 @@ function FleetReportWithNotify() {
                                                                 upVehData?.current_fleet[0]?.destination?.place_name : ""
                                                             }</p>
                                                         </TableCell>
-
                                                         <TableCell sx={{ padding: "0.1rem 0.2rem" }}>
                                                             <p
                                                                 className={`${labelClass} text-xs w-fit rounded p-1`}
@@ -432,6 +441,16 @@ function FleetReportWithNotify() {
                                                                     upVehData?.current_status ? vehicle_status[upVehData?.current_status - 1] : "available"
                                                                 }</p>
                                                         </TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}>
+                                                            <p className="text-xs">{upVehData?.current_location ? upVehData?.current_location?.location : ""}</p>
+                                                        </TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+                                                        <TableCell sx={{ padding: "0.1rem 0.2rem" }}></TableCell>
+
 
                                                     </TableRow>
                                                 )
