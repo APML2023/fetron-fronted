@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Ticket from "../sections/master/tickets"
+import Ticket from "../sections/tickets/tickets"
 
 const LoadAss = () => (
     <div>
