@@ -231,7 +231,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
       <Modal
         open={mopen}
         onClose={() => {
-          // setFetchAgain(true);
+          setFetchAgain(true);
           setMOpen((mopen) => !mopen);
 
         }}
@@ -254,7 +254,7 @@ export default function CreateFleetModal({ vehicleNumber, vehicleType, status, m
             <AtabHeader
               tabHeader={`${vehicleNumber ? vehicleNumber : ""}`}
               setMOpen={setMOpen}
-            // setFetchAgain={setFetchAgain}
+              setFetchAgain={setFetchAgain}
             />
             <div
               style={{ background: 'rgba(255,255,255,0.4)' }}
