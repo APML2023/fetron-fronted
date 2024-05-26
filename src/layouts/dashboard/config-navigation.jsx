@@ -1,7 +1,19 @@
 import SvgColor from 'src/components/svg-color';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faDriversLicense, faMagnifyingGlass, faMagnifyingGlassChart, faPager, faPerson, faScrewdriverWrench, faTruck, faTruckArrowRight, faUsers } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChartLine,
+  faDriversLicense,
+  faMagnifyingGlass,
+  faMagnifyingGlassChart,
+  faPager,
+  faPerson,
+  faQuestion,
+  faScrewdriverWrench,
+  faTruck,
+  faTruckArrowRight,
+  faUsers,
+} from '@fortawesome/free-solid-svg-icons';
 // import { title } from 'process';
 import { FaPagelines } from 'react-icons/fa';
 
@@ -12,61 +24,66 @@ const icon = (name) => (
 );
 
 const dashboardIcon = () => {
-  return <FontAwesomeIcon icon={faChartLine} className='text-normal' />
-}
+  return <FontAwesomeIcon icon={faChartLine} className="text-normal" />;
+};
 
 const navConfig = [
   {
     title: 'Dashboard',
     path: '/',
-    icon: <FontAwesomeIcon icon={faChartLine} className='text-normal' />
+    icon: <FontAwesomeIcon icon={faChartLine} className="text-normal" />,
   },
   {
     title: 'Live Report',
     path: '/vehicle/report',
-    icon: <FontAwesomeIcon icon={faPager} className='text-normal' />
+    icon: <FontAwesomeIcon icon={faPager} className="text-normal" />,
   },
   {
     title: 'Fleet Managment',
     path: '/fleets',
-    icon: <FontAwesomeIcon icon={faTruck} className='text-normal' />,
+    icon: <FontAwesomeIcon icon={faTruck} className="text-normal" />,
     children: [
       {
         subTitle: 'Fleet Monitoring',
         subpath: '/fleet-monitoring',
-        icon: <FontAwesomeIcon icon={faMagnifyingGlassChart} className='text-normal' />,
+        icon: <FontAwesomeIcon icon={faMagnifyingGlassChart} className="text-normal" />,
       },
       {
         subTitle: 'Tickets',
         subpath: '/tickets',
-      }
-    ]
+      },
+    ],
+  },
+  {
+    title: 'Issue tracking',
+    path: '/issueTracking',
+    icon:<FontAwesomeIcon icon={faQuestion}/>
   },
   {
     title: 'Shipment',
     path: '/products',
-    icon: <FontAwesomeIcon icon={faTruckArrowRight} />
+    icon: <FontAwesomeIcon icon={faTruckArrowRight} />,
   },
   {
     title: 'Consignment',
-    path: '/blog'
+    path: '/blog',
   },
   {
     title: 'Master',
     path: '/master',
-    icon: <FontAwesomeIcon icon={faScrewdriverWrench} className='text-normal' />,
+    icon: <FontAwesomeIcon icon={faScrewdriverWrench} className="text-normal" />,
     children: [
       {
-        subTitle: "Vehicle",
-        subpath: "/vehicle",
-        icon: <FontAwesomeIcon icon={faTruck} className='text-normal' />
+        subTitle: 'Vehicle',
+        subpath: '/vehicle',
+        icon: <FontAwesomeIcon icon={faTruck} className="text-normal" />,
       },
       {
-        subTitle: "Driver",
-        subpath: "/driver",
-        icon: <FontAwesomeIcon icon={faUsers} className='text-normal' />
-      }
-    ]
+        subTitle: 'Driver',
+        subpath: '/driver',
+        icon: <FontAwesomeIcon icon={faUsers} className="text-normal" />,
+      },
+    ],
   },
   {
     title: 'login',

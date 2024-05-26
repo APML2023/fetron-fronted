@@ -24,7 +24,6 @@ const AtabHeader = ({ tabHeader, setMOpen, setFetchAgain }) => {
         </button>
       </div>
     </div>
-
   )
 }
 

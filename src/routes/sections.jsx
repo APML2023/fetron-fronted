@@ -12,6 +12,7 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const LoadAss = lazy(() => import('src/pages/loadAss'));
 export const MasterVehicle = lazy(() => import('src/pages/masterVehicle'));
+export const IssueTracking =lazy(()=>import('src/pages/issueTracking')) 
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
@@ -57,6 +58,9 @@ export default function Router() {
           ]
         }
       ],
+    },
+    {
+    path:'issueTracking', element:<IssueTracking/>
     },
     {
       path: 'vehicle/report', element: <FleetReportPage />
