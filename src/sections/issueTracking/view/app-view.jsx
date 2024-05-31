@@ -28,6 +28,7 @@ import { MdAddCircle } from "react-icons/md";
 import Modal from '@mui/material/Modal';
 import { borderRadius, height } from '@mui/system';
 import  CreateIssueOption  from '../createIssueOption';
+import ProcessArea from '../Components/processArea';
 
 const style = {
   position: 'absolute',
@@ -40,7 +41,7 @@ const style = {
   transition: 'all 0.2s ease-in',
   boxShadow: 24,
   borderRadius:"8px",
-  overflowY:"scroll"
+  // overflowY:"scroll"
 };
 
 
@@ -158,10 +159,9 @@ export default function UserPage() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-         <CreateIssueOption/>
+         <CreateIssueOption />
         </Box>
       </Modal>
     </>
-
   );
 }

@@ -7,3 +7,6 @@ export const ticketdefault=[
         componentType: "input",
       }
 ]
+export const buttons =[
+  "Driver Issue","Battery Issue"
+]

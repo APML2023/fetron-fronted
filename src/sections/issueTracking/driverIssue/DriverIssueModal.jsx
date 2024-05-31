@@ -5,11 +5,8 @@ import { Link } from 'react-router-dom';
 // ----------------------------------------------------------------------
 export default function ProductsView() {
   return (
-    <>
-      <AtabHeader tabHeader="Tickets" />
-      <div>
-        {/* Header */}
-        <div className="bg-white px-4 py-2 w-full ">
+    <div className='h-[80vh] overflow-y-scroll'>
+        <div className="bg-white px-4 py-2 w-full overflow-y-scroll ">
           <h2 className="text-lg font-bold mb-2">Driver Issue</h2>
           <div className="flex justify-between gap-2">
             <p className="text-gray-600">
@@ -113,7 +110,6 @@ export default function ProductsView() {
               </select>
           </form>
         </div>
-      </div>
-    </>
+    </div>
   );
 }
