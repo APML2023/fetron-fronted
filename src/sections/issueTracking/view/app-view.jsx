@@ -27,7 +27,6 @@ import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { MdAddCircle } from "react-icons/md";
 import Modal from '@mui/material/Modal';
 import { borderRadius, height } from '@mui/system';
-import  CreateIssueOption  from '../createIssueOption';
 import ProcessArea from '../Components/processArea';
 
 const style = {
@@ -159,7 +158,7 @@ export default function UserPage() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-         <CreateIssueOption />
+         <ProcessArea />
         </Box>
       </Modal>
     </>

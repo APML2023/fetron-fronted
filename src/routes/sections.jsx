@@ -47,7 +47,7 @@ export default function Router() {
         },
         { path: "tickets", element: <LoadAss /> },
         { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: 'issueTracking', element: <BlogPage /> },
         { path: "master/vehicle", element: <MasterVehicle /> },
 
         {
@@ -58,9 +58,6 @@ export default function Router() {
           ]
         }
       ],
-    },
-    {
-    path:'issueTracking', element:<IssueTracking/>
     },
     {
       path: 'vehicle/report', element: <FleetReportPage />

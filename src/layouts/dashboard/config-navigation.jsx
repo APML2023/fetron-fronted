@@ -55,18 +55,14 @@ const navConfig = [
     ],
   },
   {
-    title: 'Issue tracking',
-    path: '/issueTracking',
-    icon:<FontAwesomeIcon icon={faQuestion}/>
-  },
-  {
-    title: 'Shipment',
+    title: 'Live DashBoard',
     path: '/products',
     icon: <FontAwesomeIcon icon={faTruckArrowRight} />,
   },
   {
-    title: 'Consignment',
-    path: '/blog',
+    title: 'Issue Tracking',
+    path: '/issueTracking',
+    icon:<FontAwesomeIcon icon={faQuestion}/>
   },
   {
     title: 'Master',
