@@ -11,7 +11,13 @@ import ProductCard from '../product-card';
 import ProductSort from '../product-sort';
 import ProductFilters from '../product-filters';
 import ProductCartWidget from '../product-cart-widget';
-
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import { Box } from '@mui/system';
+import {dashBoardTabs} from "../../../data/modalTab"
+import OffDuty from "../OffDuty"
 // ----------------------------------------------------------------------
 
 export default function ProductsView() {
@@ -24,11 +30,15 @@ export default function ProductsView() {
   const handleCloseFilter = () => {
     setOpenFilter(false);
   };
+  const [value, setValue] = useState('1');
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        DashBoard
       </Typography>
 
       <Stack
@@ -45,19 +55,23 @@ export default function ProductsView() {
             onCloseFilter={handleCloseFilter}
           />
 
-          <ProductSort />
+          {/* <ProductSort /> */}
         </Stack>
       </Stack>
-
-      <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid key={product.id} xs={12} sm={6} md={3}>
-            <ProductCard product={product} />
-          </Grid>
-        ))}
-      </Grid>
-
-      <ProductCartWidget />
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            {dashBoardTabs.map((v1)=>{
+              return(
+                <Tab label={v1.name} value={v1.value} key={v1.id}/>
+              )
+            })}
+          </TabList>
+        </Box>
+        <TabPanel value="1"><OffDuty/></TabPanel>
+        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="3">Item Three</TabPanel>
+      </TabContext>
     </Container>
   );
 }
