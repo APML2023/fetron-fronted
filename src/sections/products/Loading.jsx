@@ -10,24 +10,16 @@ import TabList from '@mui/lab/TabList';
 import TabContext from '@mui/lab/TabContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Toolbar from '@mui/material/Toolbar';
-// import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { CircularProgress, Skeleton, TableCell, TableHead, TableRow } from '@mui/material';
-
 import { users } from 'src/_mock/user';
-// import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-
-// import TableNoData from '../table-no-data';
-// import UserTableRow from '../user-table-row';
-import UserTableHead from '../../fleets/user-table-head';
-// import TableEmptyRows from '../table-empty-rows';
-// import UserTableToolbar from '../user-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../../fleets/utils';
+import UserTableHead from '../fleets/user-table-head';
+import { emptyRows, applyFilter, getComparator } from '../fleets/utils';
 import { typeOfFleet } from 'src/data/fleet';
 import { usePathname } from 'src/routes/hooks';
 import { useTheme } from '@emotion/react';
@@ -42,8 +34,6 @@ import { faLessThan, faRefresh, faSearch } from '@fortawesome/free-solid-svg-ico
 import { fontSize, width } from '@mui/system';
 import Label from 'src/components/label';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-import { split } from 'lodash';
-import moment from 'moment';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -285,17 +275,7 @@ function FleetReportWithNotify() {
     const destination = vehicle.current_fleet[0].destination;
 
     return Math.round(Distance(currentLocation, destination));
-  };
-
-  
-  function isYesterday(date) {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return date.getDate() === yesterday.getDate() &&
-           date.getMonth() === yesterday.getMonth() &&
-           date.getFullYear() === yesterday.getFullYear();
-}
-  
+  };  
 
   return (
     <React.Fragment>
@@ -304,66 +284,28 @@ function FleetReportWithNotify() {
           <Card>
             <TableContainer sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 1rem)' }}>
               <Table sx={{ height: 'calc(100vh - 1rem)', borderRadius: '0.1rem' }}>
-                <UserTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  rowCount={users.length}
-                  numSelected={selected.length}
-                  // onRequestSort={handleSort}
-                  onSelectAllClick={handleSelectAllClick}
-                  headLabel={[
-                    { id: 'Veh', label: 'Vehicle no' },
-                    { id: 'capacity', label: 'Capacity' },
-                    { id: 'driverName', label: 'Driver name' },
-                    { id: 'driverNo', label: 'Driver no' },
-                    { id: 'driverName', label: 'Driver name' },
-                    { id: 'from', label: 'From' },
-                    { id: 'to', label: 'To' },
-                    { id: 'status', label: 'Status' },
-                    { id: 'current_l', label: 'Current Location' },
-                    { id: 'pending_km', label: 'Pending km' },
-                    { id: 'time', label: 'Time' },
-                    { id: 'party_name', label: 'Party Name' },
-                    { id: 'cons_name', label: 'Consignment name' },
-                    { id: 'yest_km', label: 'Yesterday km' },
-                    { id: 'remark', label: 'Remark' },
-                  ]}
-                />
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Vehicle no</TableCell>
+                    <TableCell>From</TableCell>
+                    <TableCell>To</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Place</TableCell>
+                    <TableCell>Pending km</TableCell>
+                    <TableCell>Time</TableCell>
+                    <TableCell>Yesterday km</TableCell>
+                    <TableCell>Remark</TableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody>
                   {tabData && tabData.length ? (
-                    tabData.map((upVehData, i) => {
-                      let yesterdayKm = 'N/A';
-
-                      if (upVehData?.current_fleet?.length > 0) {
-                        const destination = upVehData.current_fleet[0].destination;
-                        const destinationTime = new Date(destination.time);
-                        
-                        if (isYesterday(destinationTime)) {
-                            const origin = upVehData.current_fleet[0].origin;
-                            const distance = calculateDistance(
-                                origin.latitude,
-                                origin.longitude,
-                                destination.latitude,
-                                destination.longitude
-                            );
-                            
-                            yesterdayKm = distance.toFixed(2); // Format as needed
-                        }
-                    }
-
+                    tabData
+                      // .filter((vehicle) => vehicle.current_status)
+                      .map((upVehData, i) => {
                         const labelClass = upVehData?.current_status
-                          ? upVehData?.current_status == 1 || upVehData?.current_status == 2
-                            ? 'bg-blue-100 text-blue-900'
-                            : upVehData?.current_status == 3
-                            ? 'bg-orange-100 text-orange-900'
-                            : upVehData?.current_status == 4
-                            ? 'bg-yellow-100 text-yellow-900'
-                            : upVehData?.current_status == 5
-                            ? 'bg-green-100 text-green-900'
-                            : upVehData?.current_status == 6
-                            ? 'bg-teal-100 text-teal-900'
-                            : 'bg-red-100 text-red-900'
-                          : 'z-0 animate-pulse bg-red-500 text-white';
+                          ? ' bg-blue-500 text-red-900 text-white'
+                          : null;
+
                         return (
                           <TableRow
                             key={upVehData._id}
@@ -377,26 +319,11 @@ function FleetReportWithNotify() {
                               </p>
                             </TableCell>
                             <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
-                              {/* <p className="text-xs">
-                                {upVehData?.current_fleet[0]?.origin?.place_name || ''}
-                              </p> */}
-                            </TableCell>
-                            <TableCell sx={{ padding: '0.1rem 0.2rem' }}></TableCell>
-                            <TableCell sx={{ padding: '0.1rem 0.2rem' }}></TableCell>
-                            <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
-                              <p className="text-xs">
-                                {/* {upVehData?.current_fleet[0]?.origin.place_name} */}
-                              </p>
-                            </TableCell>
-                            <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
                               <p className="text-xs">
                                 {upVehData?.current_fleet[0]?.origin?.place_name || ''}
                               </p>
                             </TableCell>
                             <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
-                              {/* <p className="text-xs">
-                                {upVehData?.current_fleet[0]?.destination?.time || ''}
-                              </p> */}
                               <p className="text-xs">
                                 {upVehData?.current_fleet[0]?.destination?.place_name || ''}
                               </p>
@@ -410,38 +337,28 @@ function FleetReportWithNotify() {
                             </TableCell>
                             <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
                               <p className="text-xs">
-                                {upVehData?.current_location
-                                  ? upVehData?.current_location?.location
-                                  : ''}
+                                {upVehData?.current_fleet[0]?.origin.place_name}
                               </p>
                             </TableCell>
                             <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
                               <p className="text-xs">
-                                {calculatePendingKilometers(upVehData).toFixed(2)}Kms
+                                {calculatePendingKilometers(upVehData).toFixed(2)}
                               </p>
                             </TableCell>
-
                             <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
                               <p className="text-xs">
-                                  <moment format="HH:MM">
-                                    {(upVehData?.current_fleet[0]?.destination?.time || '')
-                                      .split('')
-                                      .slice(11, 19)
-                                      .join('')}
-                                  </moment>
+                                {upVehData?.current_fleet[0]?.destination?.time || ''}
                               </p>
                             </TableCell>
-
-                            <TableCell>
-                            {/* {yesterdayKm} */}
-                            </TableCell>
-                            <TableCell>
-
+                            <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
+                              <p className="text-xs">
+                                {/* Add logic for yesterday's km if available */}
+                              </p>
                             </TableCell>
                             <TableCell sx={{ padding: '0.1rem 0.2rem' }}>
-                            <p className="text-xs">
-                            {yesterdayKm}
-                            </p>
+                              <p className="text-xs">
+                                {/* Add logic for remarks if available */}
+                              </p>
                             </TableCell>
                           </TableRow>
                         );
@@ -449,29 +366,16 @@ function FleetReportWithNotify() {
                   ) : fetchVehicleLoading ? (
                     Array.from({ length: 6 }).map((_, index) => (
                       <TableRow key={index} className="transition-colors duration-200 ease-in-out">
-                        <TableCell>
-                          <Skeleton variant="text" width={100} height={50} />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width={200} height={50} />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width={100} height={50} />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width={100} height={50} />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width={100} height={50} />
-                        </TableCell>
+                        <TableCell><Skeleton variant="text" width={100} height={50} /></TableCell>
+                        <TableCell><Skeleton variant="text" width={200} height={50} /></TableCell>
+                        <TableCell><Skeleton variant="text" width={100} height={50} /></TableCell>
+                        <TableCell><Skeleton variant="text" width={100} height={50} /></TableCell>
+                        <TableCell><Skeleton variant="text" width={100} height={50} /></TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell
-                        colSpan={9}
-                        className="w-full h-full p-4 flex justify-center items-center"
-                      >
+                      <TableCell colSpan={9} className="w-full h-full p-4 flex justify-center items-center">
                         No data
                       </TableCell>
                     </TableRow>

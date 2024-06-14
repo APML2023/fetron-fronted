@@ -275,20 +275,18 @@ function FleetReportWithNotify() {
                   {tabData && tabData.length ? (
                     <>
                       {tabData
-                        .filter((vehicle) => vehicle.current_status===0) 
+                        .filter((vehicle) => vehicle.current_status===3) 
                         .map((upVehData, i) => {
                           const labelClass = upVehData?.current_status
-                            ? null
-                            : 'animate-pulse bg-red-100 text-red-900';
+                            ? ' bg-blue-500 text-red-900 text-white'
+                            :null;
                           return (
                             <TableRow
                               tabIndex={-1}
                               role="checkbox"
                               selected={selected}
-                              className="  transition-colors duration-200 ease-in-out p-0 text-wrap: nowrap"
-                              onClick={(e) => {
-                                // setMOpen((mopen) => !mopen);
-                              }}
+                              className="  transition-colors duration-200 ease-in-out ] text-wrap: nowrap"
+                          
                             >
                               <TableCell sx={{ padding: '0.1rem 0.2rem', paddingLeft: '0.5rem' }}>
                                 <p className="text-xs font-semibold" noWrap>
@@ -589,7 +587,7 @@ function FleetReportWithNotify() {
   );
 }
 
-export default function OffDuty() {
+export default function Unloading() {
   return (
     <SnackbarProvider
       maxSnack={3}

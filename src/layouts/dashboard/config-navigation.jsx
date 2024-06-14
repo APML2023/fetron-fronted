@@ -10,6 +10,7 @@ import {
   faPerson,
   faQuestion,
   faScrewdriverWrench,
+  faSortAmountAsc,
   faTruck,
   faTruckArrowRight,
   faUsers,
@@ -48,10 +49,10 @@ const navConfig = [
         subpath: '/fleet-monitoring',
         icon: <FontAwesomeIcon icon={faMagnifyingGlassChart} className="text-normal" />,
       },
-      {
-        subTitle: 'Tickets',
-        subpath: '/tickets',
-      },
+      // {
+      //   subTitle: 'Tickets',
+      //   subpath: '/tickets',
+      // },
     ],
   },
   {
@@ -62,7 +63,7 @@ const navConfig = [
   {
     title: 'Issue Tracking',
     path: '/issueTracking',
-    icon:<FontAwesomeIcon icon={faQuestion}/>
+    icon: <FontAwesomeIcon icon={faQuestion} />,
   },
   {
     title: 'Master',

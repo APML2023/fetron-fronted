@@ -25,7 +25,7 @@ export default function UserTableHead({
   };
 
   return (
-    <TableHead sx={{ position: "sticky", top: "0" }}>
+    <TableHead sx={{ position: "sticky", top: "0",textWrap:"nowrap" }}>
       <TableRow>
         {/* <TableCell padding="checkbox">
           {/* <Checkbox

@@ -18,6 +18,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { Box } from '@mui/system';
 import {dashBoardTabs} from "../../../data/modalTab"
 import OffDuty from "../OffDuty"
+import Loading from '../Loading';
 // ----------------------------------------------------------------------
 
 export default function ProductsView() {
@@ -69,7 +70,7 @@ export default function ProductsView() {
           </TabList>
         </Box>
         <TabPanel value="1"><OffDuty/></TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="2"><Loading/></TabPanel>
         <TabPanel value="3">Item Three</TabPanel>
       </TabContext>
     </Container>
