@@ -2,6 +2,7 @@ import SvgColor from 'src/components/svg-color';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faChartArea,
   faChartLine,
   faDriversLicense,
   faMagnifyingGlass,
@@ -33,6 +34,11 @@ const navConfig = [
     title: 'Dashboard',
     path: '/',
     icon: <FontAwesomeIcon icon={faChartLine} className="text-normal" />,
+  },
+  {
+    title: 'MXL-SCREEN DASHBOARD',
+    path: '/mxl-screen',
+    icon: <FontAwesomeIcon icon={faChartArea} className="text-normal" />,
   },
   {
     title: 'Live Report',

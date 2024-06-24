@@ -13,6 +13,7 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const LoadAss = lazy(() => import('src/pages/loadAss'));
 export const MasterVehicle = lazy(() => import('src/pages/masterVehicle'));
 export const IssueTracking =lazy(()=>import('src/pages/issueTracking')) 
+export const MXLScreen = lazy(()=>import('src/pages/MxlScreen'))
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
@@ -58,6 +59,10 @@ export default function Router() {
           ]
         }
       ],
+    },
+    {
+      path: 'mxl-screen',
+      element: <MXLScreen />,
     },
     {
       path: 'vehicle/report', element: <FleetReportPage />
